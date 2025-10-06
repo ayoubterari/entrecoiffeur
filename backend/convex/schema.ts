@@ -175,4 +175,15 @@ export default defineSchema({
   }).index("by_post", ["postId"])
     .index("by_author", ["authorId"])
     .index("by_created_date", ["createdAt"]),
+
+  // PayPal configuration table
+  paypalConfig: defineTable({
+    environment: v.union(v.literal("sandbox"), v.literal("live")),
+    clientId: v.string(),
+    clientSecret: v.string(),
+    webhookUrl: v.optional(v.string()),
+    isActive: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }),
 });

@@ -20,6 +20,7 @@ import type * as functions_mutations_blog from "../functions/mutations/blog.js";
 import type * as functions_queries_blog from "../functions/queries/blog.js";
 import type * as netVendeur from "../netVendeur.js";
 import type * as orders from "../orders.js";
+import type * as payments from "../payments.js";
 import type * as products from "../products.js";
 
 /**
@@ -38,6 +39,7 @@ declare const fullApi: ApiFromModules<{
   "functions/queries/blog": typeof functions_queries_blog;
   netVendeur: typeof netVendeur;
   orders: typeof orders;
+  payments: typeof payments;
   products: typeof products;
 }>;
 export declare const api: FilterApi<

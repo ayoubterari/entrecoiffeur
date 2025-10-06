@@ -9,6 +9,7 @@ import CategoriesManagement from '../components/CategoriesManagement'
 import BlogManagement from '../components/BlogManagement'
 import CommissionManagement from '../components/CommissionManagement'
 import NetVendeurManagement from '../components/NetVendeurManagement'
+import PaymentConfig from '../components/PaymentConfig'
 
 const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userType, onLogout }) => {
   const navigate = useNavigate()
@@ -174,6 +175,13 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
           >
             <span className="nav-icon">💸</span>
             <span>Net Vendeur</span>
+          </div>
+          <div 
+            className={`nav-item ${activeTab === 'paiement' ? 'active' : ''}`}
+            onClick={() => setActiveTab('paiement')}
+          >
+            <span className="nav-icon">💳</span>
+            <span>Paiement</span>
           </div>
           <div 
             className={`nav-item ${activeTab === 'blog' ? 'active' : ''}`}
@@ -378,6 +386,10 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
 
           {activeTab === 'netvendeur' && (
             <NetVendeurManagement />
+          )}
+
+          {activeTab === 'paiement' && (
+            <PaymentConfig />
           )}
 
           {activeTab === 'blog' && (
