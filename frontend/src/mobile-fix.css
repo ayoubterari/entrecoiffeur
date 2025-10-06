@@ -1,0 +1,121 @@
+/* MOBILE FIX - Styles de secours pour forcer le responsive */
+
+/* Force mobile styles avec !important */
+@media screen and (max-width: 768px) {
+  
+  /* Header mobile forcé */
+  .ecommerce-header .header-content {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    grid-template-rows: auto auto !important;
+    gap: 1rem !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  
+  .logo-section {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    text-align: left !important;
+  }
+  
+  .marketplace-title {
+    font-size: 1.4rem !important;
+  }
+  
+  .marketplace-subtitle {
+    font-size: 0.8rem !important;
+  }
+  
+  .header-actions {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    display: flex !important;
+    gap: 0.5rem !important;
+    justify-content: flex-end !important;
+  }
+  
+  .header-search {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+    width: 100% !important;
+    max-width: none !important;
+    flex: none !important;
+  }
+  
+  /* Boutons mobiles */
+  .signin-btn, .signup-btn, .logout-btn {
+    font-size: 0.8rem !important;
+    padding: 0.6rem 1rem !important;
+    min-height: 44px !important;
+  }
+  
+  /* Categories mobile */
+  .categories-grid {
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)) !important;
+    gap: 0.75rem !important;
+  }
+  
+  .category-card {
+    padding: 1rem 0.75rem !important;
+    min-height: 100px !important;
+  }
+  
+  .category-icon {
+    font-size: 1.8rem !important;
+  }
+  
+  .category-name {
+    font-size: 0.8rem !important;
+  }
+  
+  /* Products mobile */
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    gap: 1.25rem !important;
+  }
+  
+  /* Carousel mobile */
+  .banner-slide {
+    height: 200px !important;
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+  
+  .banner-content h2 {
+    font-size: 1.6rem !important;
+  }
+  
+  .banner-content p {
+    font-size: 0.9rem !important;
+  }
+  
+  /* Container mobile */
+  .container {
+    padding: 0 1rem !important;
+  }
+}
+
+/* Très petits écrans */
+@media screen and (max-width: 480px) {
+  
+  .marketplace-title {
+    font-size: 1.2rem !important;
+  }
+  
+  .categories-grid {
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)) !important;
+  }
+  
+  .products-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .banner-slide {
+    height: 180px !important;
+  }
+  
+  .banner-content h2 {
+    font-size: 1.3rem !important;
+  }
+}

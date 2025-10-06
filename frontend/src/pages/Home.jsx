@@ -5,6 +5,7 @@ import { api } from '../lib/convex'
 import Carousel from '../components/Carousel'
 import ProductCard from '../components/ProductCard'
 import LoginModal from '../components/LoginModal'
+import styles from '../components/Home.module.css'
 
 const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName }) => {
   const navigate = useNavigate()
@@ -14,6 +15,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   const [favorites, setFavorites] = useState([])
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [loginMode, setLoginMode] = useState('signin') // 'signin' ou 'signup'
+  const [currentSlide, setCurrentSlide] = useState(0)
 
   // Get real data from Convex
   const categoriesData = useQuery(api.products.getCategories)
@@ -127,55 +129,77 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
     setShowLoginModal(false)
   }
 
+  // Carousel functions
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % bannerSlides.length)
+  }
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + bannerSlides.length) % bannerSlides.length)
+  }
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index)
+  }
+
+  // Auto-play carousel
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 4000)
+    return () => clearInterval(interval)
+  }, [])
+
   return (
-    <div className="ecommerce-container">
-      {/* Header */}
-      <header className="ecommerce-header">
-        <div className="header-content">
-          <div className="logo-section">
-            <h1 className="marketplace-title">Entre Coiffeur</h1>
-            <p className="marketplace-subtitle">Marketplace beauté & coiffure</p>
+    <div className={styles.homeContainer}>
+      {/* Header Mobile-First */}
+      <header className={styles.mobileHeader}>
+        <div className={styles.headerContent}>
+          {/* Logo à gauche */}
+          <div className={styles.logoSection}>
+            <h1 className={styles.marketplaceTitle}>Entre Coiffeur</h1>
+            <p className={styles.marketplaceSubtitle}>Marketplace beauté & coiffure</p>
           </div>
           
-          <div className="header-search">
-            <div className="search-bar-header">
+          {/* Barre de recherche au centre */}
+          <div className={styles.headerSearch}>
+            <div className={styles.searchBarHeader}>
               <input 
                 type="text" 
                 placeholder="Rechercher des produits..." 
-                className="search-input-header"
+                className={styles.searchInputHeader}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <button className="search-btn-header">🔍</button>
+              <button className={styles.searchBtnHeader}>🔍</button>
             </div>
           </div>
 
-          <div className="header-actions">
-            <button className="header-btn" title="Favoris">
-              ❤️ <span className="badge">{favorites.length}</span>
+          {/* Actions à droite */}
+          <div className={styles.headerActions}>
+            <button className={styles.headerBtn} title="Favoris">
+              ❤️ <span className={styles.badge}>{favorites.length}</span>
             </button>
-            <button className="header-btn" title="Panier">
-              🛒 <span className="badge">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
+            <button className={styles.headerBtn} title="Panier">
+              🛒 <span className={styles.badge}>{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
             </button>
             
             {isAuthenticated ? (
               <>
-                <button className="user-profile-btn" onClick={() => navigate('/dashboard')}>
-                  <div className="user-avatar-small">
+                <button className={styles.userProfileBtn} onClick={() => navigate('/dashboard')}>
+                  <div className={styles.userAvatarSmall}>
                     {userFirstName ? userFirstName.charAt(0).toUpperCase() : 'U'}
                   </div>
                   <span>{userFirstName || 'Profil'}</span>
                 </button>
-                <button className="logout-btn" onClick={onLogout}>
+                <button className={styles.logoutBtn} onClick={onLogout}>
                   Déconnexion
                 </button>
               </>
             ) : (
               <>
-                <button className="signin-btn" onClick={() => handleShowLogin('signin')}>
+                <button className={styles.signinBtn} onClick={() => handleShowLogin('signin')}>
                   Se connecter
                 </button>
-                <button className="signup-btn" onClick={() => handleShowLogin('signup')}>
+                <button className={styles.signupBtn} onClick={() => handleShowLogin('signup')}>
                   S'inscrire
                 </button>
               </>
@@ -184,52 +208,95 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         </div>
       </header>
 
-      {/* Hero Carousel */}
-      <section className="hero-carousel">
-        <Carousel items={bannerSlides} autoPlay={true} interval={4000} />
+      {/* Hero Carousel Mobile */}
+      <section className={styles.heroCarousel}>
+        <div className={styles.carousel}>
+          <div className={styles.carouselWrapper}>
+            <div 
+              className={styles.carouselContent}
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+            >
+              {bannerSlides.map((slide, index) => (
+                <div key={index} className={styles.bannerSlide}>
+                  <div className={styles.bannerContent}>
+                    <h2 className={styles.bannerContentH2}>{slide.title}</h2>
+                    <p className={styles.bannerContentP}>{slide.description}</p>
+                    <button className={styles.signupBtn}>{slide.buttonText}</button>
+                  </div>
+                  <div className={styles.bannerImage}>{slide.image}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Navigation Buttons */}
+          <button className={`${styles.carouselBtn} ${styles.carouselBtnPrev}`} onClick={prevSlide}>
+            ‹
+          </button>
+          <button className={`${styles.carouselBtn} ${styles.carouselBtnNext}`} onClick={nextSlide}>
+            ›
+          </button>
+          
+          {/* Dots Navigation */}
+          <div className={styles.carouselDots}>
+            {bannerSlides.map((_, index) => (
+              <button
+                key={index}
+                className={`${styles.carouselDot} ${index === currentSlide ? styles.active : ''}`}
+                onClick={() => goToSlide(index)}
+              />
+            ))}
+          </div>
+        </div>
       </section>
 
-      {/* Categories */}
-      <section className="categories-section">
-        <div className="container">
-          <h3 className="section-title">Catégories</h3>
-          <div className="categories-grid">
+      {/* Categories Mobile */}
+      <section className={styles.categoriesSection}>
+        <div className={styles.container}>
+          <h3 className={styles.sectionTitle}>Catégories</h3>
+          <div className={styles.categoriesGrid}>
             {categories.map((category) => (
               <button
                 key={category.id}
-                className={`category-card ${selectedCategory === category.id ? 'active' : ''}`}
+                className={`${styles.categoryCard} ${selectedCategory === category.id ? styles.active : ''}`}
                 onClick={() => setSelectedCategory(category.id)}
-                style={{ '--category-color': category.color }}
               >
-                <span className="category-icon">{category.icon}</span>
-                <span className="category-name">{category.name}</span>
+                <span className={styles.categoryIcon}>{category.icon}</span>
+                <span className={styles.categoryName}>{category.name}</span>
               </button>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Flash Sales Carousel */}
+      {/* Flash Sales - Simplified for mobile */}
       {displaySaleProducts.length > 0 && (
-        <section className="flash-sales">
-          <div className="container">
-            <Carousel 
-              items={displaySaleProducts} 
-              title="⚡ Ventes Flash - Offres limitées"
-              autoPlay={true}
-              interval={3000}
-            />
+        <section className={styles.productsSection}>
+          <div className={styles.container}>
+            <h3 className={styles.sectionTitle}>⚡ Ventes Flash - Offres limitées</h3>
+            <div className={styles.productsGrid}>
+              {displaySaleProducts.slice(0, 2).map((product) => (
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                  onToggleFavorite={handleToggleFavorite}
+                  onViewDetails={() => navigate(`/product/${product._id}`)}
+                  isFavorite={favorites.some(item => item._id === product._id)}
+                />
+              ))}
+            </div>
           </div>
         </section>
       )}
 
-      {/* Featured Products */}
-      <section className="products-section">
-        <div className="container">
-          <h3 className="section-title">
+      {/* Featured Products Mobile */}
+      <section className={styles.productsSection}>
+        <div className={styles.container}>
+          <h3 className={styles.sectionTitle}>
             {selectedCategory === 'all' ? 'Produits en vedette' : `Catégorie: ${categories.find(c => c.id === selectedCategory)?.name}`}
           </h3>
-          <div className="products-grid">
+          <div className={styles.productsGrid}>
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product) => (
                 <ProductCard
@@ -242,11 +309,11 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
                 />
               ))
             ) : (
-              <div className="empty-products">
+              <div style={{ textAlign: 'center', padding: '3rem 1.5rem' }}>
                 {!isAuthenticated && (
-                  <p>
+                  <p style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
                     <button 
-                      className="signin-btn" 
+                      className={styles.signupBtn} 
                       onClick={() => handleShowLogin('signup')}
                     >
                       Inscrivez-vous
@@ -260,53 +327,49 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         </div>
       </section>
 
-      {/* Newsletter */}
-      <section className="newsletter-section">
-        <div className="container">
-          <div className="newsletter-card">
-            <h3>Restez informé(e) des dernières nouveautés</h3>
-            <p>Recevez nos offres exclusives et les tendances beauté</p>
-            <div className="newsletter-form">
-              <input 
-                type="email" 
-                placeholder="Votre adresse email"
-                className="newsletter-input"
-              />
-              <button className="newsletter-btn">S'abonner</button>
-            </div>
+      {/* Newsletter Mobile */}
+      <section className={styles.newsletterSection}>
+        <div className={styles.newsletterCard}>
+          <h3>Restez informé(e) des dernières nouveautés</h3>
+          <p>Recevez nos offres exclusives et les tendances beauté</p>
+          <div className={styles.newsletterForm}>
+            <input 
+              type="email" 
+              placeholder="Votre adresse email"
+              className={styles.newsletterInput}
+            />
+            <button className={styles.newsletterBtn}>S'abonner</button>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="ecommerce-footer">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-section">
-              <h4>Entre Coiffeur</h4>
-              <p>Votre marketplace beauté & coiffure de référence</p>
-            </div>
-            <div className="footer-section">
-              <h4>Liens utiles</h4>
-              <ul>
-                <li><a href="#apropos">À propos</a></li>
-                <li><a href="/blog">Blog</a></li>
-                <li><a href="/community">Community</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="#faq">FAQ</a></li>
-              </ul>
-            </div>
-            <div className="footer-section">
-              <h4>Service client</h4>
-              <ul>
-                <li><a href="#">Retours</a></li>
-                <li><a href="#">Garantie</a></li>
-              </ul>
-            </div>
+      {/* Footer Mobile */}
+      <footer className={styles.ecommerceFooter}>
+        <div className={styles.footerContent}>
+          <div className={styles.footerSection}>
+            <h4>Entre Coiffeur</h4>
+            <p>Votre marketplace beauté & coiffure de référence</p>
           </div>
-          <div className="footer-bottom">
-            <p>&copy; 2025 Entre Coiffeur - Tous droits réservés</p>
+          <div className={styles.footerSection}>
+            <h4>Liens utiles</h4>
+            <ul>
+              <li><a href="#apropos">À propos</a></li>
+              <li><a href="/blog">Blog</a></li>
+              <li><a href="/community">Community</a></li>
+              <li><a href="#contact">Contact</a></li>
+              <li><a href="#faq">FAQ</a></li>
+            </ul>
           </div>
+          <div className={styles.footerSection}>
+            <h4>Service client</h4>
+            <ul>
+              <li><a href="#">Retours</a></li>
+              <li><a href="#">Garantie</a></li>
+            </ul>
+          </div>
+        </div>
+        <div className={styles.footerBottom}>
+          <p>&copy; 2025 Entre Coiffeur - Tous droits réservés</p>
         </div>
       </footer>
 
