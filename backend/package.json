@@ -1,0 +1,16 @@
+{
+  "name": "entre-coiffeur-backend",
+  "version": "1.0.0",
+  "description": "Backend for Entre Coiffeur marketplace",
+  "main": "index.js",
+  "scripts": {
+    "dev": "convex dev"
+  },
+  "dependencies": {
+    "convex": "^1.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "typescript": "^4.9.0"
+  }
+}
