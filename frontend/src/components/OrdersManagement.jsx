@@ -86,16 +86,16 @@ const OrdersManagement = () => {
   }
 
   return (
-    <div className="orders-management">
-      <div className="orders-header">
+    <div className="modern-orders-management">
+      <div className="modern-orders-header">
         <div className="header-content">
           <h2>📋 Gestion des Commandes</h2>
-          <p>Gérez toutes les commandes de la plateforme</p>
+          <p>Gérez toutes les commandes de la plateforme avec style</p>
         </div>
       </div>
 
       {/* Filtres et recherche */}
-      <div className="orders-filters">
+      <div className="modern-orders-filters">
         <div className="search-box">
           <input
             type="text"
@@ -122,7 +122,7 @@ const OrdersManagement = () => {
       </div>
 
       {/* Statistiques rapides */}
-      <div className="orders-stats">
+      <div className="modern-orders-stats">
         <div className="stat-card">
           <div className="stat-icon">📋</div>
           <div className="stat-info">
@@ -154,10 +154,10 @@ const OrdersManagement = () => {
       </div>
 
       {/* Tableau des commandes */}
-      <div className="orders-table-container">
+      <div className="modern-orders-table-container">
         {filteredOrders.length > 0 ? (
           <div className="table-wrapper">
-            <table className="orders-table">
+            <table className="modern-orders-table">
               <thead>
                 <tr>
                   <th>Commande</th>

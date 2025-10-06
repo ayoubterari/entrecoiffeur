@@ -136,14 +136,14 @@ const ProductsManagement = () => {
   }
 
   return (
-    <div className="products-management">
-      <div className="products-header">
+    <div className="modern-products-management">
+      <div className="modern-products-header">
         <div className="header-content">
           <h2>📦 Gestion des Produits</h2>
-          <p>Gérez tous les produits de la plateforme</p>
+          <p>Gérez tous les produits de la plateforme avec style</p>
         </div>
         <button 
-          className="add-product-btn"
+          className="modern-add-product-btn"
           onClick={() => setShowAddProduct(true)}
         >
           ➕ Ajouter un produit
@@ -151,7 +151,7 @@ const ProductsManagement = () => {
       </div>
 
       {/* Filtres et recherche */}
-      <div className="products-filters">
+      <div className="modern-products-filters">
         <div className="search-box">
           <input
             type="text"
@@ -178,7 +178,7 @@ const ProductsManagement = () => {
       </div>
 
       {/* Statistiques rapides */}
-      <div className="products-stats">
+      <div className="modern-products-stats">
         <div className="stat-card">
           <div className="stat-icon">📦</div>
           <div className="stat-info">
@@ -210,10 +210,10 @@ const ProductsManagement = () => {
       </div>
 
       {/* Tableau des produits */}
-      <div className="products-table-container">
+      <div className="modern-products-table-container">
         {filteredProducts.length > 0 ? (
           <div className="table-wrapper">
-            <table className="products-table">
+            <table className="modern-products-table">
               <thead>
                 <tr>
                   <th>Image</th>

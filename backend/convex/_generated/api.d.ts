@@ -14,9 +14,11 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as auth from "../auth.js";
+import type * as commissions from "../commissions.js";
 import type * as community from "../community.js";
 import type * as functions_mutations_blog from "../functions/mutations/blog.js";
 import type * as functions_queries_blog from "../functions/queries/blog.js";
+import type * as netVendeur from "../netVendeur.js";
 import type * as orders from "../orders.js";
 import type * as products from "../products.js";
 
@@ -30,9 +32,11 @@ import type * as products from "../products.js";
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  commissions: typeof commissions;
   community: typeof community;
   "functions/mutations/blog": typeof functions_mutations_blog;
   "functions/queries/blog": typeof functions_queries_blog;
+  netVendeur: typeof netVendeur;
   orders: typeof orders;
   products: typeof products;
 }>;

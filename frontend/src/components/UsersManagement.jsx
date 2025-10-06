@@ -138,14 +138,14 @@ const UsersManagement = () => {
   }
 
   return (
-    <div className="users-management">
-      <div className="users-header">
+    <div className="modern-users-management">
+      <div className="modern-users-header">
         <div className="header-content">
           <h2>👥 Gestion des Utilisateurs</h2>
-          <p>Gérez tous les utilisateurs de la plateforme</p>
+          <p>Gérez tous les utilisateurs de la plateforme avec style</p>
         </div>
         <button 
-          className="add-user-btn"
+          className="modern-add-user-btn"
           onClick={() => setShowAddUser(true)}
         >
           ➕ Ajouter un utilisateur
@@ -153,7 +153,7 @@ const UsersManagement = () => {
       </div>
 
       {/* Filtres et recherche */}
-      <div className="users-filters">
+      <div className="modern-users-filters">
         <div className="search-box">
           <input
             type="text"
@@ -173,13 +173,13 @@ const UsersManagement = () => {
             <option value="particulier">👤 Particuliers</option>
             <option value="professionnel">💼 Professionnels</option>
             <option value="grossiste">🏢 Grossistes</option>
-            <option value="superadmin">👑 Super Admins</option>
+            <option value="superadmin">👑 Super Admin</option>
           </select>
         </div>
       </div>
 
       {/* Statistiques rapides */}
-      <div className="users-stats">
+      <div className="modern-users-stats">
         <div className="stat-card">
           <div className="stat-icon">👥</div>
           <div className="stat-info">
@@ -187,41 +187,13 @@ const UsersManagement = () => {
             <p>Total utilisateurs</p>
           </div>
         </div>
-        <div className="stat-card">
-          <div className="stat-icon">👤</div>
-          <div className="stat-info">
-            <h3>{allUsers?.filter(u => u.userType === 'particulier').length || 0}</h3>
-            <p>Particuliers</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">💼</div>
-          <div className="stat-info">
-            <h3>{allUsers?.filter(u => u.userType === 'professionnel').length || 0}</h3>
-            <p>Professionnels</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">🏢</div>
-          <div className="stat-info">
-            <h3>{allUsers?.filter(u => u.userType === 'grossiste').length || 0}</h3>
-            <p>Grossistes</p>
-          </div>
-        </div>
       </div>
 
       {/* Tableau des utilisateurs */}
-      <div className="users-table-container">
+      <div className="modern-users-table-container">
         {filteredUsers.length > 0 ? (
-          <>
-            <div className="table-info">
-              <p>📊 Affichage de {filteredUsers.length} utilisateur(s) sur {allUsers?.length || 0} total</p>
-              {filteredUsers.length > 5 && (
-                <p className="scroll-hint">💡 Faites défiler vers le bas pour voir tous les utilisateurs</p>
-              )}
-            </div>
-            <div className="table-wrapper">
-              <table className="users-table">
+          <div className="table-wrapper">
+            <table className="modern-users-table">
               <thead>
                 <tr>
                   <th>Avatar</th>
@@ -298,8 +270,7 @@ const UsersManagement = () => {
                 ))}
               </tbody>
             </table>
-            </div>
-          </>
+          </div>
         ) : (
           <div className="empty-state">
             <div className="empty-icon">👥</div>

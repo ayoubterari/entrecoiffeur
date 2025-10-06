@@ -7,6 +7,8 @@ import ProductsManagement from '../components/ProductsManagement'
 import OrdersManagement from '../components/OrdersManagement'
 import CategoriesManagement from '../components/CategoriesManagement'
 import BlogManagement from '../components/BlogManagement'
+import CommissionManagement from '../components/CommissionManagement'
+import NetVendeurManagement from '../components/NetVendeurManagement'
 
 const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userType, onLogout }) => {
   const navigate = useNavigate()
@@ -160,6 +162,20 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
             <span>Commandes</span>
           </div>
           <div 
+            className={`nav-item ${activeTab === 'commissions' ? 'active' : ''}`}
+            onClick={() => setActiveTab('commissions')}
+          >
+            <span className="nav-icon">💰</span>
+            <span>Commissions</span>
+          </div>
+          <div 
+            className={`nav-item ${activeTab === 'netvendeur' ? 'active' : ''}`}
+            onClick={() => setActiveTab('netvendeur')}
+          >
+            <span className="nav-icon">💸</span>
+            <span>Net Vendeur</span>
+          </div>
+          <div 
             className={`nav-item ${activeTab === 'blog' ? 'active' : ''}`}
             onClick={() => setActiveTab('blog')}
           >
@@ -170,7 +186,7 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
             className={`nav-item ${activeTab === 'stats' ? 'active' : ''}`}
             onClick={() => setActiveTab('stats')}
           >
-            <span className="nav-icon">📊</span>
+            <span className="nav-icon">📈</span>
             <span>Statistiques</span>
           </div>
           <div 
@@ -356,13 +372,21 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
             <OrdersManagement />
           )}
 
+          {activeTab === 'commissions' && (
+            <CommissionManagement />
+          )}
+
+          {activeTab === 'netvendeur' && (
+            <NetVendeurManagement />
+          )}
+
           {activeTab === 'blog' && (
             <BlogManagement userEmail={userEmail} />
           )}
 
           {activeTab === 'stats' && (
             <div className="admin-section">
-              <h2>📊 Statistiques</h2>
+              <h2>📈 Statistiques</h2>
               <p>Section en cours de développement...</p>
             </div>
           )}
