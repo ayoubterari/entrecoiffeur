@@ -7,4 +7,19 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false,
+    minify: 'terser',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          convex: ['convex']
+        }
+      }
+    }
+  },
+  base: '/'
 })

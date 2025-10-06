@@ -1,0 +1,17 @@
+node_modules
+.env.local
+.env
+*.log
+.DS_Store
+backend/node_modules
+backend/.env.local
+backend/.env
+frontend/node_modules
+*.bat
+.git
+README.md
+DESIGN_FEATURES.md
+ECOMMERCE_FEATURES.md
+MARKETPLACE_DESIGN.md
+QUICK_START.md
+BLOG_SYSTEM_GUIDE.md
