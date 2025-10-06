@@ -18,15 +18,68 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
   const [productToDelete, setProductToDelete] = useState(null)
   const [productImages, setProductImages] = useState([])
 
-  const tabs = [
-    { id: 'profile', name: 'Profil', icon: '👤' },
-    { id: 'products', name: 'Mes Produits', icon: '📦' },
-    { id: 'orders', name: 'Orders (Vendeur)', icon: '📋' },
-    { id: 'purchases', name: 'Mes Commandes', icon: '🛒' },
-    { id: 'analytics', name: 'Statistiques', icon: '📊' },
-    { id: 'settings', name: 'Paramètres', icon: '⚙️' },
-    { id: 'dev', name: 'Dev Tools', icon: '🛠️' },
-  ]
+  // Fonction pour vérifier les permissions d'ajout de produit
+  const canAddProduct = () => {
+    if (!userType) return false
+    
+    // Particulier : ne peut pas ajouter de produits
+    if (userType === 'particulier') return false
+    
+    // Professionnel : limité à 2 produits
+    if (userType === 'professionnel') {
+      const currentProductCount = userProducts?.length || 0
+      return currentProductCount < 2
+    }
+    
+    // Grossiste : aucune limite
+    if (userType === 'grossiste') return true
+    
+    return false
+  }
+
+  // Fonction pour obtenir le message de limitation
+  const getLimitationMessage = () => {
+    if (userType === 'particulier') {
+      return "Les particuliers ne peuvent pas vendre de produits. Vous pouvez uniquement acheter."
+    }
+    
+    if (userType === 'professionnel') {
+      const currentProductCount = userProducts?.length || 0
+      if (currentProductCount >= 2) {
+        return "Limite atteinte : Les professionnels peuvent ajouter maximum 2 produits."
+      }
+      return `Vous pouvez ajouter ${2 - currentProductCount} produit(s) supplémentaire(s).`
+    }
+    
+    if (userType === 'grossiste') {
+      return "En tant que grossiste, vous pouvez ajouter un nombre illimité de produits."
+    }
+    
+    return ""
+  }
+
+  // Filtrer les onglets selon le rôle utilisateur
+  const getAvailableTabs = () => {
+    const baseTabs = [
+      { id: 'profile', name: 'Profil', icon: '👤' },
+      { id: 'purchases', name: 'Mes Commandes', icon: '🛒' },
+      { id: 'settings', name: 'Paramètres', icon: '⚙️' },
+      { id: 'dev', name: 'Dev Tools', icon: '🛠️' },
+    ]
+    
+    // Ajouter les onglets de vente uniquement pour professionnels et grossistes
+    if (userType === 'professionnel' || userType === 'grossiste') {
+      baseTabs.splice(2, 0, 
+        { id: 'products', name: 'Mes Produits', icon: '📦' },
+        { id: 'orders', name: 'Orders (Vendeur)', icon: '📋' },
+        { id: 'analytics', name: 'Statistiques', icon: '📊' }
+      )
+    }
+    
+    return baseTabs
+  }
+  
+  const tabs = getAvailableTabs()
 
   // Get categories and user products
   const categories = useQuery(api.products.getCategories)
@@ -484,13 +537,32 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                 <div className="header-content">
                   <h2>📦 Mes Produits</h2>
                   <p>Gérez votre catalogue de produits</p>
+                  {/* Message d'information sur les limitations */}
+                  <div className={`role-limitation-info ${userType}`}>
+                    <span className="role-badge">
+                      {userType === 'professionnel' && '💼 Professionnel'}
+                      {userType === 'grossiste' && '🏢 Grossiste'}
+                    </span>
+                    <p className="limitation-message">{getLimitationMessage()}</p>
+                  </div>
                 </div>
-                <button 
-                  className="add-product-btn"
-                  onClick={() => setShowAddProduct(!showAddProduct)}
-                >
-                  {showAddProduct ? '❌ Annuler' : '➕ Ajouter un produit'}
-                </button>
+                {canAddProduct() && (
+                  <button 
+                    className="add-product-btn"
+                    onClick={() => setShowAddProduct(!showAddProduct)}
+                  >
+                    {showAddProduct ? '❌ Annuler' : '➕ Ajouter un produit'}
+                  </button>
+                )}
+                {!canAddProduct() && userType !== 'particulier' && (
+                  <button 
+                    className="add-product-btn disabled"
+                    disabled
+                    title={getLimitationMessage()}
+                  >
+                    🚫 Limite atteinte
+                  </button>
+                )}
               </div>
 
               {showAddProduct && (
@@ -756,13 +828,30 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
               <div className="products-list">
                 {userProducts?.length === 0 ? (
                   <div className="empty-state">
-                    <p>Vous n'avez pas encore ajouté de produits.</p>
-                    <button 
-                      className="add-product-btn"
-                      onClick={() => setShowAddProduct(true)}
-                    >
-                      Ajouter votre premier produit
-                    </button>
+                    <div className="empty-icon">📦</div>
+                    <h3>Aucun produit ajouté</h3>
+                    <p>
+                      {userType === 'particulier' 
+                        ? "En tant que particulier, vous ne pouvez pas vendre de produits. Explorez notre marketplace pour faire vos achats !"
+                        : "Vous n'avez pas encore ajouté de produits à votre catalogue."
+                      }
+                    </p>
+                    {canAddProduct() && (
+                      <button 
+                        className="add-product-btn"
+                        onClick={() => setShowAddProduct(true)}
+                      >
+                        ➕ Ajouter votre premier produit
+                      </button>
+                    )}
+                    {userType === 'particulier' && (
+                      <button 
+                        className="browse-products-btn"
+                        onClick={() => navigate('/')}
+                      >
+                        🛍️ Parcourir les produits
+                      </button>
+                    )}
                   </div>
                 ) : (
                   <div className="products-grid">

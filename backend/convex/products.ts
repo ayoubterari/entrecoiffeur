@@ -121,10 +121,35 @@ export const createProduct = mutation({
     onSale: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    // Get the seller information to check user type
+    const seller = await ctx.db.get(args.sellerId);
+    if (!seller) {
+      throw new ConvexError("Seller not found");
+    }
+
+    // Check role-based limitations
+    if (seller.userType === "particulier") {
+      throw new ConvexError("Les particuliers ne peuvent pas vendre de produits");
+    }
+
+    // For professionals, check the 2-product limit
+    if (seller.userType === "professionnel") {
+      const existingProducts = await ctx.db
+        .query("products")
+        .filter((q) => q.eq(q.field("sellerId"), args.sellerId))
+        .collect();
+      
+      if (existingProducts.length >= 2) {
+        throw new ConvexError("Limite atteinte : Les professionnels peuvent ajouter maximum 2 produits");
+      }
+    }
+
+    // Grossistes have no limits, so we continue normally
+
     // Get the category name from categoryId
     const category = await ctx.db.get(args.categoryId);
     if (!category) {
-      throw new Error("Category not found");
+      throw new ConvexError("Category not found");
     }
 
     const productId = await ctx.db.insert("products", {

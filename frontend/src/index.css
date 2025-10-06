@@ -4409,6 +4409,84 @@ body.dashboard-body #root {
   }
 }
 
+/* Role-based limitations styles */
+.role-limitation-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 107, 157, 0.2);
+}
+
+.role-limitation-info.professionnel {
+  border-color: rgba(102, 126, 234, 0.3);
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.role-limitation-info.grossiste {
+  border-color: rgba(76, 217, 100, 0.3);
+  background: rgba(76, 217, 100, 0.05);
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #FF6B9D 0%, #C44569 100%);
+  color: white;
+}
+
+.role-limitation-info.professionnel .role-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.role-limitation-info.grossiste .role-badge {
+  background: linear-gradient(135deg, #4cd964 0%, #5ac8fa 100%);
+}
+
+.limitation-message {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.add-product-btn.disabled {
+  background: #e9ecef !important;
+  color: #6c757d !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+  transform: none !important;
+}
+
+.add-product-btn.disabled:hover {
+  background: #e9ecef !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Enhanced empty state for particuliers */
+.empty-state .browse-products-btn {
+  background: linear-gradient(135deg, #FF6B9D 0%, #C44569 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.empty-state .browse-products-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 107, 157, 0.3);
+}
+
 /* Dashboard Orders & Purchases Styles */
 .orders-header,
 .purchases-header {
