@@ -195,4 +195,13 @@ export default defineSchema({
   }).index("by_user", ["userId"])
     .index("by_product", ["productId"])
     .index("by_user_product", ["userId", "productId"]),
+
+  // Follows table - Users following sellers
+  follows: defineTable({
+    followerId: v.id("users"), // User who follows
+    followedId: v.id("users"), // Seller being followed
+    createdAt: v.number(),
+  }).index("by_follower", ["followerId"])
+    .index("by_followed", ["followedId"])
+    .index("by_follower_followed", ["followerId", "followedId"]),
 });

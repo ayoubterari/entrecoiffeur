@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useQuery } from 'convex/react'
+import { useQuery, useMutation } from 'convex/react'
 import { api } from '../lib/convex'
 import ProductCard from '../components/ProductCard'
 import './SellerStore.css'
@@ -10,6 +10,9 @@ const SellerStore = () => {
   const navigate = useNavigate()
   const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState([])
+
+  // Get current user ID from localStorage
+  const currentUserId = localStorage.getItem('userId')
 
   // Récupérer les informations du vendeur
   const seller = useQuery(
@@ -26,16 +29,22 @@ const SellerStore = () => {
   // Récupérer les catégories pour les filtres
   const categories = useQuery(api.products.getCategories)
 
-  const [selectedCategory, setSelectedCategory] = useState('all')
-  const [searchQuery, setSearchQuery] = useState('')
+  // Follow-related queries and mutations
+  const followersCount = useQuery(
+    api.follows.getFollowersCount,
+    sellerId && sellerId !== 'undefined' ? { sellerId } : "skip"
+  )
 
-  // Filtrer les produits
-  const filteredProducts = sellerProducts?.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.description.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory
-    return matchesSearch && matchesCategory
-  }) || []
+  const isFollowing = useQuery(
+    api.follows.isFollowing,
+    currentUserId && sellerId && sellerId !== 'undefined' ? 
+    { followerId: currentUserId, followedId: sellerId } : "skip"
+  )
+
+  const toggleFollow = useMutation(api.follows.toggleFollow)
+
+  // Afficher tous les produits sans filtrage
+  const filteredProducts = sellerProducts || []
 
   const handleAddToCart = (product) => {
     setCart(prev => {
@@ -61,6 +70,28 @@ const SellerStore = () => {
     })
   }
 
+  const handleFollowClick = async () => {
+    if (!currentUserId) {
+      // Redirect to login if not authenticated
+      navigate('/login')
+      return
+    }
+
+    if (currentUserId === sellerId) {
+      // Can't follow yourself
+      return
+    }
+
+    try {
+      await toggleFollow({
+        followerId: currentUserId,
+        followedId: sellerId
+      })
+    } catch (error) {
+      console.error('Error toggling follow:', error)
+    }
+  }
+
   if (!seller || !sellerProducts) {
     return (
       <div className="seller-store-loading">
@@ -71,84 +102,170 @@ const SellerStore = () => {
 
   return (
     <div className="seller-store">
-      {/* Header du store */}
+      {/* Social Media Style Header */}
       <div className="seller-store-header">
         <div className="seller-store-header-content">
           <button 
             className="back-btn"
             onClick={() => navigate(-1)}
+            style={{
+              background: 'linear-gradient(135deg, #ff6b9d, #fd79a8)',
+              color: 'white',
+              border: '2px solid #ff6b9d',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '50px',
+              fontWeight: '600',
+              fontSize: '0.95rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              cursor: 'pointer',
+              boxShadow: '0 4px 15px rgba(255, 107, 157, 0.3)',
+              zIndex: 10,
+              position: 'relative',
+              opacity: 1,
+              visibility: 'visible'
+            }}
           >
-            Retour
+            ← Retour
           </button>
           
-          <div className="seller-info">
-            <div className="seller-avatar">
-              <div className="avatar-circle">
-                {seller.firstName?.charAt(0)?.toUpperCase() || 'V'}
+          {/* Profile Section - Social Media Style */}
+          <div className="profile-section">
+            <div className="profile-header">
+              <div className="seller-avatar">
+                <div className="avatar-logo">
+                  <div className="logo-background">
+                    <div className="beauty-pattern"></div>
+                    <div className="sparkle sparkle-1">✨</div>
+                    <div className="sparkle sparkle-2">💫</div>
+                    <div className="sparkle sparkle-3">⭐</div>
+                  </div>
+                  <div className="logo-letter">
+                    {seller.firstName?.charAt(0)?.toUpperCase() || 'V'}
+                  </div>
+                  <div className="logo-crown">👑</div>
+                  <div className="beauty-icons">
+                    <span className="beauty-icon icon-1">💄</span>
+                    <span className="beauty-icon icon-2">✂️</span>
+                    <span className="beauty-icon icon-3">💅</span>
+                  </div>
+                </div>
+                <div className="online-indicator"></div>
+              </div>
+              
+              <div className="profile-info">
+                <div className="profile-names">
+                  <h1 className="seller-name">
+                    {seller.firstName} {seller.lastName}
+                  </h1>
+                  <p className="seller-username">@{seller.firstName?.toLowerCase()}{seller.lastName?.toLowerCase()}</p>
+                </div>
+                
+                <div className="profile-stats">
+                  <div className="stat-item">
+                    <span className="stat-number">{sellerProducts.length}</span>
+                    <span className="stat-label">Produits</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-number">
+                      {followersCount !== undefined ? 
+                        followersCount >= 1000 ? 
+                          `${(followersCount / 1000).toFixed(1)}K` : 
+                          followersCount 
+                        : '0'
+                      }
+                    </span>
+                    <span className="stat-label">Followers</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-number">4.8</span>
+                    <span className="stat-label">Rating</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="profile-actions">
+                {currentUserId && currentUserId !== sellerId ? (
+                  <button 
+                    className={`follow-btn ${isFollowing ? 'following' : ''}`}
+                    onClick={handleFollowClick}
+                    disabled={!currentUserId}
+                  >
+                    {isFollowing ? (
+                      <>
+                        <span className="follow-icon">✓</span>
+                        Suivi(e)
+                      </>
+                    ) : (
+                      <>
+                        <span className="follow-icon">+</span>
+                        Suivre
+                      </>
+                    )}
+                  </button>
+                ) : currentUserId === sellerId ? (
+                  <button className="follow-btn own-store" disabled>
+                    <span className="follow-icon">👤</span>
+                    Votre store
+                  </button>
+                ) : (
+                  <button 
+                    className="follow-btn"
+                    onClick={() => navigate('/login')}
+                  >
+                    <span className="follow-icon">+</span>
+                    Suivre
+                  </button>
+                )}
+                <button className="message-btn">Message</button>
+                <button className="share-btn">Partager</button>
               </div>
             </div>
             
-            <div className="seller-details">
-              <h1 className="seller-name">
-                {seller.firstName} {seller.lastName}
-              </h1>
-              <p className="seller-email">{seller.email}</p>
-              <div className="seller-stats">
-                <span className="stat">
-                  📦 {sellerProducts.length} produit{sellerProducts.length > 1 ? 's' : ''}
-                </span>
-                <span className="stat">
-                  🏷️ {seller.userType === 'professionnel' ? 'Professionnel' : 'Particulier'}
-                </span>
-                {seller.companyName && (
-                  <span className="stat">
-                    🏢 {seller.companyName}
-                  </span>
-                )}
+            {/* Bio Section */}
+            <div className="profile-bio">
+              <p className="bio-text">
+                ✨ {seller.userType === 'professionnel' ? 'Professionnel' : 'Passionné'} de beauté & coiffure
+                {seller.companyName && ` • ${seller.companyName}`}
+              </p>
+              <p className="bio-description">
+                🌟 Découvrez ma sélection de produits de qualité premium
+                📍 Livraison rapide partout en France
+                💬 N'hésitez pas à me contacter pour des conseils personnalisés
+              </p>
+              <div className="profile-badges">
+                <span className="badge verified">✓ Vérifié</span>
+                <span className="badge pro">👑 Pro</span>
+                <span className="badge fast-shipping">🚀 Expédition rapide</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Filtres et recherche */}
-      <div className="store-filters">
-        <div className="filters-row">
-          <div className="search-box">
-            <input
-              type="text"
-              placeholder="Rechercher dans ce store..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
-            />
-            <span className="search-icon">🔍</span>
-          </div>
-
-          <div className="category-filters">
-            <button
-              className={`filter-btn ${selectedCategory === 'all' ? 'active' : ''}`}
-              onClick={() => setSelectedCategory('all')}
-            >
-              Tous ({sellerProducts.length})
-            </button>
-            {categories?.map((category) => {
-              const categoryCount = sellerProducts.filter(p => p.category === category.name).length
-              if (categoryCount === 0) return null
-              
-              return (
-                <button
-                  key={category._id}
-                  className={`filter-btn ${selectedCategory === category.name ? 'active' : ''}`}
-                  onClick={() => setSelectedCategory(category.name)}
-                >
-                  {category.icon} {category.name} ({categoryCount})
-                </button>
-              )
-            })}
-          </div>
+      {/* Social Media Navigation Tabs */}
+      <div className="profile-navigation">
+        <div className="nav-tabs">
+          <button className="nav-tab active">
+            <span className="tab-icon">🛍️</span>
+            <span className="tab-text">Boutique</span>
+          </button>
+          <button className="nav-tab">
+            <span className="tab-icon">📸</span>
+            <span className="tab-text">Posts</span>
+          </button>
+          <button className="nav-tab">
+            <span className="tab-icon">⭐</span>
+            <span className="tab-text">Avis</span>
+          </button>
+          <button className="nav-tab">
+            <span className="tab-icon">ℹ️</span>
+            <span className="tab-text">À propos</span>
+          </button>
         </div>
       </div>
+
 
       {/* Produits du vendeur */}
       <div className="store-products">
