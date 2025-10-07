@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../lib/convex'
@@ -11,8 +11,14 @@ const SellerStore = () => {
   const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState([])
 
-  // Get current user ID from localStorage
-  const currentUserId = localStorage.getItem('userId')
+  // Get current user ID from localStorage with safety check
+  const [currentUserId, setCurrentUserId] = useState(null)
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentUserId(localStorage.getItem('userId'))
+    }
+  }, [])
 
   // Récupérer les informations du vendeur
   const seller = useQuery(
@@ -26,8 +32,6 @@ const SellerStore = () => {
     sellerId && sellerId !== 'undefined' ? { sellerId } : "skip"
   )
 
-  // Récupérer les catégories pour les filtres
-  const categories = useQuery(api.products.getCategories)
 
   // Follow-related queries and mutations
   const followersCount = useQuery(
@@ -43,8 +47,8 @@ const SellerStore = () => {
 
   const toggleFollow = useMutation(api.follows.toggleFollow)
 
-  // Afficher tous les produits sans filtrage
-  const filteredProducts = sellerProducts || []
+  // Afficher tous les produits sans filtrage - avec vérification de sécurité
+  const filteredProducts = Array.isArray(sellerProducts) ? sellerProducts : []
 
   const handleAddToCart = (product) => {
     setCart(prev => {
@@ -71,31 +75,48 @@ const SellerStore = () => {
   }
 
   const handleFollowClick = async () => {
-    if (!currentUserId) {
-      // Redirect to login if not authenticated
-      navigate('/login')
-      return
-    }
-
-    if (currentUserId === sellerId) {
-      // Can't follow yourself
-      return
-    }
-
     try {
+      if (!currentUserId) {
+        // Redirect to login if not authenticated
+        navigate('/login')
+        return
+      }
+
+      if (currentUserId === sellerId) {
+        // Can't follow yourself
+        return
+      }
+
       await toggleFollow({
         followerId: currentUserId,
         followedId: sellerId
       })
     } catch (error) {
       console.error('Error toggling follow:', error)
+      // Optionally show user-friendly error message
     }
   }
 
-  if (!seller || !sellerProducts) {
+  // Loading state avec vérification de sécurité
+  if (!seller || sellerProducts === undefined) {
     return (
       <div className="seller-store-loading">
         <div className="loading-spinner">Chargement du store...</div>
+      </div>
+    )
+  }
+
+  // Vérification de sécurité pour les données du vendeur
+  if (!seller || typeof seller !== 'object') {
+    return (
+      <div className="seller-store-error">
+        <div className="error-message">
+          <h3>Erreur de chargement</h3>
+          <p>Impossible de charger les informations du vendeur</p>
+          <button onClick={() => navigate(-1)} className="back-btn">
+            ← Retour
+          </button>
+        </div>
       </div>
     )
   }
@@ -271,16 +292,8 @@ const SellerStore = () => {
       <div className="store-products">
         <div className="products-header">
           <h2>
-            {selectedCategory === 'all' 
-              ? `Tous les produits (${filteredProducts.length})`
-              : `${selectedCategory} (${filteredProducts.length})`
-            }
+            Tous les produits ({filteredProducts.length})
           </h2>
-          {searchQuery && (
-            <p className="search-results">
-              Résultats pour "{searchQuery}"
-            </p>
-          )}
         </div>
 
         {filteredProducts.length > 0 ? (
@@ -298,25 +311,11 @@ const SellerStore = () => {
           </div>
         ) : (
           <div className="no-products">
-            {searchQuery ? (
-              <div className="no-results">
-                <span className="no-results-icon">🔍</span>
-                <h3>Aucun produit trouvé</h3>
-                <p>Essayez avec d'autres mots-clés</p>
-                <button 
-                  className="clear-search-btn"
-                  onClick={() => setSearchQuery('')}
-                >
-                  Effacer la recherche
-                </button>
-              </div>
-            ) : (
-              <div className="empty-store">
-                <span className="empty-icon">📦</span>
-                <h3>Aucun produit dans cette catégorie</h3>
-                <p>Ce vendeur n'a pas encore ajouté de produits dans cette catégorie</p>
-              </div>
-            )}
+            <div className="empty-store">
+              <span className="empty-icon">📦</span>
+              <h3>Aucun produit disponible</h3>
+              <p>Ce vendeur n'a pas encore ajouté de produits à sa boutique</p>
+            </div>
           </div>
         )}
       </div>
