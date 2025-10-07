@@ -479,8 +479,9 @@ const Community = ({ isAuthenticated, userEmail, userFirstName, userLastName }) 
                       <button 
                         className="action-btn comments-btn"
                         onClick={() => setExpandedPost(expandedPost === post._id ? null : post._id)}
+                        title={`${post.commentCount || post.comments || 0} commentaires`}
                       >
-                        💬 {post.commentCount || post.comments || 0} commentaires
+                        💬
                       </button>
                       
                       <button 
@@ -488,11 +489,14 @@ const Community = ({ isAuthenticated, userEmail, userFirstName, userLastName }) 
                         onClick={() => setExpandedPost(expandedPost === post._id ? null : post._id)}
                         title="Commentaire audio"
                       >
-                        🎤 Audio
+                        🎤
                       </button>
                       
-                      <button className="action-btn share-btn">
-                        🔗 Partager
+                      <button 
+                        className="action-btn share-btn"
+                        title="Partager"
+                      >
+                        🔗
                       </button>
                     </div>
 
