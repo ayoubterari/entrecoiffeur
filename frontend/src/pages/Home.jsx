@@ -6,7 +6,7 @@ import Carousel from '../components/Carousel'
 import ProductCard from '../components/ProductCard'
 import styles from '../components/Home.module.css'
 
-const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName, onAddToCart, cart, onOpenCart, onShowLogin }) => {
+const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName, onAddToCart, cart, onOpenCart, onShowLogin, onToggleFavorite, favoritesCount, userId, onOpenFavorites }) => {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -16,6 +16,9 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   // Get real data from Convex
   const categoriesData = useQuery(api.products.getCategories)
   const allProducts = useQuery(api.products.getProducts, { limit: 20 })
+  
+  // Get user favorite product IDs for efficient checking
+  const userFavoriteIds = useQuery(api.favorites.getUserFavoriteIds, userId ? { userId } : "skip")
 
   // Redirection automatique pour les superadmins
   useEffect(() => {
@@ -101,14 +104,9 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
     onAddToCart(cartItem)
   }
 
-  const handleToggleFavorite = (product) => {
-    setFavorites(prev => {
-      const isFavorite = prev.some(item => item._id === product._id)
-      if (isFavorite) {
-        return prev.filter(item => item._id !== product._id)
-      }
-      return [...prev, product]
-    })
+  // Helper function to check if a product is favorite
+  const isProductFavorite = (productId) => {
+    return userFavoriteIds?.includes(productId) || false
   }
 
   const filteredProducts = selectedCategory === 'all' 
@@ -165,8 +163,12 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
 
           {/* Actions à droite */}
           <div className={styles.headerActions}>
-            <button className={styles.headerBtn} title="Favoris">
-              ❤️ <span className={styles.badge}>{favorites.length}</span>
+            <button 
+              className={styles.headerBtn} 
+              title="Favoris"
+              onClick={onOpenFavorites}
+            >
+              ❤️ <span className={styles.badge}>{favoritesCount}</span>
             </button>
             <button 
               className={styles.headerBtn} 
@@ -274,9 +276,9 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
                   key={product._id}
                   product={product}
                   onAddToCart={handleAddToCart}
-                  onToggleFavorite={handleToggleFavorite}
+                  onToggleFavorite={onToggleFavorite}
                   onViewDetails={() => navigate(`/product/${product._id}`)}
-                  isFavorite={favorites.some(item => item._id === product._id)}
+                  isFavorite={isProductFavorite(product._id)}
                 />
               ))}
             </div>
@@ -297,9 +299,9 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
                   key={product._id}
                   product={product}
                   onAddToCart={handleAddToCart}
-                  onToggleFavorite={handleToggleFavorite}
+                  onToggleFavorite={onToggleFavorite}
                   onViewDetails={() => navigate(`/product/${product._id}`)}
-                  isFavorite={favorites.some(item => item._id === product._id)}
+                  isFavorite={isProductFavorite(product._id)}
                 />
               ))
             ) : (

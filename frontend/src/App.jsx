@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom'
-import { useQuery } from 'convex/react'
+import { useQuery, useMutation } from 'convex/react'
 import { api } from './lib/convex'
 import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
@@ -11,9 +11,11 @@ import BlogDynamic from './pages/BlogDynamic'
 import Community from './pages/Community'
 import Checkout from './pages/Checkout'
 import OrderSuccess from './pages/OrderSuccess'
+import Favorites from './pages/Favorites'
 import CartToast from './components/CartToast'
 import CartModal from './components/CartModal'
 import LoginModal from './components/LoginModal'
+import FavoritesModal from './components/FavoritesModal'
 
 // Wrapper pour ProductDetail qui utilise les paramètres d'URL
 function ProductDetailWrapper({ onAddToCart, isAuthenticated, onLogin }) {
@@ -35,7 +37,8 @@ function ProductDetailWrapper({ onAddToCart, isAuthenticated, onLogin }) {
   )
 }
 
-function App() {
+function AppContent() {
+  const navigate = useNavigate()
   const [userId, setUserId] = useState(localStorage.getItem('userId'))
   const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail'))
   const [userFirstName, setUserFirstName] = useState(localStorage.getItem('userFirstName'))
@@ -45,10 +48,17 @@ function App() {
   const [lastAddedItem, setLastAddedItem] = useState(null)
   const [showCartModal, setShowCartModal] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
+  const [showFavoritesModal, setShowFavoritesModal] = useState(false)
   const [loginMode, setLoginMode] = useState('signin')
 
   // Query to get current user info
   const currentUser = useQuery(api.auth.getCurrentUser, userId ? { userId } : "skip")
+  
+  // Query to get user favorites count
+  const favoritesCount = useQuery(api.favorites.getFavoritesCount, userId ? { userId } : "skip")
+  
+  // Mutation to toggle favorite
+  const toggleFavorite = useMutation(api.favorites.toggleFavorite)
 
   useEffect(() => {
     if (currentUser) {
@@ -148,8 +158,23 @@ function App() {
     localStorage.setItem('cart', JSON.stringify(newCart))
   }
 
+  const handleToggleFavorite = async (product) => {
+    if (!isAuthenticated) {
+      handleShowLogin('signin')
+      return
+    }
+
+    try {
+      await toggleFavorite({
+        userId,
+        productId: product._id
+      })
+    } catch (error) {
+      console.error('Erreur lors de la gestion des favoris:', error)
+    }
+  }
+
   return (
-    <Router>
       <div className="App">
         <Routes>
           {/* Page d'accueil */}
@@ -167,6 +192,10 @@ function App() {
                 cart={cart}
                 onOpenCart={() => setShowCartModal(true)}
                 onShowLogin={handleShowLogin}
+                onToggleFavorite={handleToggleFavorite}
+                favoritesCount={favoritesCount || 0}
+                userId={userId}
+                onOpenFavorites={() => setShowFavoritesModal(true)}
               />
             } 
           />
@@ -259,6 +288,20 @@ function App() {
             } 
           />
           
+          {/* Favorites */}
+          <Route 
+            path="/favorites" 
+            element={
+              <Favorites 
+                userId={userId}
+                onAddToCart={handleAddToCart}
+                onToggleFavorite={handleToggleFavorite}
+                isAuthenticated={isAuthenticated}
+                onLogin={handleShowLogin}
+              />
+            } 
+          />
+          
           {/* Route par défaut - redirection vers accueil */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
@@ -288,7 +331,29 @@ function App() {
           onLogin={handleLoginSuccess}
           initialMode={loginMode}
         />
+        
+        {/* Favorites Modal */}
+        <FavoritesModal
+          isOpen={showFavoritesModal}
+          onClose={() => setShowFavoritesModal(false)}
+          userId={userId}
+          onAddToCart={handleAddToCart}
+          onToggleFavorite={handleToggleFavorite}
+          onViewDetails={(productId) => {
+            setShowFavoritesModal(false)
+            navigate(`/product/${productId}`)
+          }}
+          isAuthenticated={isAuthenticated}
+          onLogin={handleShowLogin}
+        />
       </div>
+  )
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   )
 }

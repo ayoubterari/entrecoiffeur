@@ -186,4 +186,13 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   }),
+
+  // Favorites table
+  favorites: defineTable({
+    userId: v.id("users"),
+    productId: v.id("products"),
+    createdAt: v.number(),
+  }).index("by_user", ["userId"])
+    .index("by_product", ["productId"])
+    .index("by_user_product", ["userId", "productId"]),
 });
