@@ -133,8 +133,8 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
     }
     
     try {
-      // Convertir les images en URLs (temporaire - à remplacer par un service de stockage)
-      const imageUrls = productImages.map(img => img.url)
+      // Utiliser les storageIds des images uploadées
+      const imageStorageIds = productImages.map(img => img.storageId)
       
       await createProduct({
         name: productForm.name,
@@ -145,7 +145,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
         sellerId: userId,
         stock: parseInt(productForm.stock),
         tags: productForm.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
-        images: imageUrls,
+        images: imageStorageIds,
         featured: productForm.featured,
         onSale: productForm.onSale
       })
@@ -226,11 +226,22 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
       originalPrice: product.originalPrice?.toString() || '',
       categoryId: product.categoryId,
       stock: product.stock.toString(),
-      tags: product.tags.join(', '),
+      tags: product.tags?.join(', ') || '',
       images: product.images,
       featured: product.featured || false,
       onSale: product.onSale || false
     })
+    
+    // Convertir les images existantes pour le composant ImageUpload
+    const existingImages = product.images?.map((imageId, index) => ({
+      storageId: imageId,
+      name: `Image ${index + 1}`,
+      size: 0, // Taille inconnue pour les images existantes
+      type: 'image/jpeg', // Type par défaut
+      previewUrl: null // Sera chargé par ConvexImage
+    })) || []
+    
+    setProductImages(existingImages)
     setShowEditProduct(true)
   }
 
@@ -239,6 +250,9 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
     if (!editingProduct) return
 
     try {
+      // Utiliser les storageIds des images uploadées
+      const imageStorageIds = productImages.map(img => img.storageId)
+      
       await updateProduct({
         productId: editingProduct._id,
         name: productForm.name,
@@ -248,7 +262,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
         categoryId: productForm.categoryId,
         stock: parseInt(productForm.stock),
         tags: productForm.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
-        images: productForm.images,
+        images: imageStorageIds,
         featured: productForm.featured,
         onSale: productForm.onSale
       })
@@ -266,6 +280,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
         featured: false,
         onSale: false
       })
+      setProductImages([]) // Reset images
       setShowEditProduct(false)
       setEditingProduct(null)
       setToast({ message: 'Produit modifié avec succès !', type: 'success' })
@@ -278,6 +293,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
   const handleCancelEdit = () => {
     setShowEditProduct(false)
     setEditingProduct(null)
+    setProductImages([]) // Reset images
     setProductForm({
       name: '',
       description: '',
@@ -787,6 +803,13 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                             placeholder="ex: professionnel, bio, cheveux secs"
                           />
                         </div>
+
+                        {/* Upload d'images pour l'édition */}
+                        <ImageUpload 
+                          images={productImages}
+                          onImagesChange={setProductImages}
+                          maxImages={5}
+                        />
 
                         <div className="form-row">
                           <div className="form-group">

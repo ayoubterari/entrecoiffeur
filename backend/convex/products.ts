@@ -112,7 +112,7 @@ export const createProduct = mutation({
     description: v.string(),
     price: v.number(),
     originalPrice: v.optional(v.number()),
-    images: v.array(v.string()),
+    images: v.array(v.union(v.string(), v.id("_storage"))),
     categoryId: v.id("categories"),
     sellerId: v.id("users"), // Add sellerId as parameter
     stock: v.number(),
@@ -199,7 +199,7 @@ export const updateProduct = mutation({
     description: v.optional(v.string()),
     price: v.optional(v.number()),
     originalPrice: v.optional(v.number()),
-    images: v.optional(v.array(v.string())),
+    images: v.optional(v.array(v.union(v.string(), v.id("_storage")))),
     categoryId: v.optional(v.id("categories")),
     stock: v.optional(v.number()),
     tags: v.optional(v.array(v.string())),
@@ -208,6 +208,12 @@ export const updateProduct = mutation({
   },
   handler: async (ctx, args) => {
     const { productId, categoryId, ...updates } = args;
+    
+    // Check if product exists
+    const existingProduct = await ctx.db.get(productId);
+    if (!existingProduct) {
+      throw new ConvexError("Product not found");
+    }
     
     // Remove undefined values and categoryId from updates
     const cleanUpdates = Object.fromEntries(
@@ -223,6 +229,10 @@ export const updateProduct = mutation({
         cleanUpdates.category = category.name;
       }
     }
+
+    // Update the product
+    await ctx.db.patch(productId, cleanUpdates);
+    return productId;
   },
 });
 

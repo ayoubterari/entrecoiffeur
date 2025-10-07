@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import './CartToast.css'
 
 const CartToast = ({ show, product, onClose }) => {
   const [isVisible, setIsVisible] = useState(false)

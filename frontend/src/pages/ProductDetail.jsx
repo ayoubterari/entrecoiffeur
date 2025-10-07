@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
+import ProductDetailImages from '../components/ProductDetailImages'
 
 const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogin }) => {
   const navigate = useNavigate()
@@ -107,36 +108,20 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
         {/* Section Images */}
         <div className="product-images-section">
           <div className="main-image">
-            <div className="image-container">
-              {product.images?.[selectedImage] ? (
-                <img src={product.images[selectedImage]} alt={product.name} />
-              ) : (
-                <div className="placeholder-image">🛍️</div>
-              )}
-              
-              {/* Badges */}
-              <div className="product-badges">
-                {product.featured && <span className="badge featured">⭐ Vedette</span>}
-                {product.onSale && <span className="badge sale">🔥 Promo</span>}
-                {product.stock < 10 && <span className="badge low-stock">⚠️ Stock limité</span>}
-              </div>
+            <ProductDetailImages 
+              images={product.images}
+              productName={product.name}
+              selectedImage={selectedImage}
+              onImageSelect={setSelectedImage}
+            />
+            
+            {/* Badges */}
+            <div className="product-badges">
+              {product.featured && <span className="badge featured">⭐ Vedette</span>}
+              {product.onSale && <span className="badge sale">🔥 Promo</span>}
+              {product.stock < 10 && <span className="badge low-stock">⚠️ Stock limité</span>}
             </div>
           </div>
-          
-          {/* Miniatures */}
-          {product.images && product.images.length > 1 && (
-            <div className="image-thumbnails">
-              {product.images.map((image, index) => (
-                <button
-                  key={index}
-                  className={`thumbnail ${selectedImage === index ? 'active' : ''}`}
-                  onClick={() => setSelectedImage(index)}
-                >
-                  <img src={image} alt={`${product.name} ${index + 1}`} />
-                </button>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* Section Informations */}

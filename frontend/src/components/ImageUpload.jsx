@@ -1,10 +1,16 @@
 import React, { useState, useRef } from 'react'
+import { useMutation, useQuery } from 'convex/react'
+import { api } from '../lib/convex'
 
 const ImageUpload = ({ images, onImagesChange, maxImages = 5 }) => {
   const [dragActive, setDragActive] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const inputRef = useRef(null)
+  
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl)
+  const storeFile = useMutation(api.files.storeFile)
 
-  const handleFiles = (files) => {
+  const handleFiles = async (files) => {
     const fileArray = Array.from(files)
     const validFiles = fileArray.filter(file => {
       // Vérifier le type de fichier
@@ -30,14 +36,57 @@ const ImageUpload = ({ images, onImagesChange, maxImages = 5 }) => {
       alert(`Vous ne pouvez ajouter que ${remainingSlots} image(s) supplémentaire(s)`)
     }
 
-    // Convertir les fichiers en URLs pour la prévisualisation
-    const newImages = filesToAdd.map(file => ({
-      file,
-      url: URL.createObjectURL(file),
-      name: file.name
-    }))
+    if (filesToAdd.length === 0) return
 
-    onImagesChange([...images, ...newImages])
+    setUploading(true)
+    
+    try {
+      // Upload files to Convex storage
+      const uploadedImages = []
+      
+      for (const file of filesToAdd) {
+        // Generate upload URL
+        const uploadUrl = await generateUploadUrl()
+        
+        // Upload file to Convex storage
+        const result = await fetch(uploadUrl, {
+          method: "POST",
+          headers: { "Content-Type": file.type },
+          body: file,
+        })
+        
+        if (!result.ok) {
+          throw new Error(`Failed to upload ${file.name}`)
+        }
+        
+        const { storageId } = await result.json()
+        
+        // Store file metadata
+        await storeFile({
+          storageId,
+          fileName: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+        })
+        
+        // Create image object with storage ID
+        uploadedImages.push({
+          storageId,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          // Create temporary preview URL for immediate display
+          previewUrl: URL.createObjectURL(file)
+        })
+      }
+      
+      onImagesChange([...images, ...uploadedImages])
+    } catch (error) {
+      console.error('Error uploading files:', error)
+      alert('Erreur lors du téléchargement des images. Veuillez réessayer.')
+    } finally {
+      setUploading(false)
+    }
   }
 
   const handleDrag = (e) => {
@@ -50,20 +99,20 @@ const ImageUpload = ({ images, onImagesChange, maxImages = 5 }) => {
     }
   }
 
-  const handleDrop = (e) => {
+  const handleDrop = async (e) => {
     e.preventDefault()
     e.stopPropagation()
     setDragActive(false)
     
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFiles(e.dataTransfer.files)
+      await handleFiles(e.dataTransfer.files)
     }
   }
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     e.preventDefault()
     if (e.target.files && e.target.files[0]) {
-      handleFiles(e.target.files)
+      await handleFiles(e.target.files)
     }
   }
 
@@ -109,7 +158,17 @@ const ImageUpload = ({ images, onImagesChange, maxImages = 5 }) => {
           disabled={images.length >= maxImages}
         />
         
-        {images.length < maxImages ? (
+        {uploading ? (
+          <div className="upload-content">
+            <div className="upload-icon">⏳</div>
+            <p className="upload-text">
+              Téléchargement en cours...
+            </p>
+            <p className="upload-subtext">
+              Veuillez patienter
+            </p>
+          </div>
+        ) : images.length < maxImages ? (
           <div className="upload-content">
             <div className="upload-icon">📸</div>
             <p className="upload-text">
@@ -139,11 +198,19 @@ const ImageUpload = ({ images, onImagesChange, maxImages = 5 }) => {
                 {index === 0 && <div className="main-badge">Image principale</div>}
                 
                 <div className="image-container">
-                  <img 
-                    src={image.url} 
-                    alt={`Preview ${index + 1}`}
-                    className="preview-image"
-                  />
+                  {image.storageId && !image.previewUrl ? (
+                    <ConvexImagePreview 
+                      storageId={image.storageId}
+                      alt={`Preview ${index + 1}`}
+                      className="preview-image"
+                    />
+                  ) : (
+                    <img 
+                      src={image.previewUrl || image.url} 
+                      alt={`Preview ${index + 1}`}
+                      className="preview-image"
+                    />
+                  )}
                   
                   <div className="image-overlay">
                     <div className="image-actions">
@@ -184,7 +251,7 @@ const ImageUpload = ({ images, onImagesChange, maxImages = 5 }) => {
                 <div className="image-info">
                   <p className="image-name">{image.name}</p>
                   <p className="image-size">
-                    {(image.file.size / 1024 / 1024).toFixed(2)} MB
+                    {((image.size || image.file?.size || 0) / 1024 / 1024).toFixed(2)} MB
                   </p>
                 </div>
               </div>
@@ -203,6 +270,29 @@ const ImageUpload = ({ images, onImagesChange, maxImages = 5 }) => {
         </div>
       )}
     </div>
+  )
+}
+
+// Composant pour afficher les images depuis Convex storage
+const ConvexImagePreview = ({ storageId, alt, className }) => {
+  const imageUrl = useQuery(api.files.getFileUrl, { storageId })
+  
+  if (!imageUrl) {
+    return <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f0f0f0' }}>⏳</div>
+  }
+  
+  return (
+    <img 
+      src={imageUrl} 
+      alt={alt}
+      className={className}
+      onError={(e) => {
+        e.target.style.display = 'none'
+        if (e.target.nextSibling) {
+          e.target.nextSibling.style.display = 'flex'
+        }
+      }}
+    />
   )
 }
 

@@ -12,6 +12,8 @@ import Community from './pages/Community'
 import Checkout from './pages/Checkout'
 import OrderSuccess from './pages/OrderSuccess'
 import CartToast from './components/CartToast'
+import CartModal from './components/CartModal'
+import LoginModal from './components/LoginModal'
 
 // Wrapper pour ProductDetail qui utilise les paramètres d'URL
 function ProductDetailWrapper({ onAddToCart, isAuthenticated, onLogin }) {
@@ -41,6 +43,9 @@ function App() {
   const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart') || '[]'))
   const [showCartToast, setShowCartToast] = useState(false)
   const [lastAddedItem, setLastAddedItem] = useState(null)
+  const [showCartModal, setShowCartModal] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
+  const [loginMode, setLoginMode] = useState('signin')
 
   // Query to get current user info
   const currentUser = useQuery(api.auth.getCurrentUser, userId ? { userId } : "skip")
@@ -65,6 +70,20 @@ function App() {
     setUserEmail(localStorage.getItem('userEmail') || '')
     setUserFirstName(localStorage.getItem('userFirstName') || '')
     setUserLastName(localStorage.getItem('userLastName') || '')
+  }
+
+  const handleShowLogin = (mode = 'signin') => {
+    setLoginMode(mode)
+    setShowLoginModal(true)
+  }
+
+  const handleCloseLoginModal = () => {
+    setShowLoginModal(false)
+  }
+
+  const handleLoginSuccess = (newUserId) => {
+    handleLogin(newUserId)
+    setShowLoginModal(false)
   }
 
   const handleLogout = () => {
@@ -107,6 +126,28 @@ function App() {
     setShowCartToast(true)
   }
 
+  const handleUpdateQuantity = (productId, newQuantity) => {
+    if (newQuantity <= 0) {
+      handleRemoveItem(productId)
+      return
+    }
+    
+    const newCart = cart.map(item =>
+      item.productId === productId
+        ? { ...item, quantity: newQuantity }
+        : item
+    )
+    
+    setCart(newCart)
+    localStorage.setItem('cart', JSON.stringify(newCart))
+  }
+
+  const handleRemoveItem = (productId) => {
+    const newCart = cart.filter(item => item.productId !== productId)
+    setCart(newCart)
+    localStorage.setItem('cart', JSON.stringify(newCart))
+  }
+
   return (
     <Router>
       <div className="App">
@@ -122,6 +163,10 @@ function App() {
                 userEmail={userEmail}
                 userFirstName={userFirstName || ''}
                 userLastName={userLastName || ''}
+                onAddToCart={handleAddToCart}
+                cart={cart}
+                onOpenCart={() => setShowCartModal(true)}
+                onShowLogin={handleShowLogin}
               />
             } 
           />
@@ -178,7 +223,7 @@ function App() {
             element={
               <Checkout 
                 isAuthenticated={isAuthenticated}
-                onLogin={handleLogin}
+                onLogin={handleShowLogin}
                 userEmail={userEmail}
                 userFirstName={userFirstName || ''}
                 userLastName={userLastName || ''}
@@ -221,8 +266,27 @@ function App() {
         {/* Cart Toast Notification */}
         <CartToast
           show={showCartToast}
-          
+          product={lastAddedItem}
           onClose={() => setShowCartToast(false)}
+        />
+        
+        {/* Cart Modal */}
+        <CartModal
+          isOpen={showCartModal}
+          onClose={() => setShowCartModal(false)}
+          cart={cart}
+          onUpdateQuantity={handleUpdateQuantity}
+          onRemoveItem={handleRemoveItem}
+          isAuthenticated={isAuthenticated}
+          onLogin={handleShowLogin}
+        />
+        
+        {/* Global Login Modal */}
+        <LoginModal 
+          isOpen={showLoginModal}
+          onClose={handleCloseLoginModal}
+          onLogin={handleLoginSuccess}
+          initialMode={loginMode}
         />
       </div>
     </Router>

@@ -4,17 +4,13 @@ import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
 import Carousel from '../components/Carousel'
 import ProductCard from '../components/ProductCard'
-import LoginModal from '../components/LoginModal'
 import styles from '../components/Home.module.css'
 
-const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName }) => {
+const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName, onAddToCart, cart, onOpenCart, onShowLogin }) => {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
-  const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState([])
-  const [showLoginModal, setShowLoginModal] = useState(false)
-  const [loginMode, setLoginMode] = useState('signin') // 'signin' ou 'signup'
   const [currentSlide, setCurrentSlide] = useState(0)
 
   // Get real data from Convex
@@ -88,17 +84,21 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   }))
 
   const handleAddToCart = (product) => {
-    setCart(prev => {
-      const existing = prev.find(item => item._id === product._id)
-      if (existing) {
-        return prev.map(item => 
-          item._id === product._id 
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
-      }
-      return [...prev, { ...product, quantity: 1 }]
-    })
+    if (!isAuthenticated) {
+      onShowLogin('signin')
+      return
+    }
+    
+    // Formater les données pour le panier global
+    const cartItem = {
+      productId: product._id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      image: product.images?.[0] || '🛍️'
+    }
+    
+    onAddToCart(cartItem)
   }
 
   const handleToggleFavorite = (product) => {
@@ -116,17 +116,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
     : displayProducts.filter(p => p.categoryId === selectedCategory)
 
   const handleShowLogin = (mode = 'signin') => {
-    setLoginMode(mode)
-    setShowLoginModal(true)
-  }
-
-  const handleCloseModal = () => {
-    setShowLoginModal(false)
-  }
-
-  const handleLoginSuccess = (userId) => {
-    onLogin(userId)
-    setShowLoginModal(false)
+    onShowLogin(mode)
   }
 
   // Carousel functions
@@ -178,7 +168,11 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
             <button className={styles.headerBtn} title="Favoris">
               ❤️ <span className={styles.badge}>{favorites.length}</span>
             </button>
-            <button className={styles.headerBtn} title="Panier">
+            <button 
+              className={styles.headerBtn} 
+              title="Panier"
+              onClick={onOpenCart}
+            >
               🛒 <span className={styles.badge}>{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
             </button>
             
@@ -372,14 +366,6 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
           <p>&copy; 2025 Entre Coiffeur - Tous droits réservés</p>
         </div>
       </footer>
-
-      {/* Login Modal */}
-      <LoginModal 
-        isOpen={showLoginModal}
-        onClose={handleCloseModal}
-        onLogin={handleLoginSuccess}
-        initialMode={loginMode}
-      />
     </div>
   )
 }

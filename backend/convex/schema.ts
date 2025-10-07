@@ -35,7 +35,7 @@ export default defineSchema({
     stock: v.number(),
     category: v.string(),
     sellerId: v.id("users"),
-    images: v.array(v.string()),
+    images: v.array(v.union(v.string(), v.id("_storage"))),
     tags: v.optional(v.array(v.string())),
     featured: v.boolean(),
     onSale: v.boolean(),
