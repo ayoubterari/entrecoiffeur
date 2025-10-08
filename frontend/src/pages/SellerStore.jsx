@@ -4,6 +4,7 @@ import { useQuery, useMutation } from 'convex/react'
 import { api } from '../lib/convex'
 import ProductCard from '../components/ProductCard'
 import MessagePopup from '../components/MessagePopup'
+import SellerPostsTab from '../components/SellerPostsTab'
 import './SellerStore.css'
 
 const SellerStore = () => {
@@ -12,6 +13,7 @@ const SellerStore = () => {
   const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState([])
   const [isMessagePopupOpen, setIsMessagePopupOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState('boutique')
 
   // Get current user ID from localStorage with safety check
   const [currentUserId, setCurrentUserId] = useState(null)
@@ -290,19 +292,31 @@ const SellerStore = () => {
       {/* Social Media Navigation Tabs */}
       <div className="profile-navigation">
         <div className="nav-tabs">
-          <button className="nav-tab active">
+          <button 
+            className={`nav-tab ${activeTab === 'boutique' ? 'active' : ''}`}
+            onClick={() => setActiveTab('boutique')}
+          >
             <span className="tab-icon">🛍️</span>
             <span className="tab-text">Boutique</span>
           </button>
-          <button className="nav-tab">
+          <button 
+            className={`nav-tab ${activeTab === 'posts' ? 'active' : ''}`}
+            onClick={() => setActiveTab('posts')}
+          >
             <span className="tab-icon">📸</span>
             <span className="tab-text">Posts</span>
           </button>
-          <button className="nav-tab">
+          <button 
+            className={`nav-tab ${activeTab === 'avis' ? 'active' : ''}`}
+            onClick={() => setActiveTab('avis')}
+          >
             <span className="tab-icon">⭐</span>
             <span className="tab-text">Avis</span>
           </button>
-          <button className="nav-tab">
+          <button 
+            className={`nav-tab ${activeTab === 'apropos' ? 'active' : ''}`}
+            onClick={() => setActiveTab('apropos')}
+          >
             <span className="tab-icon">ℹ️</span>
             <span className="tab-text">À propos</span>
           </button>
@@ -310,33 +324,94 @@ const SellerStore = () => {
       </div>
 
 
-      {/* Produits du vendeur */}
-      <div className="store-products">
-        <div className="products-header">
-          <h2>
-            Tous les produits ({filteredProducts.length})
-          </h2>
-        </div>
+      {/* Tab Content */}
+      <div className="tab-content">
+        {activeTab === 'boutique' && (
+          <div className="store-products">
+            <div className="products-header">
+              <h2>
+                Tous les produits ({filteredProducts.length})
+              </h2>
+            </div>
 
-        {filteredProducts.length > 0 ? (
-          <div className="products-grid">
-            {filteredProducts.map((product) => (
-              <ProductCard
-                key={product._id}
-                product={product}
-                onAddToCart={handleAddToCart}
-                onToggleFavorite={handleToggleFavorite}
-                onViewDetails={() => navigate(`/product/${product._id}`)}
-                isFavorite={favorites.some(item => item._id === product._id)}
-              />
-            ))}
+            {filteredProducts.length > 0 ? (
+              <div className="products-grid">
+                {filteredProducts.map((product) => (
+                  <ProductCard
+                    key={product._id}
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    onToggleFavorite={handleToggleFavorite}
+                    onViewDetails={() => navigate(`/product/${product._id}`)}
+                    isFavorite={favorites.some(item => item._id === product._id)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="no-products">
+                <div className="empty-store">
+                  <span className="empty-icon">📦</span>
+                  <h3>Aucun produit disponible</h3>
+                  <p>Ce vendeur n'a pas encore ajouté de produits à sa boutique</p>
+                </div>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="no-products">
-            <div className="empty-store">
-              <span className="empty-icon">📦</span>
-              <h3>Aucun produit disponible</h3>
-              <p>Ce vendeur n'a pas encore ajouté de produits à sa boutique</p>
+        )}
+
+        {activeTab === 'posts' && (
+          <SellerPostsTab
+            sellerId={sellerId}
+            currentUserId={currentUserId}
+            isOwner={currentUserId === sellerId}
+          />
+        )}
+
+        {activeTab === 'avis' && (
+          <div className="reviews-tab">
+            <div className="coming-soon">
+              <div className="empty-state">
+                <span className="empty-icon">⭐</span>
+                <h3>Avis et évaluations</h3>
+                <p>Cette section sera bientôt disponible</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'apropos' && (
+          <div className="about-tab">
+            <div className="about-content">
+              <div className="about-section">
+                <h3>À propos de {seller.firstName} {seller.lastName}</h3>
+                <div className="seller-details">
+                  <div className="detail-item">
+                    <span className="detail-label">Type de compte :</span>
+                    <span className="detail-value">
+                      {seller.userType === 'professionnel' ? '👑 Professionnel' : '💎 Particulier'}
+                    </span>
+                  </div>
+                  {seller.companyName && (
+                    <div className="detail-item">
+                      <span className="detail-label">Entreprise :</span>
+                      <span className="detail-value">{seller.companyName}</span>
+                    </div>
+                  )}
+                  <div className="detail-item">
+                    <span className="detail-label">Membre depuis :</span>
+                    <span className="detail-value">
+                      {new Date(seller.createdAt).toLocaleDateString('fr-FR', {
+                        year: 'numeric',
+                        month: 'long'
+                      })}
+                    </span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Produits en vente :</span>
+                    <span className="detail-value">{filteredProducts.length} produits</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}

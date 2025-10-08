@@ -255,4 +255,47 @@ export default defineSchema({
     .index("by_active", ["isActive"])
     .index("by_created_by", ["createdBy"])
     .index("by_valid_from", ["validFrom"]),
+
+  // Seller Posts table - Posts created by sellers in their store
+  sellerPosts: defineTable({
+    sellerId: v.id("users"), // Seller who created the post
+    content: v.string(), // Post text content
+    images: v.optional(v.array(v.union(v.string(), v.id("_storage")))), // Post images
+    type: v.union(
+      v.literal("text"), // Text only post
+      v.literal("image"), // Image post with optional text
+      v.literal("promotion"), // Promotional post
+      v.literal("announcement") // Store announcement
+    ),
+    isActive: v.boolean(), // Whether the post is visible
+    likesCount: v.number(), // Number of likes
+    commentsCount: v.number(), // Number of comments
+    viewsCount: v.number(), // Number of views
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_seller", ["sellerId"])
+    .index("by_active", ["isActive"])
+    .index("by_type", ["type"])
+    .index("by_created_date", ["createdAt"])
+    .index("by_seller_active", ["sellerId", "isActive"]),
+
+  // Seller Post Likes table - Track who liked which posts
+  sellerPostLikes: defineTable({
+    postId: v.id("sellerPosts"),
+    userId: v.id("users"), // User who liked the post
+    createdAt: v.number(),
+  }).index("by_post", ["postId"])
+    .index("by_user", ["userId"])
+    .index("by_post_user", ["postId", "userId"]),
+
+  // Seller Post Comments table - Comments on seller posts
+  sellerPostComments: defineTable({
+    postId: v.id("sellerPosts"),
+    userId: v.id("users"), // User who commented
+    content: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_post", ["postId"])
+    .index("by_user", ["userId"])
+    .index("by_post_created", ["postId", "createdAt"]),
 });

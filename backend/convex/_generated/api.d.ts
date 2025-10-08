@@ -29,6 +29,7 @@ import type * as netVendeur from "../netVendeur.js";
 import type * as orders from "../orders.js";
 import type * as payments from "../payments.js";
 import type * as products from "../products.js";
+import type * as sellerPosts from "../sellerPosts.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -55,6 +56,7 @@ declare const fullApi: ApiFromModules<{
   orders: typeof orders;
   payments: typeof payments;
   products: typeof products;
+  sellerPosts: typeof sellerPosts;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
