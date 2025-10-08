@@ -2,16 +2,20 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useMutation, useQuery } from 'convex/react'
 import { api } from '../lib/convex'
+import CouponInput from '../components/CouponInput'
 
 const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLastName }) => {
   const navigate = useNavigate()
   const location = useLocation()
   const [orderData, setOrderData] = useState(null)
+  const [originalOrderData, setOriginalOrderData] = useState(null)
+  const [appliedCoupon, setAppliedCoupon] = useState(null)
   const [loading, setLoading] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState('paypal')
   
   // Convex mutations
   const createOrder = useMutation(api.orders.createOrder)
+  const applyCouponMutation = useMutation(api.functions.mutations.coupons.applyCoupon)
   const getProduct = useQuery(api.products.getById, 
     orderData?.items?.[0]?.productId ? { productId: orderData.items[0].productId } : "skip"
   )
@@ -32,6 +36,7 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
     // Récupérer les données de commande depuis l'état de navigation
     if (location.state?.orderData) {
       setOrderData(location.state.orderData)
+      setOriginalOrderData(location.state.orderData)
     } else {
       // Rediriger vers l'accueil si pas de données de commande
       navigate('/')
@@ -49,6 +54,29 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
     setBillingInfo(prev => ({
       ...prev,
       [field]: value
+    }))
+  }
+
+  // Gestion des coupons
+  const handleCouponApplied = (couponData) => {
+    setAppliedCoupon(couponData)
+    setOrderData(prev => ({
+      ...prev,
+      discount: couponData.discountAmount,
+      couponCode: couponData.code,
+      couponId: couponData.couponId,
+      total: couponData.finalAmount
+    }))
+  }
+
+  const handleCouponRemoved = () => {
+    setAppliedCoupon(null)
+    setOrderData(prev => ({
+      ...prev,
+      discount: 0,
+      couponCode: null,
+      couponId: null,
+      total: originalOrderData.total
     }))
   }
 
@@ -80,6 +108,11 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
         payer: billingInfo
       }
 
+      // Appliquer le coupon si présent
+      if (orderData.couponId) {
+        await applyCouponMutation({ couponId: orderData.couponId })
+      }
+
       // Créer la commande dans Convex
       if (getProduct && getCurrentUser && getCurrentUser._id) {
         const orderResult = await createOrder({
@@ -92,13 +125,13 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
           subtotal: orderData.subtotal,
           shipping: orderData.shipping,
           tax: orderData.tax,
+          discount: orderData.discount || 0,
+          couponCode: orderData.couponCode || undefined,
           total: orderData.total,
           paymentMethod: 'PayPal',
           paymentId: paymentResult.id,
           billingInfo: billingInfo,
         })
-
-        console.log('Commande créée:', orderResult)
       } else {
         console.error('Impossible de créer la commande:', {
           getProduct: !!getProduct,
@@ -117,7 +150,6 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
           billingInfo
         }
       })
-
     } catch (error) {
       console.error('Erreur PayPal:', error)
       alert('Erreur lors du paiement. Veuillez réessayer.')
@@ -141,6 +173,11 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
         payer: billingInfo
       }
 
+      // Appliquer le coupon si présent
+      if (orderData.couponId) {
+        await applyCouponMutation({ couponId: orderData.couponId })
+      }
+
       // Créer la commande dans Convex
       if (getProduct && getCurrentUser && getCurrentUser._id) {
         const orderResult = await createOrder({
@@ -153,6 +190,8 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
           subtotal: orderData.subtotal,
           shipping: orderData.shipping,
           tax: orderData.tax,
+          discount: orderData.discount || 0,
+          couponCode: orderData.couponCode || undefined,
           total: orderData.total,
           paymentMethod: 'Carte bancaire',
           paymentId: paymentResult.id,
@@ -240,12 +279,25 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
               <span>TVA (20%):</span>
               <span>{orderData.tax.toFixed(2)}€</span>
             </div>
+            {orderData.discount > 0 && (
+              <div className="total-line discount-line">
+                <span>Réduction ({orderData.couponCode}):</span>
+                <span className="discount-amount">-{orderData.discount.toFixed(2)}€</span>
+              </div>
+            )}
             <div className="total-line final-total">
               <span>Total:</span>
               <span>{orderData.total.toFixed(2)}€</span>
             </div>
           </div>
         </div>
+
+        {/* Section Coupon */}
+        <CouponInput 
+          orderAmount={originalOrderData?.subtotal || 0}
+          onCouponApplied={handleCouponApplied}
+          onCouponRemoved={handleCouponRemoved}
+        />
 
         {/* Informations de facturation */}
         <div className="billing-section">

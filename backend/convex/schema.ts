@@ -59,6 +59,8 @@ export default defineSchema({
     subtotal: v.number(),
     shipping: v.number(),
     tax: v.number(),
+    discount: v.optional(v.number()),
+    couponCode: v.optional(v.string()),
     total: v.number(),
     status: v.union(
       v.literal("pending"),
@@ -234,4 +236,23 @@ export default defineSchema({
     .index("by_sender", ["senderId"])
     .index("by_receiver", ["receiverId"])
     .index("by_conversation_created", ["conversationId", "createdAt"]),
+
+  // Coupons table - Admin discount codes management
+  coupons: defineTable({
+    code: v.string(), // Unique coupon code (e.g., "SUMMER20", "WELCOME10")
+    discountPercentage: v.number(), // Percentage discount (0-100)
+    description: v.optional(v.string()), // Optional description of the coupon
+    isActive: v.boolean(), // Whether the coupon is currently active
+    usageLimit: v.optional(v.number()), // Maximum number of uses (null = unlimited)
+    usageCount: v.number(), // Current number of uses
+    validFrom: v.number(), // Start date timestamp
+    validUntil: v.optional(v.number()), // End date timestamp (null = no expiry)
+    minimumAmount: v.optional(v.number()), // Minimum order amount to use coupon
+    createdBy: v.id("users"), // Admin who created the coupon
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_code", ["code"])
+    .index("by_active", ["isActive"])
+    .index("by_created_by", ["createdBy"])
+    .index("by_valid_from", ["validFrom"]),
 });

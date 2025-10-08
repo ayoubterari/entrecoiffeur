@@ -4390,6 +4390,21 @@ body.dashboard-body #root {
   color: var(--text-pink);
 }
 
+/* Discount Line */
+.total-line.discount-line {
+  color: #28a745;
+  font-weight: 600;
+  background: rgba(40, 167, 69, 0.1);
+  padding: 0.5rem;
+  border-radius: 8px;
+  margin: 0.5rem 0;
+}
+
+.discount-amount {
+  color: #28a745 !important;
+  font-weight: 700;
+}
+
 /* Billing Section */
 .billing-section {
   background: var(--bg-card);

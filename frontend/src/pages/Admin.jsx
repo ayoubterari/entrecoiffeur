@@ -10,6 +10,7 @@ import BlogManagement from '../components/BlogManagement'
 import CommissionManagement from '../components/CommissionManagement'
 import NetVendeurManagement from '../components/NetVendeurManagement'
 import PaymentConfig from '../components/PaymentConfig'
+import CouponsManagement from '../components/CouponsManagement'
 
 const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userType, onLogout }) => {
   const navigate = useNavigate()
@@ -191,6 +192,13 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
             <span>Blog</span>
           </div>
           <div 
+            className={`nav-item ${activeTab === 'coupons' ? 'active' : ''}`}
+            onClick={() => setActiveTab('coupons')}
+          >
+            <span className="nav-icon">🎫</span>
+            <span>Coupons</span>
+          </div>
+          <div 
             className={`nav-item ${activeTab === 'stats' ? 'active' : ''}`}
             onClick={() => setActiveTab('stats')}
           >
@@ -304,6 +312,18 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
                     </button>
                     
                     <button 
+                      className="quick-action-item coupons"
+                      onClick={() => setActiveTab('coupons')}
+                    >
+                      <div className="quick-icon">🎫</div>
+                      <div className="quick-content">
+                        <h4>Coupons</h4>
+                        <p>Codes de réduction</p>
+                      </div>
+                      <div className="quick-arrow">→</div>
+                    </button>
+                    
+                    <button 
                       className="quick-action-item stats"
                       onClick={() => setActiveTab('stats')}
                     >
@@ -394,6 +414,10 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
 
           {activeTab === 'blog' && (
             <BlogManagement userEmail={userEmail} />
+          )}
+
+          {activeTab === 'coupons' && (
+            <CouponsManagement />
           )}
 
           {activeTab === 'stats' && (
