@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../lib/convex'
 import ProductCard from '../components/ProductCard'
+import MessagePopup from '../components/MessagePopup'
 import './SellerStore.css'
 
 const SellerStore = () => {
@@ -10,6 +11,7 @@ const SellerStore = () => {
   const navigate = useNavigate()
   const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState([])
+  const [isMessagePopupOpen, setIsMessagePopupOpen] = useState(false)
 
   // Get current user ID from localStorage with safety check
   const [currentUserId, setCurrentUserId] = useState(null)
@@ -95,6 +97,21 @@ const SellerStore = () => {
       console.error('Error toggling follow:', error)
       // Optionally show user-friendly error message
     }
+  }
+
+  const handleMessageClick = () => {
+    if (!currentUserId) {
+      // Redirect to login if not authenticated
+      navigate('/login')
+      return
+    }
+
+    if (currentUserId === sellerId) {
+      // Can't message yourself
+      return
+    }
+
+    setIsMessagePopupOpen(true)
   }
 
   // Loading state avec vérification de sécurité
@@ -239,7 +256,12 @@ const SellerStore = () => {
                     Suivre
                   </button>
                 )}
-                <button className="message-btn">Message</button>
+                <button 
+                  className="message-btn"
+                  onClick={handleMessageClick}
+                >
+                  Message
+                </button>
                 <button className="share-btn">Partager</button>
               </div>
             </div>
@@ -319,6 +341,15 @@ const SellerStore = () => {
           </div>
         )}
       </div>
+
+      {/* Message Popup */}
+      <MessagePopup
+        isOpen={isMessagePopupOpen}
+        onClose={() => setIsMessagePopupOpen(false)}
+        sellerId={sellerId}
+        sellerName={`${seller.firstName} ${seller.lastName}`}
+        currentUserId={currentUserId}
+      />
     </div>
   )
 }

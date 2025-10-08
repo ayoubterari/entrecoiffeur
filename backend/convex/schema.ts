@@ -204,4 +204,34 @@ export default defineSchema({
   }).index("by_follower", ["followerId"])
     .index("by_followed", ["followedId"])
     .index("by_follower_followed", ["followerId", "followedId"]),
+
+  // Conversations table - Chat conversations between buyers and sellers
+  conversations: defineTable({
+    buyerId: v.id("users"), // Buyer who initiated the conversation
+    sellerId: v.id("users"), // Store owner
+    lastMessageAt: v.number(),
+    lastMessage: v.optional(v.string()),
+    isReadByBuyer: v.boolean(),
+    isReadBySeller: v.boolean(),
+    status: v.union(v.literal("active"), v.literal("archived")), // active, archived
+    createdAt: v.number(),
+  }).index("by_buyer", ["buyerId"])
+    .index("by_seller", ["sellerId"])
+    .index("by_participants", ["buyerId", "sellerId"])
+    .index("by_last_message", ["lastMessageAt"]),
+
+  // Messages table - Individual messages in conversations
+  messages: defineTable({
+    conversationId: v.id("conversations"),
+    senderId: v.id("users"), // Who sent the message
+    receiverId: v.id("users"), // Who receives the message
+    content: v.string(),
+    messageType: v.union(v.literal("text"), v.literal("image"), v.literal("system")),
+    isRead: v.boolean(),
+    createdAt: v.number(),
+    editedAt: v.optional(v.number()),
+  }).index("by_conversation", ["conversationId"])
+    .index("by_sender", ["senderId"])
+    .index("by_receiver", ["receiverId"])
+    .index("by_conversation_created", ["conversationId", "createdAt"]),
 });

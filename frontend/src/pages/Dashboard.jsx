@@ -6,6 +6,8 @@ import MockDataInitializer from '../components/MockDataInitializer'
 import Toast from '../components/Toast'
 import ConfirmDialog from '../components/ConfirmDialog'
 import ImageUpload from '../components/ImageUpload'
+import MessagePopup from '../components/MessagePopup'
+import './Dashboard.css'
 
 const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, companyName }) => {
   const navigate = useNavigate()
@@ -17,6 +19,8 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [productToDelete, setProductToDelete] = useState(null)
   const [productImages, setProductImages] = useState([])
+  const [selectedConversation, setSelectedConversation] = useState(null)
+  const [isMessagePopupOpen, setIsMessagePopupOpen] = useState(false)
 
   // Fonction pour vérifier les permissions d'ajout de produit
   const canAddProduct = () => {
@@ -62,6 +66,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
   const getAvailableTabs = () => {
     const baseTabs = [
       { id: 'profile', name: 'Profil', icon: '👤' },
+      { id: 'messages', name: 'Messages', icon: '💬' },
       { id: 'purchases', name: 'Mes Commandes', icon: '🛒' },
       { id: 'settings', name: 'Paramètres', icon: '⚙️' },
       { id: 'dev', name: 'Dev Tools', icon: '🛠️' },
@@ -69,7 +74,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
     
     // Ajouter les onglets de vente uniquement pour professionnels et grossistes
     if (userType === 'professionnel' || userType === 'grossiste') {
-      baseTabs.splice(2, 0, 
+      baseTabs.splice(3, 0, 
         { id: 'products', name: 'Mes Produits', icon: '📦' },
         { id: 'orders', name: 'Orders (Vendeur)', icon: '📋' },
         { id: 'analytics', name: 'Statistiques', icon: '📊' }
@@ -98,10 +103,19 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
     userId ? { sellerId: userId } : "skip"
   )
   
+  // Messages queries
+  const conversations = useQuery(api.messaging.getUserConversations,
+    userId ? { userId } : "skip"
+  )
+  const unreadCount = useQuery(api.messaging.getUnreadMessageCount,
+    userId ? { userId } : "skip"
+  )
+  
   const createProduct = useMutation(api.products.createProduct)
   const updateProduct = useMutation(api.products.updateProduct)
   const deleteProduct = useMutation(api.products.deleteProduct)
   const updateOrderStatus = useMutation(api.orders.updateOrderStatus)
+  const markAsRead = useMutation(api.messaging.markConversationAsRead)
 
   // Removed mock data - using real data from Convex queries
 
@@ -308,6 +322,45 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
     })
   }
 
+  // Message handlers
+  const handleConversationClick = (conversation) => {
+    setSelectedConversation(conversation)
+    setIsMessagePopupOpen(true)
+    
+    // Mark as read
+    if (userId) {
+      markAsRead({ 
+        conversationId: conversation._id, 
+        userId: userId 
+      })
+    }
+  }
+
+  const isUnread = (conversation) => {
+    if (!userId) return false
+    
+    if (conversation.userRole === 'buyer') {
+      return !conversation.isReadByBuyer
+    } else {
+      return !conversation.isReadBySeller
+    }
+  }
+
+  const formatTime = (timestamp) => {
+    const date = new Date(timestamp)
+    const now = new Date()
+    const diffInHours = (now - date) / (1000 * 60 * 60)
+
+    if (diffInHours < 1) {
+      return 'À l\'instant'
+    } else if (diffInHours < 24) {
+      return `Il y a ${Math.floor(diffInHours)}h`
+    } else {
+      const diffInDays = Math.floor(diffInHours / 24)
+      return `Il y a ${diffInDays}j`
+    }
+  }
+
   // Ajouter une classe au body pour supprimer les marges
   React.useEffect(() => {
     document.body.classList.add('dashboard-body')
@@ -362,6 +415,9 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
               >
                 <span className="nav-icon">{tab.icon}</span>
                 {tab.name}
+                {tab.id === 'messages' && unreadCount > 0 && (
+                  <span className="unread-badge">{unreadCount}</span>
+                )}
               </button>
             ))}
           </nav>
@@ -443,6 +499,73 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                   ></textarea>
                 </div>
                 <button className="save-btn">Sauvegarder</button>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'messages' && (
+            <div className="tab-content">
+              <div className="messages-header">
+                <h2>💬 Messages</h2>
+                <p>Gérez vos conversations avec les clients</p>
+                {unreadCount > 0 && (
+                  <div className="unread-count-badge">
+                    {unreadCount} nouveau{unreadCount > 1 ? 'x' : ''}
+                  </div>
+                )}
+              </div>
+
+              <div className="conversations-list">
+                {!conversations || conversations.length === 0 ? (
+                  <div className="empty-state">
+                    <div className="empty-icon">💬</div>
+                    <h3>Aucune conversation</h3>
+                    <p>Vos conversations avec les clients apparaîtront ici</p>
+                  </div>
+                ) : (
+                  conversations.map((conversation) => (
+                    <div
+                      key={conversation._id}
+                      className={`conversation-item ${isUnread(conversation) ? 'unread' : ''}`}
+                      onClick={() => handleConversationClick(conversation)}
+                    >
+                      <div className="conversation-avatar">
+                        <span className="avatar-letter">
+                          {conversation.otherParticipant?.firstName?.charAt(0)?.toUpperCase() || 'U'}
+                        </span>
+                        {isUnread(conversation) && <div className="unread-dot"></div>}
+                      </div>
+                      
+                      <div className="conversation-info">
+                        <div className="conversation-header">
+                          <h4 className="participant-name">
+                            {conversation.otherParticipant?.firstName} {conversation.otherParticipant?.lastName}
+                          </h4>
+                          <span className="conversation-time">
+                            {formatTime(conversation.lastMessageAt)}
+                          </span>
+                        </div>
+                        
+                        <div className="conversation-preview">
+                          <p className="last-message">
+                            {conversation.lastMessage || 'Nouvelle conversation'}
+                          </p>
+                          <div className="conversation-meta">
+                            <span className="user-role">
+                              {conversation.userRole === 'seller' ? '🏪 Vendeur' : '🛒 Acheteur'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="conversation-actions">
+                        <button className="reply-btn">
+                          <span>💬</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           )}
@@ -1078,6 +1201,21 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
         cancelText="Annuler"
         type="danger"
       />
+
+      {/* Message Popup */}
+      {selectedConversation && (
+        <MessagePopup
+          isOpen={isMessagePopupOpen}
+          onClose={() => {
+            setIsMessagePopupOpen(false)
+            setSelectedConversation(null)
+          }}
+          sellerId={selectedConversation.otherParticipant?._id}
+          sellerName={`${selectedConversation.otherParticipant?.firstName} ${selectedConversation.otherParticipant?.lastName}`}
+          currentUserId={userId}
+          existingConversationId={selectedConversation._id}
+        />
+      )}
       </div>
     </div>
   )
