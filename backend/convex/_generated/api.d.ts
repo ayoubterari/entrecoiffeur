@@ -23,6 +23,7 @@ import type * as functions_mutations_blog from "../functions/mutations/blog.js";
 import type * as functions_mutations_coupons from "../functions/mutations/coupons.js";
 import type * as functions_queries_blog from "../functions/queries/blog.js";
 import type * as functions_queries_coupons from "../functions/queries/coupons.js";
+import type * as functions_queries_search from "../functions/queries/search.js";
 import type * as messaging from "../messaging.js";
 import type * as netVendeur from "../netVendeur.js";
 import type * as orders from "../orders.js";
@@ -48,6 +49,7 @@ declare const fullApi: ApiFromModules<{
   "functions/mutations/coupons": typeof functions_mutations_coupons;
   "functions/queries/blog": typeof functions_queries_blog;
   "functions/queries/coupons": typeof functions_queries_coupons;
+  "functions/queries/search": typeof functions_queries_search;
   messaging: typeof messaging;
   netVendeur: typeof netVendeur;
   orders: typeof orders;

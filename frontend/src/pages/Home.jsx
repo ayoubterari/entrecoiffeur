@@ -4,11 +4,14 @@ import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
 import Carousel from '../components/Carousel'
 import ProductCard from '../components/ProductCard'
+import SmartSearch from '../components/SmartSearch'
 import styles from '../components/Home.module.css'
 
 const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName, onAddToCart, cart, onOpenCart, onShowLogin, onToggleFavorite, favoritesCount, userId, onOpenFavorites }) => {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [isSearching, setIsSearching] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [favorites, setFavorites] = useState([])
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -16,6 +19,12 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   // Get real data from Convex
   const categoriesData = useQuery(api.products.getCategories)
   const allProducts = useQuery(api.products.getProducts, { limit: 20 })
+  
+  // Get search results when searching
+  const searchData = useQuery(
+    api.functions.queries.search.searchProducts,
+    searchQuery.length >= 2 ? { query: searchQuery, limit: 20 } : "skip"
+  )
   
   // Get user favorite product IDs for efficient checking
   const userFavoriteIds = useQuery(api.favorites.getUserFavoriteIds, userId ? { userId } : "skip")
@@ -109,9 +118,22 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
     return userFavoriteIds?.includes(productId) || false
   }
 
-  const filteredProducts = selectedCategory === 'all' 
-    ? displayProducts 
-    : displayProducts.filter(p => p.categoryId === selectedCategory)
+  // Logique d'affichage des produits avec recherche intelligente
+  const getDisplayProducts = () => {
+    // Si on est en mode recherche, afficher les résultats de recherche
+    if (isSearching && searchResults.length > 0) {
+      return searchResults
+    }
+    
+    // Sinon, filtrer par catégorie comme avant
+    if (selectedCategory === 'all') {
+      return displayProducts
+    }
+    
+    return displayProducts.filter(p => p.categoryId === selectedCategory)
+  }
+
+  const filteredProducts = getDisplayProducts()
 
   const handleShowLogin = (mode = 'signin') => {
     onShowLogin(mode)
@@ -136,6 +158,45 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
     return () => clearInterval(interval)
   }, [])
 
+  // Mettre à jour les résultats de recherche quand searchData change
+  useEffect(() => {
+    if (searchData) {
+      setSearchResults(searchData)
+      setIsSearching(true)
+    } else if (searchQuery.length < 2) {
+      setSearchResults([])
+      setIsSearching(false)
+    }
+  }, [searchData, searchQuery])
+
+  // Gestion de la recherche intelligente
+  const handleSearch = (query) => {
+    setSearchQuery(query)
+    
+    if (query && query.length >= 2) {
+      setIsSearching(true)
+      // Les résultats seront mis à jour via useEffect quand searchData change
+      console.log('Recherche:', query)
+    } else {
+      setSearchResults([])
+      setIsSearching(false)
+    }
+  }
+
+  // Gestion de la sélection d'un produit depuis la recherche
+  const handleProductSelect = (product) => {
+    navigate(`/product/${product._id}`)
+  }
+
+  // Réinitialiser la recherche quand on change de catégorie
+  useEffect(() => {
+    if (selectedCategory !== 'all') {
+      setSearchQuery('')
+      setSearchResults([])
+      setIsSearching(false)
+    }
+  }, [selectedCategory])
+
   return (
     <div className={styles.homeContainer}>
       {/* Header Mobile-First */}
@@ -147,18 +208,13 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
             <p className={styles.marketplaceSubtitle}>Marketplace beauté & coiffure</p>
           </div>
           
-          {/* Barre de recherche au centre */}
+          {/* Barre de recherche intelligente au centre */}
           <div className={styles.headerSearch}>
-            <div className={styles.searchBarHeader}>
-              <input 
-                type="text" 
-                placeholder="Rechercher des produits..." 
-                className={styles.searchInputHeader}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <button className={styles.searchBtnHeader}>🔍</button>
-            </div>
+            <SmartSearch
+              onSearch={handleSearch}
+              onProductSelect={handleProductSelect}
+              placeholder="Rechercher des produits..."
+            />
           </div>
 
           {/* Actions à droite */}
@@ -290,7 +346,13 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
       <section className={styles.productsSection}>
         <div className={styles.container}>
           <h3 className={styles.sectionTitle}>
-            {selectedCategory === 'all' ? 'Produits en vedette' : `Catégorie: ${categories.find(c => c.id === selectedCategory)?.name}`}
+            {isSearching && searchQuery ? (
+              `Résultats pour "${searchQuery}" (${filteredProducts.length})`
+            ) : selectedCategory === 'all' ? (
+              'Produits en vedette'
+            ) : (
+              `Catégorie: ${categories.find(c => c.id === selectedCategory)?.name}`
+            )}
           </h3>
           <div className={styles.productsGrid}>
             {filteredProducts.length > 0 ? (
@@ -306,7 +368,23 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
               ))
             ) : (
               <div style={{ textAlign: 'center', padding: '3rem 1.5rem' }}>
-                {!isAuthenticated && (
+                {isSearching && searchQuery ? (
+                  <div>
+                    <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>😔</div>
+                    <h4 style={{ color: '#2d3436', marginBottom: '1rem' }}>
+                      Aucun produit trouvé pour "{searchQuery}"
+                    </h4>
+                    <p style={{ color: '#636e72', marginBottom: '1.5rem' }}>
+                      Essayez avec des mots-clés différents ou plus généraux
+                    </p>
+                    <button 
+                      className={styles.signupBtn}
+                      onClick={() => handleSearch('')}
+                    >
+                      Voir tous les produits
+                    </button>
+                  </div>
+                ) : !isAuthenticated ? (
                   <p style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
                     <button 
                       className={styles.signupBtn} 
@@ -316,6 +394,13 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
                     </button> 
                     pour commencer à vendre vos produits !
                   </p>
+                ) : (
+                  <div>
+                    <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🛍️</div>
+                    <p style={{ color: '#636e72' }}>
+                      Aucun produit disponible dans cette catégorie pour le moment.
+                    </p>
+                  </div>
                 )}
               </div>
             )}
