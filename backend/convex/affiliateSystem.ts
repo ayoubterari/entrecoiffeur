@@ -379,6 +379,139 @@ export const processAffiliateEarning = mutation({
   },
 });
 
+// Récupérer les commandes d'affiliation d'un utilisateur
+export const getUserAffiliateOrders = query({
+  args: {
+    userId: v.id("users"),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit || 20;
+    
+    // Récupérer les gains d'affiliation de l'utilisateur
+    const earnings = await ctx.db
+      .query("affiliateEarnings")
+      .withIndex("by_affiliate", (q) => q.eq("affiliateId", args.userId))
+      .order("desc")
+      .take(limit);
+
+    // Enrichir avec les informations des commandes
+    const enrichedOrders = await Promise.all(
+      earnings.map(async (earning) => {
+        const order = await ctx.db.get(earning.orderId);
+        const buyer = await ctx.db.get(earning.buyerId);
+        const seller = await ctx.db.get(earning.sellerId);
+        
+        return {
+          ...earning,
+          order: order ? {
+            orderNumber: order.orderNumber,
+            productName: order.productName,
+            quantity: order.quantity,
+            total: order.total,
+            status: order.status,
+            createdAt: order.createdAt,
+          } : null,
+          buyer: buyer ? {
+            firstName: buyer.firstName,
+            lastName: buyer.lastName,
+            email: buyer.email,
+          } : null,
+          seller: seller ? {
+            firstName: seller.firstName,
+            lastName: seller.lastName,
+            companyName: seller.companyName,
+          } : null,
+        };
+      })
+    );
+
+    return enrichedOrders.filter(order => order.order !== null);
+  },
+});
+
+// Fonction utilitaire pour traiter les gains en attente des commandes déjà livrées
+export const processDeliveredOrdersEarnings = mutation({
+  args: {},
+  handler: async (ctx, args) => {
+    try {
+      // Trouver toutes les commandes livrées
+      const deliveredOrders = await ctx.db
+        .query("orders")
+        .filter((q) => q.eq(q.field("status"), "delivered"))
+        .collect();
+
+      let processedCount = 0;
+      let totalPointsConfirmed = 0;
+
+      for (const order of deliveredOrders) {
+        // Trouver les gains en attente pour cette commande
+        const pendingEarnings = await ctx.db
+          .query("affiliateEarnings")
+          .withIndex("by_order", (q) => q.eq("orderId", order._id))
+          .filter((q) => q.eq(q.field("status"), "pending"))
+          .collect();
+
+        for (const earning of pendingEarnings) {
+          // Confirmer le gain
+          await ctx.db.patch(earning._id, {
+            status: "confirmed",
+            paidAt: Date.now(),
+            updatedAt: Date.now(),
+          });
+
+          // Mettre à jour les points de l'utilisateur
+          const userPoints = await ctx.db
+            .query("userPoints")
+            .withIndex("by_user", (q) => q.eq("userId", earning.affiliateId))
+            .first();
+
+          if (userPoints) {
+            const newTotalPoints = userPoints.totalPoints + earning.pointsEarned;
+            const newTotalEarned = userPoints.totalEarned + earning.pointsEarned;
+            const newPendingPoints = Math.max(0, userPoints.pendingPoints - earning.pointsEarned);
+
+            await ctx.db.patch(userPoints._id, {
+              totalPoints: newTotalPoints,
+              totalEarned: newTotalEarned,
+              pendingPoints: newPendingPoints,
+              updatedAt: Date.now(),
+            });
+
+            // Créer une transaction de points
+            await ctx.db.insert("pointTransactions", {
+              userId: earning.affiliateId,
+              type: "earned",
+              amount: earning.pointsEarned,
+              description: `Points gagnés via affiliation - Commande livrée #${String(order._id)}`,
+              relatedOrderId: order._id,
+              relatedEarningId: earning._id,
+              balanceAfter: newTotalPoints,
+              createdAt: Date.now(),
+            });
+
+            processedCount++;
+            totalPointsConfirmed += earning.pointsEarned;
+          }
+        }
+      }
+
+      return {
+        success: true,
+        processedCount,
+        totalPointsConfirmed,
+        message: `${processedCount} gains d'affiliation confirmés pour un total de ${totalPointsConfirmed} points`,
+      };
+    } catch (error) {
+      console.error("Erreur lors du traitement des gains en attente:", error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  },
+});
+
 // Confirmer les gains d'affiliation (quand la commande est livrée)
 export const confirmAffiliateEarning = mutation({
   args: {

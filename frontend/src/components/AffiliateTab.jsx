@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { useQuery } from 'convex/react'
+import { useQuery, useMutation } from 'convex/react'
 import { api } from '../lib/convex'
 import './AffiliateTab.css'
 
 const AffiliateTab = ({ userId }) => {
-  const [activeSubTab, setActiveSubTab] = useState('overview') // overview, links, earnings, transactions
+  const [activeSubTab, setActiveSubTab] = useState('overview') // overview, links, orders, earnings, transactions
 
   // Récupérer les statistiques d'affiliation
   const affiliateStats = useQuery(api.affiliateSystem.getUserAffiliateStats,
@@ -20,6 +20,15 @@ const AffiliateTab = ({ userId }) => {
   const pointTransactions = useQuery(api.affiliateSystem.getUserPointTransactions,
     userId ? { userId, limit: 20 } : "skip"
   )
+
+  // Récupérer les commandes d'affiliation
+  const affiliateOrders = useQuery(api.affiliateSystem.getUserAffiliateOrders,
+    userId ? { userId, limit: 15 } : "skip"
+  )
+
+  // Mutation pour traiter les gains en attente
+  const processDeliveredOrdersEarnings = useMutation(api.affiliateSystem.processDeliveredOrdersEarnings)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const copyToClipboard = async (text) => {
     try {
@@ -42,6 +51,26 @@ const AffiliateTab = ({ userId }) => {
 
   const formatPoints = (points) => {
     return new Intl.NumberFormat('fr-FR').format(points)
+  }
+
+  const handleProcessPendingEarnings = async () => {
+    if (isProcessing) return
+    
+    setIsProcessing(true)
+    try {
+      const result = await processDeliveredOrdersEarnings()
+      if (result.success) {
+        alert(`✅ ${result.message}`)
+        // Recharger les données
+        window.location.reload()
+      } else {
+        alert(`❌ Erreur: ${result.error}`)
+      }
+    } catch (error) {
+      alert(`❌ Erreur: ${error.message}`)
+    } finally {
+      setIsProcessing(false)
+    }
   }
 
   if (!affiliateStats) {
@@ -89,6 +118,13 @@ const AffiliateTab = ({ userId }) => {
           >
             <span className="nav-icon">🔗</span>
             Mes liens
+          </button>
+          <button 
+            className={`nav-btn ${activeSubTab === 'orders' ? 'active' : ''}`}
+            onClick={() => setActiveSubTab('orders')}
+          >
+            <span className="nav-icon">📦</span>
+            Commandes
           </button>
           <button 
             className={`nav-btn ${activeSubTab === 'earnings' ? 'active' : ''}`}
@@ -156,6 +192,24 @@ const AffiliateTab = ({ userId }) => {
                     <div className="earning-amount">{formatPoints(affiliateStats.pendingEarnings)}</div>
                     <div className="earning-label">Points en attente</div>
                     <div className="earning-desc">Seront crédités à la livraison</div>
+                    {affiliateStats.pendingEarnings > 0 && (
+                      <button 
+                        className="process-earnings-btn"
+                        onClick={handleProcessPendingEarnings}
+                        disabled={isProcessing}
+                      >
+                        {isProcessing ? (
+                          <>
+                            <div className="loading-spinner-small"></div>
+                            Traitement...
+                          </>
+                        ) : (
+                          <>
+                            🔄 Traiter les gains
+                          </>
+                        )}
+                      </button>
+                    )}
                   </div>
                 </div>
                 
@@ -280,6 +334,104 @@ const AffiliateTab = ({ userId }) => {
                 <div className="empty-icon">🔗</div>
                 <h3>Aucun lien créé</h3>
                 <p>Visitez un store et cliquez sur "Partager" pour créer votre premier lien d'affiliation !</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeSubTab === 'orders' && (
+          <div className="orders-tab">
+            <div className="orders-header">
+              <h3>📦 Commandes via mes liens</h3>
+              <p>Toutes les commandes passées grâce à vos liens d'affiliation</p>
+            </div>
+
+            {affiliateOrders && affiliateOrders.length > 0 ? (
+              <div className="orders-list">
+                {affiliateOrders.map((orderData) => (
+                  <div key={orderData._id} className="order-card">
+                    <div className="order-header">
+                      <div className="order-info">
+                        <div className="order-number">
+                          <span className="order-icon">📋</span>
+                          <strong>{orderData.order.orderNumber}</strong>
+                        </div>
+                        <div className="order-date">
+                          {formatDate(orderData.order.createdAt)}
+                        </div>
+                      </div>
+                      
+                      <div className="order-status">
+                        <span className={`status-badge ${orderData.order.status}`}>
+                          {orderData.order.status === 'confirmed' && '✅ Confirmée'}
+                          {orderData.order.status === 'preparing' && '📦 En préparation'}
+                          {orderData.order.status === 'shipped' && '🚚 Expédiée'}
+                          {orderData.order.status === 'delivered' && '✅ Livrée'}
+                          {orderData.order.status === 'cancelled' && '❌ Annulée'}
+                          {orderData.order.status === 'pending' && '⏳ En attente'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="order-details">
+                      <div className="product-info">
+                        <h4>{orderData.order.productName}</h4>
+                        <p>Quantité: {orderData.order.quantity}</p>
+                      </div>
+                      
+                      <div className="buyer-info">
+                        <div className="buyer-avatar">
+                          {orderData.buyer?.firstName?.charAt(0)?.toUpperCase() || 'A'}
+                        </div>
+                        <div className="buyer-details">
+                          <span className="buyer-name">
+                            {orderData.buyer?.firstName} {orderData.buyer?.lastName}
+                          </span>
+                          <span className="buyer-email">{orderData.buyer?.email}</span>
+                        </div>
+                      </div>
+
+                      <div className="seller-info">
+                        <span className="seller-label">Vendeur:</span>
+                        <span className="seller-name">
+                          {orderData.seller?.firstName} {orderData.seller?.lastName}
+                          {orderData.seller?.companyName && ` (${orderData.seller.companyName})`}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="order-earnings">
+                      <div className="earnings-info">
+                        <div className="earning-amount">
+                          <span className="earning-icon">💰</span>
+                          <span className="points">{formatPoints(orderData.pointsEarned)} points</span>
+                        </div>
+                        <div className="earning-details">
+                          <span className="order-total">Commande: {orderData.orderAmount}€</span>
+                          <span className="earning-rate">({(orderData.pointsRate * 100).toFixed(1)}%)</span>
+                        </div>
+                      </div>
+                      
+                      <div className="earning-status">
+                        <span className={`earning-badge ${orderData.status}`}>
+                          {orderData.status === 'pending' && '⏳ En attente'}
+                          {orderData.status === 'confirmed' && '✅ Confirmé'}
+                          {orderData.status === 'cancelled' && '❌ Annulé'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="empty-orders">
+                <div className="empty-icon">📦</div>
+                <h3>Aucune commande pour le moment</h3>
+                <p>Les commandes passées via vos liens d'affiliation apparaîtront ici</p>
+                <div className="empty-tip">
+                  <span>💡</span>
+                  <span>Partagez vos liens pour commencer à gagner des points !</span>
+                </div>
               </div>
             )}
           </div>

@@ -3,10 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useMutation, useQuery } from 'convex/react'
 import { api } from '../lib/convex'
 import CouponInput from '../components/CouponInput'
+import { useAffiliateTracking } from '../hooks/useAffiliateTracking'
+import './Checkout.css'
 
 const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLastName }) => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { getActiveAffiliateCode } = useAffiliateTracking()
   const [orderData, setOrderData] = useState(null)
   const [originalOrderData, setOriginalOrderData] = useState(null)
   const [appliedCoupon, setAppliedCoupon] = useState(null)
@@ -115,6 +118,9 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
 
       // Créer la commande dans Convex
       if (getProduct && getCurrentUser && getCurrentUser._id) {
+        // Récupérer le code d'affiliation actif
+        const affiliateCode = getActiveAffiliateCode()
+        
         const orderResult = await createOrder({
           buyerId: getCurrentUser._id,
           sellerId: getProduct.sellerId,
@@ -129,6 +135,8 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
           couponCode: orderData.couponCode || undefined,
           total: orderData.total,
           paymentMethod: 'PayPal',
+          // Ajouter les données d'affiliation
+          affiliateCode: affiliateCode || undefined,
           paymentId: paymentResult.id,
           billingInfo: billingInfo,
         })
@@ -180,6 +188,9 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
 
       // Créer la commande dans Convex
       if (getProduct && getCurrentUser && getCurrentUser._id) {
+        // Récupérer le code d'affiliation actif
+        const affiliateCode = getActiveAffiliateCode()
+        
         const orderResult = await createOrder({
           buyerId: getCurrentUser._id,
           sellerId: getProduct.sellerId,
@@ -194,6 +205,8 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
           couponCode: orderData.couponCode || undefined,
           total: orderData.total,
           paymentMethod: 'Carte bancaire',
+          // Ajouter les données d'affiliation
+          affiliateCode: affiliateCode || undefined,
           paymentId: paymentResult.id,
           billingInfo: billingInfo,
         })

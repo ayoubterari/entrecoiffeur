@@ -62,12 +62,22 @@ const SellerStore = () => {
   const toggleFollow = useMutation(api.follows.toggleFollow)
 
   // Hook pour le tracking d'affiliation
-  useAffiliateTracking()
+  const { preserveAffiliateForAuth } = useAffiliateTracking()
 
   // Afficher tous les produits sans filtrage - avec vérification de sécurité
   const filteredProducts = Array.isArray(sellerProducts) ? sellerProducts : []
 
   const handleAddToCart = (product) => {
+    // Vérifier si l'utilisateur est connecté
+    if (!currentUserId) {
+      // Préserver le code d'affiliation avant redirection
+      preserveAffiliateForAuth()
+      // Rediriger vers la page de connexion
+      navigate('/login')
+      return
+    }
+
+    // Utilisateur connecté, ajouter au panier normalement
     setCart(prev => {
       const existingItem = prev.find(item => item._id === product._id)
       if (existingItem) {
@@ -94,6 +104,8 @@ const SellerStore = () => {
   const handleFollowClick = async () => {
     try {
       if (!currentUserId) {
+        // Préserver le code d'affiliation avant redirection
+        preserveAffiliateForAuth()
         // Redirect to login if not authenticated
         navigate('/login')
         return
@@ -116,6 +128,8 @@ const SellerStore = () => {
 
   const handleMessageClick = () => {
     if (!currentUserId) {
+      // Préserver le code d'affiliation avant redirection
+      preserveAffiliateForAuth()
       // Redirect to login if not authenticated
       navigate('/login')
       return
@@ -127,6 +141,18 @@ const SellerStore = () => {
     }
 
     setIsMessagePopupOpen(true)
+  }
+
+  const handleShareClick = () => {
+    if (!currentUserId) {
+      // Préserver le code d'affiliation avant redirection
+      preserveAffiliateForAuth()
+      // Redirect to login if not authenticated
+      navigate('/login')
+      return
+    }
+
+    setIsShareModalOpen(true)
   }
 
   // Loading state avec vérification de sécurité
@@ -287,7 +313,7 @@ const SellerStore = () => {
                 </button>
                 <button 
                   className="share-btn"
-                  onClick={() => setIsShareModalOpen(true)}
+                  onClick={handleShareClick}
                 >
                   Partager
                 </button>

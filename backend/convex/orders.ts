@@ -18,6 +18,7 @@ export const createOrder = mutation({
     total: v.number(),
     paymentMethod: v.string(),
     paymentId: v.string(),
+    affiliateCode: v.optional(v.string()),
     billingInfo: v.object({
       firstName: v.string(),
       lastName: v.string(),
@@ -32,6 +33,21 @@ export const createOrder = mutation({
     // Generate order number
     const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
     
+    // Traiter l'affiliation si présente
+    let affiliateId = undefined;
+    if (args.affiliateCode) {
+      // Trouver l'affilié à partir du code
+      const affiliateLink = await ctx.db
+        .query("affiliateLinks")
+        .withIndex("by_link_code", (q) => q.eq("linkCode", args.affiliateCode!))
+        .filter((q) => q.eq(q.field("isActive"), true))
+        .first();
+      
+      if (affiliateLink && affiliateLink.affiliateId !== args.buyerId) {
+        affiliateId = affiliateLink.affiliateId;
+      }
+    }
+
     const orderId = await ctx.db.insert("orders", {
       orderNumber,
       buyerId: args.buyerId,
@@ -51,13 +67,89 @@ export const createOrder = mutation({
       paymentId: args.paymentId,
       paymentStatus: "paid",
       billingInfo: args.billingInfo,
+      // Ajouter les champs d'affiliation
+      affiliateCode: args.affiliateCode || undefined,
+      affiliateId: affiliateId,
+      affiliateEarningProcessed: false,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
 
+    // Traiter les gains d'affiliation si applicable
+    if (args.affiliateCode && affiliateId) {
+      try {
+        // Calculer les points (5% du montant de la commande)
+        const pointsRate = 0.05; // 5%
+        const pointsEarned = Math.floor(args.total * pointsRate);
+
+        // Trouver le lien d'affiliation pour obtenir son ID
+        const affiliateLink = await ctx.db
+          .query("affiliateLinks")
+          .withIndex("by_link_code", (q) => q.eq("linkCode", args.affiliateCode!))
+          .filter((q) => q.eq(q.field("isActive"), true))
+          .first();
+
+        // Créer l'enregistrement de gain seulement si le lien existe
+        if (affiliateLink) {
+          await ctx.db.insert("affiliateEarnings", {
+            affiliateId: affiliateId,
+            orderId: orderId,
+            linkId: affiliateLink._id,
+            sellerId: args.sellerId,
+            buyerId: args.buyerId,
+            orderAmount: args.total,
+            pointsEarned,
+            pointsRate,
+            status: "pending", // En attente jusqu'à la livraison
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          });
+
+          // Initialiser les points de l'utilisateur si nécessaire
+          const userPoints = await ctx.db
+            .query("userPoints")
+            .withIndex("by_user", (q) => q.eq("userId", affiliateId))
+            .first();
+
+          if (!userPoints) {
+            await ctx.db.insert("userPoints", {
+              userId: affiliateId,
+              totalPoints: 0,
+              totalEarned: 0,
+              totalSpent: 0,
+              pendingPoints: pointsEarned,
+              updatedAt: Date.now(),
+            });
+          } else {
+            await ctx.db.patch(userPoints._id, {
+              pendingPoints: userPoints.pendingPoints + pointsEarned,
+              updatedAt: Date.now(),
+            });
+          }
+
+          // Mettre à jour les statistiques du lien d'affiliation
+          await ctx.db.patch(affiliateLink._id, {
+            conversionsCount: affiliateLink.conversionsCount + 1,
+            totalEarnings: affiliateLink.totalEarnings + pointsEarned,
+            updatedAt: Date.now(),
+          });
+
+          // Marquer la commande comme traitée pour l'affiliation
+          await ctx.db.patch(orderId, {
+            affiliateEarningProcessed: true,
+          });
+        }
+
+      } catch (error) {
+        console.error("Erreur lors du traitement de l'affiliation:", error);
+        // Ne pas faire échouer la commande pour une erreur d'affiliation
+      }
+    }
+
     return {
       orderId,
       orderNumber,
+      affiliateProcessed: !!(args.affiliateCode && affiliateId),
     };
   },
 });
@@ -115,7 +207,7 @@ export const getAllOrders = query({
   },
 });
 
-// Update order status (admin only)
+// Mettre à jour le statut d'une commande et traiter l'affiliation si nécessaire
 export const updateOrderStatus = mutation({
   args: {
     orderId: v.id("orders"),
@@ -129,14 +221,78 @@ export const updateOrderStatus = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    // Mettre à jour le statut de la commande
     await ctx.db.patch(args.orderId, {
       status: args.status,
       updatedAt: Date.now(),
     });
 
-    return { success: true };
+    // Si la commande est livrée, confirmer les gains d'affiliation
+    if (args.status === "delivered") {
+      try {
+        // Trouver les gains en attente pour cette commande
+        const earnings = await ctx.db
+          .query("affiliateEarnings")
+          .withIndex("by_order", (q) => q.eq("orderId", args.orderId))
+          .filter((q) => q.eq(q.field("status"), "pending"))
+          .collect();
+
+        for (const earning of earnings) {
+          // Confirmer le gain
+          await ctx.db.patch(earning._id, {
+            status: "confirmed",
+            paidAt: Date.now(),
+            updatedAt: Date.now(),
+          });
+
+          // Mettre à jour les points de l'utilisateur
+          const userPoints = await ctx.db
+            .query("userPoints")
+            .withIndex("by_user", (q) => q.eq("userId", earning.affiliateId))
+            .first();
+
+          if (userPoints) {
+            const newTotalPoints = userPoints.totalPoints + earning.pointsEarned;
+            const newTotalEarned = userPoints.totalEarned + earning.pointsEarned;
+            const newPendingPoints = Math.max(0, userPoints.pendingPoints - earning.pointsEarned);
+
+            await ctx.db.patch(userPoints._id, {
+              totalPoints: newTotalPoints,
+              totalEarned: newTotalEarned,
+              pendingPoints: newPendingPoints,
+              updatedAt: Date.now(),
+            });
+
+            // Créer une transaction de points
+            await ctx.db.insert("pointTransactions", {
+              userId: earning.affiliateId,
+              type: "earned",
+              amount: earning.pointsEarned,
+              description: `Points gagnés via affiliation - Commande livrée #${String(args.orderId)}`,
+              relatedOrderId: args.orderId,
+              relatedEarningId: earning._id,
+              balanceAfter: newTotalPoints,
+              createdAt: Date.now(),
+            });
+          }
+        }
+
+        console.log(`Confirmed ${earnings.length} affiliate earnings for delivered order ${args.orderId}`);
+      } catch (error) {
+        console.error("Erreur lors de la confirmation des gains d'affiliation:", error);
+        // Ne pas faire échouer la mise à jour du statut pour une erreur d'affiliation
+      }
+    }
+
+    return {
+      success: true,
+      orderId: args.orderId,
+      status: args.status,
+      affiliateEarningsConfirmed: args.status === "delivered",
+    };
   },
 });
+
 
 // Get order by ID
 export const getOrderById = query({

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useMutation } from 'convex/react'
 import { api } from '../lib/convex'
 import './ShareModal.css'
@@ -96,7 +97,7 @@ const ShareModal = ({ isOpen, onClose, sellerId, sellerName, currentUserId }) =>
 
   if (!isOpen) return null
 
-  return (
+  return createPortal(
     <div className="share-modal-overlay" onClick={handleOverlayClick}>
       <div className="share-modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="share-modal-close" onClick={onClose}>
@@ -239,7 +240,8 @@ const ShareModal = ({ isOpen, onClose, sellerId, sellerName, currentUserId }) =>
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
 

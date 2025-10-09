@@ -16,6 +16,7 @@ import CartToast from './components/CartToast'
 import CartModal from './components/CartModal'
 import LoginModal from './components/LoginModal'
 import FavoritesModal from './components/FavoritesModal'
+import { useAffiliateTracking } from './hooks/useAffiliateTracking'
 
 // Wrapper pour ProductDetail qui utilise les paramètres d'URL
 function ProductDetailWrapper({ onAddToCart, isAuthenticated, onLogin }) {
@@ -39,6 +40,7 @@ function ProductDetailWrapper({ onAddToCart, isAuthenticated, onLogin }) {
 
 function AppContent() {
   const navigate = useNavigate()
+  const { restoreAffiliateAfterAuth, getAffiliateReturnUrl } = useAffiliateTracking()
   const [userId, setUserId] = useState(localStorage.getItem('userId'))
   const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail'))
   const [userFirstName, setUserFirstName] = useState(localStorage.getItem('userFirstName'))
@@ -94,6 +96,18 @@ function AppContent() {
   const handleLoginSuccess = (newUserId) => {
     handleLogin(newUserId)
     setShowLoginModal(false)
+    
+    // Restaurer le code d'affiliation après connexion
+    const affiliateRestored = restoreAffiliateAfterAuth()
+    const returnUrl = getAffiliateReturnUrl()
+    
+    // Si un code d'affiliation a été restauré et qu'il y a une URL de retour
+    if (affiliateRestored && returnUrl) {
+      // Rediriger vers la page d'origine avec un petit délai pour laisser le temps à l'état de se mettre à jour
+      setTimeout(() => {
+        window.location.href = returnUrl
+      }, 100)
+    }
   }
 
   const handleLogout = () => {

@@ -65,8 +65,53 @@ export const useAffiliateTracking = () => {
     localStorage.removeItem('affiliateTimestamp')
   }
 
+  // Fonction pour préserver le code d'affiliation avant redirection auth
+  const preserveAffiliateForAuth = () => {
+    const code = getActiveAffiliateCode()
+    if (code) {
+      // Stocker dans sessionStorage pour survie à la redirection
+      sessionStorage.setItem('pendingAffiliateCode', code)
+      sessionStorage.setItem('pendingAffiliateTimestamp', localStorage.getItem('affiliateTimestamp'))
+      // Stocker aussi l'URL de retour
+      sessionStorage.setItem('affiliateReturnUrl', window.location.href)
+    }
+  }
+
+  // Fonction pour restaurer le code après connexion
+  const restoreAffiliateAfterAuth = () => {
+    const pendingCode = sessionStorage.getItem('pendingAffiliateCode')
+    const pendingTimestamp = sessionStorage.getItem('pendingAffiliateTimestamp')
+    
+    if (pendingCode && pendingTimestamp) {
+      // Restaurer dans localStorage
+      localStorage.setItem('affiliateCode', pendingCode)
+      localStorage.setItem('affiliateTimestamp', pendingTimestamp)
+      
+      // Nettoyer sessionStorage
+      sessionStorage.removeItem('pendingAffiliateCode')
+      sessionStorage.removeItem('pendingAffiliateTimestamp')
+      
+      return true // Indique qu'un code a été restauré
+    }
+    
+    return false
+  }
+
+  // Fonction pour obtenir l'URL de retour après auth
+  const getAffiliateReturnUrl = () => {
+    const returnUrl = sessionStorage.getItem('affiliateReturnUrl')
+    if (returnUrl) {
+      sessionStorage.removeItem('affiliateReturnUrl')
+      return returnUrl
+    }
+    return null
+  }
+
   return {
     getActiveAffiliateCode,
-    clearAffiliateCode
+    clearAffiliateCode,
+    preserveAffiliateForAuth,
+    restoreAffiliateAfterAuth,
+    getAffiliateReturnUrl
   }
 }
