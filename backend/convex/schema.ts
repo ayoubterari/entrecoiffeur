@@ -14,9 +14,14 @@ export default defineSchema({
     companyName: v.optional(v.string()), // Pour professionnels et grossistes
     siret: v.optional(v.string()), // Pour professionnels et grossistes
     tvaNumber: v.optional(v.string()), // Pour professionnels et grossistes
+    // Champs pour la gestion des groupes
+    isGroupMember: v.optional(v.boolean()), // Si l'utilisateur appartient à un groupe
+    groupAccessCode: v.optional(v.string()), // Code d'accès du groupe utilisé lors de l'inscription
+    hasSeenGroupWelcome: v.optional(v.boolean()), // Si l'utilisateur a déjà vu le modal de bienvenue groupe
     createdAt: v.number(),
   }).index("by_email", ["email"])
-    .index("by_user_type", ["userType"]),
+    .index("by_user_type", ["userType"])
+    .index("by_group_member", ["isGroupMember"]),
   
   categories: defineTable({
     name: v.string(),
@@ -98,6 +103,27 @@ export default defineSchema({
     createdAt: v.number(),
   }).index("by_product", ["productId"])
     .index("by_user", ["userId"]),
+
+  // Order Reviews table - Évaluations des commandes livrées
+  orderReviews: defineTable({
+    orderId: v.id("orders"), // Commande évaluée
+    buyerId: v.id("users"), // Acheteur qui évalue
+    sellerId: v.id("users"), // Vendeur évalué
+    productId: v.id("products"), // Produit de la commande
+    rating: v.number(), // Note de 1 à 5 étoiles
+    comment: v.optional(v.string()), // Commentaire optionnel
+    deliveryRating: v.optional(v.number()), // Note pour la livraison (1-5)
+    productQualityRating: v.optional(v.number()), // Note pour la qualité du produit (1-5)
+    sellerServiceRating: v.optional(v.number()), // Note pour le service vendeur (1-5)
+    isRecommended: v.optional(v.boolean()), // Recommande-t-il ce vendeur/produit ?
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_order", ["orderId"])
+    .index("by_buyer", ["buyerId"])
+    .index("by_seller", ["sellerId"])
+    .index("by_product", ["productId"])
+    .index("by_rating", ["rating"])
+    .index("by_created_date", ["createdAt"]),
 
   // Blog articles table
   blogArticles: defineTable({

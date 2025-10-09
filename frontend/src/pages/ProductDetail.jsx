@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
 import ProductDetailImages from '../components/ProductDetailImages'
+import './ProductDetail.css'
 
 const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogin }) => {
   const navigate = useNavigate()
@@ -23,6 +24,14 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
   // Récupérer les détails du produit
   const product = useQuery(api.products.getById, { productId })
   const seller = useQuery(api.auth.getCurrentUser, product?.sellerId ? { userId: product.sellerId } : "skip")
+  
+  // Récupérer les évaluations du produit
+  const productReviewStats = useQuery(api.orderReviews.getProductReviewStats, 
+    productId ? { productId } : "skip"
+  )
+  const productReviews = useQuery(api.orderReviews.getProductReviews, 
+    productId ? { productId, limit: 10 } : "skip"
+  )
   
   if (!product) {
     return (
@@ -144,14 +153,21 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
             <div className="rating-section">
               <div className="stars">
                 {[...Array(5)].map((_, i) => (
-                  <span key={i} className={`star ${i < (product.rating || 0) ? 'filled' : ''}`}>
+                  <span key={i} className={`star ${i < Math.floor(productReviewStats?.averageRating || 0) ? 'filled' : ''}`}>
                     ⭐
                   </span>
                 ))}
               </div>
               <span className="rating-text">
-                {product.rating || 'Nouveau'} ({product.reviewCount || 0} avis)
+                {productReviewStats?.averageRating ? 
+                  `${productReviewStats.averageRating}/5` : 'Nouveau'
+                } ({productReviewStats?.totalReviews || 0} avis)
               </span>
+              {productReviewStats?.recommendationRate > 0 && (
+                <span className="recommendation-rate">
+                  👍 {productReviewStats.recommendationRate}% recommandent ce produit
+                </span>
+              )}
             </div>
           </div>
 
@@ -294,6 +310,173 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
           </div>
         </div>
       </div>
+
+      {/* Section Avis et Évaluations */}
+      {productReviewStats && productReviewStats.totalReviews > 0 && (
+        <div className="reviews-section">
+          <div className="reviews-header">
+            <h3>⭐ Avis clients ({productReviewStats.totalReviews})</h3>
+            
+            {/* Statistiques détaillées */}
+            <div className="review-stats">
+              <div className="overall-rating">
+                <div className="rating-display">
+                  <span className="big-rating">{productReviewStats.averageRating}</span>
+                  <div className="rating-details">
+                    <div className="stars-large">
+                      {[...Array(5)].map((_, i) => (
+                        <span key={i} className={`star ${i < Math.floor(productReviewStats.averageRating) ? 'filled' : ''}`}>
+                          ⭐
+                        </span>
+                      ))}
+                    </div>
+                    <span className="rating-subtitle">sur 5 étoiles</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Distribution des notes */}
+              <div className="rating-distribution">
+                {[5, 4, 3, 2, 1].map((stars) => (
+                  <div key={stars} className="rating-bar">
+                    <span className="stars-count">{stars} ⭐</span>
+                    <div className="bar-container">
+                      <div 
+                        className="bar-fill" 
+                        style={{ 
+                          width: `${productReviewStats.totalReviews > 0 ? 
+                            (productReviewStats.ratingDistribution[stars] / productReviewStats.totalReviews) * 100 : 0}%` 
+                        }}
+                      ></div>
+                    </div>
+                    <span className="count">({productReviewStats.ratingDistribution[stars]})</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Statistiques détaillées */}
+              <div className="detailed-stats">
+                {productReviewStats.averageDeliveryRating > 0 && (
+                  <div className="stat-item">
+                    <span className="stat-icon">🚚</span>
+                    <span className="stat-label">Livraison</span>
+                    <span className="stat-value">{productReviewStats.averageDeliveryRating}/5</span>
+                  </div>
+                )}
+                {productReviewStats.averageProductQualityRating > 0 && (
+                  <div className="stat-item">
+                    <span className="stat-icon">📦</span>
+                    <span className="stat-label">Qualité</span>
+                    <span className="stat-value">{productReviewStats.averageProductQualityRating}/5</span>
+                  </div>
+                )}
+                {productReviewStats.averageSellerServiceRating > 0 && (
+                  <div className="stat-item">
+                    <span className="stat-icon">👤</span>
+                    <span className="stat-label">Service</span>
+                    <span className="stat-value">{productReviewStats.averageSellerServiceRating}/5</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Liste des avis */}
+          <div className="reviews-list">
+            {productReviews && productReviews.length > 0 ? (
+              productReviews.map((review) => (
+                <div key={review._id} className="review-card">
+                  <div className="review-header">
+                    <div className="reviewer-info">
+                      <div className="reviewer-avatar">
+                        {review.buyerFirstName?.charAt(0)?.toUpperCase() || 'A'}
+                      </div>
+                      <div className="reviewer-details">
+                        <h4>{review.displayName}</h4>
+                        <span className="review-date">
+                          {new Date(review.createdAt).toLocaleDateString('fr-FR', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="review-rating">
+                      <div className="stars">
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i} className={`star ${i < review.rating ? 'filled' : ''}`}>
+                            ⭐
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {review.comment && (
+                    <div className="review-comment">
+                      <p>{review.comment}</p>
+                    </div>
+                  )}
+
+                  {/* Notes détaillées si disponibles */}
+                  {(review.deliveryRating || review.productQualityRating || review.sellerServiceRating) && (
+                    <div className="review-detailed-ratings">
+                      {review.deliveryRating && (
+                        <div className="detailed-rating">
+                          <span className="rating-label">🚚 Livraison:</span>
+                          <div className="mini-stars">
+                            {[...Array(5)].map((_, i) => (
+                              <span key={i} className={`mini-star ${i < review.deliveryRating ? 'filled' : ''}`}>⭐</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {review.productQualityRating && (
+                        <div className="detailed-rating">
+                          <span className="rating-label">📦 Qualité:</span>
+                          <div className="mini-stars">
+                            {[...Array(5)].map((_, i) => (
+                              <span key={i} className={`mini-star ${i < review.productQualityRating ? 'filled' : ''}`}>⭐</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {review.sellerServiceRating && (
+                        <div className="detailed-rating">
+                          <span className="rating-label">👤 Service:</span>
+                          <div className="mini-stars">
+                            {[...Array(5)].map((_, i) => (
+                              <span key={i} className={`mini-star ${i < review.sellerServiceRating ? 'filled' : ''}`}>⭐</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {review.isRecommended !== null && (
+                    <div className="review-recommendation">
+                      {review.isRecommended ? (
+                        <span className="recommendation positive">👍 Recommande ce produit</span>
+                      ) : (
+                        <span className="recommendation negative">👎 Ne recommande pas ce produit</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))
+            ) : (
+              <div className="no-reviews">
+                <div className="no-reviews-icon">⭐</div>
+                <h4>Aucun avis pour le moment</h4>
+                <p>Soyez le premier à laisser un avis sur ce produit !</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Section produits similaires */}
       <div className="related-products">

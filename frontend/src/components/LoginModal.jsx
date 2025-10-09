@@ -12,6 +12,8 @@ const LoginModal = ({ isOpen, onClose, onLogin, initialMode = 'signin' }) => {
   const [companyName, setCompanyName] = useState('')
   const [siret, setSiret] = useState('')
   const [tvaNumber, setTvaNumber] = useState('')
+  const [isGroupMember, setIsGroupMember] = useState(false)
+  const [groupAccessCode, setGroupAccessCode] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -47,7 +49,9 @@ const LoginModal = ({ isOpen, onClose, onLogin, initialMode = 'signin' }) => {
           userType,
           companyName: companyName || undefined,
           siret: siret || undefined,
-          tvaNumber: tvaNumber || undefined
+          tvaNumber: tvaNumber || undefined,
+          isGroupMember: isGroupMember || undefined,
+          groupAccessCode: (isGroupMember && groupAccessCode) ? groupAccessCode : undefined
         })
         // Sauvegarder immédiatement les informations utilisateur
         localStorage.setItem('userEmail', result.email)
@@ -55,6 +59,8 @@ const LoginModal = ({ isOpen, onClose, onLogin, initialMode = 'signin' }) => {
         localStorage.setItem('userLastName', result.lastName || '')
         localStorage.setItem('userType', result.userType || '')
         localStorage.setItem('companyName', result.companyName || '')
+        localStorage.setItem('isGroupMember', result.isGroupMember ? 'true' : 'false')
+        localStorage.setItem('groupAccessCode', result.groupAccessCode || '')
         
         setSuccess(true)
         setTimeout(() => {
@@ -88,6 +94,8 @@ const LoginModal = ({ isOpen, onClose, onLogin, initialMode = 'signin' }) => {
     setPassword('')
     setFirstName('')
     setLastName('')
+    setIsGroupMember(false)
+    setGroupAccessCode('')
   }
 
   const handleOverlayClick = (e) => {
@@ -103,6 +111,8 @@ const LoginModal = ({ isOpen, onClose, onLogin, initialMode = 'signin' }) => {
     setPassword('')
     setFirstName('')
     setLastName('')
+    setIsGroupMember(false)
+    setGroupAccessCode('')
     onClose()
   }
 
@@ -167,6 +177,36 @@ const LoginModal = ({ isOpen, onClose, onLogin, initialMode = 'signin' }) => {
                   <option value="grossiste">🏢 Grossiste</option>
                 </select>
               </div>
+
+              <div className="input-group">
+                <label className="form-label">Appartenance à un groupe</label>
+                <select
+                  value={isGroupMember ? 'member' : 'individual'}
+                  onChange={(e) => setIsGroupMember(e.target.value === 'member')}
+                  className="form-select"
+                  required
+                >
+                  <option value="individual">👤 Je n'appartiens pas à un groupe</option>
+                  <option value="member">👥 Membre de groupe</option>
+                </select>
+              </div>
+
+              {isGroupMember && (
+                <div className="input-group">
+                  <input
+                    type="text"
+                    placeholder="Code d'accès du groupe *"
+                    value={groupAccessCode}
+                    onChange={(e) => setGroupAccessCode(e.target.value)}
+                    className="form-input"
+                    required
+                    maxLength={20}
+                  />
+                  <small className="form-hint">
+                    Saisissez le code d'accès fourni par votre groupe
+                  </small>
+                </div>
+              )}
 
               {(userType === 'professionnel' || userType === 'grossiste') && (
                 <>

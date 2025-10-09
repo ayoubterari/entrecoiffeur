@@ -7,6 +7,7 @@ import Toast from '../components/Toast'
 import ConfirmDialog from '../components/ConfirmDialog'
 import ImageUpload from '../components/ImageUpload'
 import MessagePopup from '../components/MessagePopup'
+import OrderReviewModal from '../components/OrderReviewModal'
 import './Dashboard.css'
 
 const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, companyName }) => {
@@ -21,6 +22,9 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
   const [productImages, setProductImages] = useState([])
   const [selectedConversation, setSelectedConversation] = useState(null)
   const [isMessagePopupOpen, setIsMessagePopupOpen] = useState(false)
+  const [couponCopied, setCouponCopied] = useState(false)
+  const [showReviewModal, setShowReviewModal] = useState(false)
+  const [selectedOrderForReview, setSelectedOrderForReview] = useState(null)
 
   // Fonction pour vérifier les permissions d'ajout de produit
   const canAddProduct = () => {
@@ -62,6 +66,41 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
     return ""
   }
 
+  // Get categories and user products
+  const categories = useQuery(api.products.getCategories)
+  const userProducts = useQuery(api.products.getProductsBySeller, 
+    userId ? { sellerId: userId } : "skip"
+  )
+  
+  // Get orders data
+  const sellerOrders = useQuery(api.orders.getSellerOrders, 
+    userId ? { sellerId: userId } : "skip"
+  )
+  const buyerOrders = useQuery(api.orders.getBuyerOrders, 
+    userId ? { buyerId: userId } : "skip"
+  )
+  const orderStats = useQuery(api.orders.getSellerOrderStats, 
+    userId ? { sellerId: userId } : "skip"
+  )
+  
+  // Get current user data to check group membership
+  const currentUser = useQuery(api.auth.getCurrentUser, userId ? { userId } : "skip")
+  
+  // Get FBGROUP coupon if user is a group member
+  const fbGroupCoupon = useQuery(api.functions.queries.coupons.getCouponByCode, 
+    currentUser?.isGroupMember ? { code: "FBGROUP" } : "skip"
+  )
+
+  // Get pending review orders for buyer
+  const pendingReviewOrders = useQuery(api.orderReviews.getPendingReviewOrders,
+    userId ? { buyerId: userId } : "skip"
+  )
+
+  // Get buyer reviews
+  const buyerReviews = useQuery(api.orderReviews.getBuyerReviews,
+    userId ? { buyerId: userId, limit: 10 } : "skip"
+  )
+
   // Filtrer les onglets selon le rôle utilisateur
   const getAvailableTabs = () => {
     const baseTabs = [
@@ -81,27 +120,15 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
       )
     }
     
+    // Ajouter l'onglet Coupons uniquement pour les membres de groupe
+    if (currentUser?.isGroupMember) {
+      baseTabs.push({ id: 'coupons', name: 'Mes Coupons', icon: '🎫' })
+    }
+    
     return baseTabs
   }
   
   const tabs = getAvailableTabs()
-
-  // Get categories and user products
-  const categories = useQuery(api.products.getCategories)
-  const userProducts = useQuery(api.products.getProductsBySeller, 
-    userId ? { sellerId: userId } : "skip"
-  )
-  
-  // Get orders data
-  const sellerOrders = useQuery(api.orders.getSellerOrders, 
-    userId ? { sellerId: userId } : "skip"
-  )
-  const buyerOrders = useQuery(api.orders.getBuyerOrders, 
-    userId ? { buyerId: userId } : "skip"
-  )
-  const orderStats = useQuery(api.orders.getSellerOrderStats, 
-    userId ? { sellerId: userId } : "skip"
-  )
   
   // Messages queries
   const conversations = useQuery(api.messaging.getUserConversations,
@@ -361,6 +388,27 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
     }
   }
 
+  // Function to copy coupon code
+  const copyCouponCode = () => {
+    if (fbGroupCoupon?.code) {
+      navigator.clipboard.writeText(fbGroupCoupon.code)
+      setCouponCopied(true)
+      setTimeout(() => setCouponCopied(false), 2000)
+    }
+  }
+
+  // Handle review order
+  const handleReviewOrder = (order) => {
+    setSelectedOrderForReview(order)
+    setShowReviewModal(true)
+  }
+
+  // Handle close review modal
+  const handleCloseReviewModal = () => {
+    setShowReviewModal(false)
+    setSelectedOrderForReview(null)
+  }
+
   // Ajouter une classe au body pour supprimer les marges
   React.useEffect(() => {
     document.body.classList.add('dashboard-body')
@@ -500,6 +548,90 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                 </div>
                 <button className="save-btn">Sauvegarder</button>
               </div>
+
+              {/* Section Coupon de Groupe */}
+              {currentUser?.isGroupMember && fbGroupCoupon && (
+                <div className="group-coupon-section">
+                  <h3>🎫 Votre Coupon de Groupe</h3>
+                  <div className="group-coupon-card">
+                    <div className="coupon-header">
+                      <div className="coupon-icon">🎁</div>
+                      <div className="coupon-info">
+                        <h4>Coupon Exclusif Membre</h4>
+                        <p>Réservé aux membres du groupe</p>
+                      </div>
+                      <div className="group-badge">
+                        <span>👥 Groupe</span>
+                      </div>
+                    </div>
+                    
+                    <div className="coupon-details">
+                      <div className="coupon-code-section">
+                        <label>Code promo :</label>
+                        <div className="coupon-code-container">
+                          <span className="coupon-code">{fbGroupCoupon.code}</span>
+                          <button 
+                            className={`copy-coupon-btn ${couponCopied ? 'copied' : ''}`}
+                            onClick={copyCouponCode}
+                            title="Copier le code"
+                          >
+                            {couponCopied ? '✓' : '📋'}
+                          </button>
+                        </div>
+                        {couponCopied && (
+                          <span className="copy-success">Code copié !</span>
+                        )}
+                      </div>
+                      
+                      <div className="coupon-discount">
+                        <div className="discount-badge">
+                          <span className="discount-value">{fbGroupCoupon.discountPercentage}%</span>
+                          <span className="discount-label">de réduction</span>
+                        </div>
+                      </div>
+                      
+                      {fbGroupCoupon.description && (
+                        <div className="coupon-description">
+                          <p>{fbGroupCoupon.description}</p>
+                        </div>
+                      )}
+                      
+                      <div className="coupon-conditions">
+                        {fbGroupCoupon.minimumAmount && (
+                          <div className="condition-item">
+                            <span className="condition-icon">💰</span>
+                            <span>Commande minimum : {fbGroupCoupon.minimumAmount}€</span>
+                          </div>
+                        )}
+                        
+                        {fbGroupCoupon.validUntil && (
+                          <div className="condition-item">
+                            <span className="condition-icon">📅</span>
+                            <span>Valide jusqu'au : {new Date(fbGroupCoupon.validUntil).toLocaleDateString('fr-FR')}</span>
+                          </div>
+                        )}
+                        
+                        {fbGroupCoupon.usageLimit && (
+                          <div className="condition-item">
+                            <span className="condition-icon">🔢</span>
+                            <span>Utilisations restantes : {fbGroupCoupon.usageLimit - fbGroupCoupon.usageCount}</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="coupon-actions">
+                        <button 
+                          className="use-coupon-btn"
+                          onClick={() => navigate('/')}
+                        >
+                          <span>🛍️</span>
+                          Utiliser maintenant
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -1104,6 +1236,48 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                 <p>Suivez vos achats et commandes</p>
               </div>
 
+              {/* Section des évaluations en attente */}
+              {pendingReviewOrders && pendingReviewOrders.length > 0 && (
+                <div className="pending-reviews-section">
+                  <h3>⭐ Évaluations en attente</h3>
+                  <p>Vos commandes livrées en attente d'évaluation</p>
+                  <div className="pending-reviews-grid">
+                    {pendingReviewOrders.map((order) => (
+                      <div key={order._id} className="pending-review-card">
+                        <div className="review-card-header">
+                          <div className="order-info">
+                            <span className="order-number">#{order.orderNumber}</span>
+                            <span className="delivered-badge">🏠 Livrée</span>
+                          </div>
+                        </div>
+                        
+                        <div className="review-card-content">
+                          <div className="product-info">
+                            {order.productImage && (
+                              <img src={order.productImage} alt={order.productName} className="product-thumb" />
+                            )}
+                            <div className="product-details">
+                              <h4>{order.productName}</h4>
+                              <p>Vendeur : {order.sellerName}</p>
+                              {order.sellerCompany && <p>{order.sellerCompany}</p>}
+                            </div>
+                          </div>
+                          
+                          <div className="review-action">
+                            <button 
+                              className="review-btn"
+                              onClick={() => handleReviewOrder(order)}
+                            >
+                              ⭐ Évaluer
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="purchases-list">
                 {buyerOrders && buyerOrders.length > 0 ? (
                   buyerOrders.map((order) => (
@@ -1178,6 +1352,164 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
               <MockDataInitializer />
             </div>
           )}
+
+          {activeTab === 'coupons' && currentUser?.isGroupMember && (
+            <div className="tab-content">
+              <div className="coupons-header">
+                <h2>🎫 Mes Coupons Exclusifs</h2>
+                <p>Vos coupons de réduction en tant que membre du groupe</p>
+                <div className="group-member-badge">
+                  <span>👥 Membre de Groupe</span>
+                </div>
+              </div>
+
+              <div className="coupons-grid">
+                {fbGroupCoupon ? (
+                  <div className="coupon-card-large">
+                    <div className="coupon-card-header">
+                      <div className="coupon-type-badge">
+                        <span className="badge-icon">🎁</span>
+                        <span>Coupon Exclusif</span>
+                      </div>
+                      <div className="coupon-status active">
+                        <span>✅ Actif</span>
+                      </div>
+                    </div>
+                    
+                    <div className="coupon-main-content">
+                      <div className="coupon-code-display">
+                        <label>Code promo :</label>
+                        <div className="code-container">
+                          <span className="code-text">{fbGroupCoupon.code}</span>
+                          <button 
+                            className={`copy-code-btn ${couponCopied ? 'copied' : ''}`}
+                            onClick={copyCouponCode}
+                            title="Copier le code"
+                          >
+                            {couponCopied ? '✓ Copié' : '📋 Copier'}
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="coupon-value">
+                        <div className="discount-display">
+                          <span className="discount-number">{fbGroupCoupon.discountPercentage}%</span>
+                          <span className="discount-text">de réduction</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {fbGroupCoupon.description && (
+                      <div className="coupon-description">
+                        <p>{fbGroupCoupon.description}</p>
+                      </div>
+                    )}
+                    
+                    <div className="coupon-details-grid">
+                      {fbGroupCoupon.minimumAmount && (
+                        <div className="detail-item">
+                          <span className="detail-icon">💰</span>
+                          <div className="detail-content">
+                            <span className="detail-label">Commande minimum</span>
+                            <span className="detail-value">{fbGroupCoupon.minimumAmount}€</span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {fbGroupCoupon.validUntil && (
+                        <div className="detail-item">
+                          <span className="detail-icon">📅</span>
+                          <div className="detail-content">
+                            <span className="detail-label">Valide jusqu'au</span>
+                            <span className="detail-value">
+                              {new Date(fbGroupCoupon.validUntil).toLocaleDateString('fr-FR')}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {fbGroupCoupon.usageLimit && (
+                        <div className="detail-item">
+                          <span className="detail-icon">🔢</span>
+                          <div className="detail-content">
+                            <span className="detail-label">Utilisations restantes</span>
+                            <span className="detail-value">
+                              {fbGroupCoupon.usageLimit - fbGroupCoupon.usageCount}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="detail-item">
+                        <span className="detail-icon">📊</span>
+                        <div className="detail-content">
+                          <span className="detail-label">Utilisé</span>
+                          <span className="detail-value">{fbGroupCoupon.usageCount} fois</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="coupon-actions">
+                      <button 
+                        className="use-now-btn"
+                        onClick={() => navigate('/')}
+                      >
+                        <span>🛍️</span>
+                        Utiliser maintenant
+                      </button>
+                      <button 
+                        className="share-coupon-btn"
+                        onClick={() => {
+                          if (navigator.share) {
+                            navigator.share({
+                              title: 'Code promo Entre Coiffeur',
+                              text: `Utilisez le code ${fbGroupCoupon.code} pour ${fbGroupCoupon.discountPercentage}% de réduction !`,
+                              url: window.location.origin
+                            })
+                          }
+                        }}
+                      >
+                        <span>📤</span>
+                        Partager
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="coupon-loading">
+                    <div className="loading-spinner"></div>
+                    <p>Chargement de vos coupons...</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Section avantages membres */}
+              <div className="member-benefits-section">
+                <h3>🌟 Avantages Membres du Groupe</h3>
+                <div className="benefits-grid">
+                  <div className="benefit-card">
+                    <div className="benefit-icon">🎁</div>
+                    <h4>Coupons Exclusifs</h4>
+                    <p>Accès à des codes promo réservés aux membres</p>
+                  </div>
+                  <div className="benefit-card">
+                    <div className="benefit-icon">⚡</div>
+                    <h4>Accès Prioritaire</h4>
+                    <p>Découvrez les nouveautés en avant-première</p>
+                  </div>
+                  <div className="benefit-card">
+                    <div className="benefit-icon">💬</div>
+                    <h4>Support Dédié</h4>
+                    <p>Assistance client prioritaire et personnalisée</p>
+                  </div>
+                  <div className="benefit-card">
+                    <div className="benefit-icon">🚀</div>
+                    <h4>Offres Flash</h4>
+                    <p>Promotions spéciales et ventes privées</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -1216,6 +1548,13 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
           existingConversationId={selectedConversation._id}
         />
       )}
+
+      {/* Order Review Modal */}
+      <OrderReviewModal
+        isOpen={showReviewModal}
+        onClose={handleCloseReviewModal}
+        order={selectedOrderForReview}
+      />
       </div>
     </div>
   )

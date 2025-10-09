@@ -5,6 +5,7 @@ import { api } from '../lib/convex'
 import Carousel from '../components/Carousel'
 import ProductCard from '../components/ProductCard'
 import SmartSearch from '../components/SmartSearch'
+import GroupWelcomeModal from '../components/GroupWelcomeModal'
 import styles from '../components/Home.module.css'
 
 const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName, onAddToCart, cart, onOpenCart, onShowLogin, onToggleFavorite, favoritesCount, userId, onOpenFavorites }) => {
@@ -15,6 +16,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [favorites, setFavorites] = useState([])
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [showGroupWelcomeModal, setShowGroupWelcomeModal] = useState(false)
 
   // Get real data from Convex
   const categoriesData = useQuery(api.products.getCategories)
@@ -28,6 +30,9 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   
   // Get user favorite product IDs for efficient checking
   const userFavoriteIds = useQuery(api.favorites.getUserFavoriteIds, userId ? { userId } : "skip")
+  
+  // Get current user data to check group membership
+  const currentUser = useQuery(api.auth.getCurrentUser, userId ? { userId } : "skip")
 
   // Redirection automatique pour les superadmins
   useEffect(() => {
@@ -46,6 +51,24 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
       }
     }
   }, [isAuthenticated, userEmail, navigate])
+
+  // Vérifier si l'utilisateur est un nouveau membre de groupe et afficher le modal
+  useEffect(() => {
+    if (isAuthenticated && currentUser && userId) {
+      // Vérifier si l'utilisateur est membre d'un groupe et n'a pas encore vu le modal de bienvenue
+      if (currentUser.isGroupMember && 
+          currentUser.groupAccessCode === "123456" && 
+          !currentUser.hasSeenGroupWelcome) {
+        
+        // Délai pour laisser la page se charger complètement
+        const timer = setTimeout(() => {
+          setShowGroupWelcomeModal(true)
+        }, 1000)
+        
+        return () => clearTimeout(timer)
+      }
+    }
+  }, [isAuthenticated, currentUser, userId])
   const featuredProductsData = useQuery(api.products.getFeaturedProducts)
   const saleProductsData = useQuery(api.products.getSaleProducts)
 
@@ -453,6 +476,13 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
           <p>&copy; 2025 Entre Coiffeur - Tous droits réservés</p>
         </div>
       </footer>
+
+      {/* Modal de bienvenue pour les membres de groupe */}
+      <GroupWelcomeModal
+        isOpen={showGroupWelcomeModal}
+        onClose={() => setShowGroupWelcomeModal(false)}
+        userId={userId}
+      />
     </div>
   )
 }

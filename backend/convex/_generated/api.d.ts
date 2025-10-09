@@ -24,8 +24,10 @@ import type * as functions_mutations_coupons from "../functions/mutations/coupon
 import type * as functions_queries_blog from "../functions/queries/blog.js";
 import type * as functions_queries_coupons from "../functions/queries/coupons.js";
 import type * as functions_queries_search from "../functions/queries/search.js";
+import type * as initializeFBGroupCoupon from "../initializeFBGroupCoupon.js";
 import type * as messaging from "../messaging.js";
 import type * as netVendeur from "../netVendeur.js";
+import type * as orderReviews from "../orderReviews.js";
 import type * as orders from "../orders.js";
 import type * as payments from "../payments.js";
 import type * as products from "../products.js";
@@ -51,8 +53,10 @@ declare const fullApi: ApiFromModules<{
   "functions/queries/blog": typeof functions_queries_blog;
   "functions/queries/coupons": typeof functions_queries_coupons;
   "functions/queries/search": typeof functions_queries_search;
+  initializeFBGroupCoupon: typeof initializeFBGroupCoupon;
   messaging: typeof messaging;
   netVendeur: typeof netVendeur;
+  orderReviews: typeof orderReviews;
   orders: typeof orders;
   payments: typeof payments;
   products: typeof products;

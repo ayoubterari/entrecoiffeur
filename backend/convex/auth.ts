@@ -13,6 +13,8 @@ export const createUser = mutation({
     companyName: v.optional(v.string()),
     siret: v.optional(v.string()),
     tvaNumber: v.optional(v.string()),
+    isGroupMember: v.optional(v.boolean()),
+    groupAccessCode: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     // Check if user already exists
@@ -32,6 +34,18 @@ export const createUser = mutation({
       }
     }
 
+    // Validation pour les membres de groupe
+    if (args.isGroupMember) {
+      if (!args.groupAccessCode) {
+        throw new ConvexError("Group access code is required for group members");
+      }
+      
+      // Vérifier le code d'accès (pour l'instant, seul "123456" est valide)
+      if (args.groupAccessCode !== "123456") {
+        throw new ConvexError("Invalid group access code");
+      }
+    }
+
     // Create new user
     const userId = await ctx.db.insert("users", {
       email: args.email,
@@ -42,6 +56,9 @@ export const createUser = mutation({
       companyName: args.companyName,
       siret: args.siret,
       tvaNumber: args.tvaNumber,
+      isGroupMember: args.isGroupMember || false,
+      groupAccessCode: args.groupAccessCode,
+      hasSeenGroupWelcome: false, // Par défaut, l'utilisateur n'a pas encore vu le modal de bienvenue
       createdAt: Date.now(),
     });
 
@@ -51,7 +68,9 @@ export const createUser = mutation({
       firstName: args.firstName,
       lastName: args.lastName,
       userType: args.userType,
-      companyName: args.companyName
+      companyName: args.companyName,
+      isGroupMember: args.isGroupMember || false,
+      groupAccessCode: args.groupAccessCode
     };
   },
 });
@@ -238,5 +257,22 @@ export const getUsersByType = query({
         total: users.length
       };
     }
+  },
+});
+
+// Mark user as having seen group welcome modal
+export const markGroupWelcomeSeen = mutation({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const user = await ctx.db.get(args.userId);
+    if (!user) {
+      throw new ConvexError("User not found");
+    }
+
+    await ctx.db.patch(args.userId, {
+      hasSeenGroupWelcome: true
+    });
+
+    return { success: true };
   },
 });
