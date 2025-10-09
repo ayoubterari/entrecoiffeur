@@ -1,0 +1,438 @@
+/* Share Modal Styles */
+
+.share-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.share-modal-content {
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(255, 255, 255, 0.9) 100%);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 107, 157, 0.2);
+  border-radius: 25px;
+  padding: 2rem;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 25px 50px rgba(255, 107, 157, 0.2);
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.share-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 107, 157, 0.1);
+  border: 2px solid rgba(255, 107, 157, 0.2);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ff6b9d;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.share-modal-close:hover {
+  background: rgba(255, 107, 157, 0.2);
+  border-color: #ff6b9d;
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* Header */
+.share-modal-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.share-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.share-modal-header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 0.5rem 0;
+}
+
+.share-modal-header p {
+  color: #636e72;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Points Info */
+.points-info {
+  margin-bottom: 2rem;
+}
+
+.points-card {
+  background: linear-gradient(135deg, 
+    rgba(255, 107, 157, 0.05) 0%, 
+    rgba(253, 121, 168, 0.05) 100%);
+  border: 2px solid rgba(255, 107, 157, 0.1);
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.points-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.points-details h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2d3436;
+}
+
+.points-details ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.points-details li {
+  padding: 0.5rem 0;
+  color: #636e72;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Error Message */
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border: 2px solid rgba(239, 68, 68, 0.2);
+  border-radius: 15px;
+  padding: 1rem;
+  color: #ef4444;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+/* Generating Link */
+.generating-link {
+  text-align: center;
+  padding: 2rem;
+  color: #636e72;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 107, 157, 0.2);
+  border-top: 4px solid #ff6b9d;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+/* Affiliate Link Section */
+.affiliate-link-section {
+  margin-bottom: 2rem;
+}
+
+.link-label {
+  display: block;
+  font-weight: 600;
+  color: #2d3436;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.link-container {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.affiliate-link-input {
+  flex: 1;
+  padding: 1rem;
+  border: 2px solid rgba(255, 107, 157, 0.2);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  color: #2d3436;
+  font-family: 'Courier New', monospace;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.affiliate-link-input:focus {
+  outline: none;
+  border-color: #ff6b9d;
+  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+}
+
+.copy-btn {
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+  white-space: nowrap;
+}
+
+.copy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+}
+
+.copy-btn.copied {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+}
+
+.copy-icon {
+  font-size: 1rem;
+}
+
+/* Social Share Section */
+.social-share-section {
+  margin-bottom: 2rem;
+}
+
+.social-share-section h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2d3436;
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.social-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+
+.social-btn {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: white;
+  font-size: 0.9rem;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.social-btn.facebook {
+  background: linear-gradient(135deg, #1877f2, #166fe5);
+}
+
+.social-btn.twitter {
+  background: linear-gradient(135deg, #1da1f2, #0d8bd9);
+}
+
+.social-btn.whatsapp {
+  background: linear-gradient(135deg, #25d366, #20ba5a);
+}
+
+.social-btn.telegram {
+  background: linear-gradient(135deg, #0088cc, #006ba6);
+}
+
+.social-btn.linkedin {
+  background: linear-gradient(135deg, #0077b5, #005885);
+}
+
+.social-icon {
+  font-size: 1.1rem;
+}
+
+/* Sharing Tips */
+.sharing-tips {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 107, 157, 0.03);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 107, 157, 0.1);
+}
+
+.sharing-tips h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3436;
+  text-align: center;
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.tip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: #636e72;
+}
+
+.tip-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* Modal Footer */
+.modal-footer {
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 107, 157, 0.1);
+}
+
+.close-btn {
+  padding: 0.75rem 2rem;
+  background: rgba(255, 107, 157, 0.1);
+  color: #ff6b9d;
+  border: 2px solid rgba(255, 107, 157, 0.2);
+  border-radius: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.close-btn:hover {
+  background: rgba(255, 107, 157, 0.2);
+  border-color: #ff6b9d;
+  transform: translateY(-1px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .share-modal-content {
+    padding: 1.5rem;
+    margin: 1rem;
+    border-radius: 20px;
+  }
+
+  .share-modal-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .points-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .link-container {
+    flex-direction: column;
+  }
+
+  .affiliate-link-input {
+    width: 100%;
+  }
+
+  .copy-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .social-buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tips-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .share-modal-content {
+    padding: 1rem;
+    max-height: 95vh;
+  }
+
+  .share-modal-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .points-icon {
+    font-size: 1.5rem;
+  }
+
+  .social-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .social-btn {
+    padding: 1rem;
+  }
+}

@@ -8,6 +8,7 @@ import ConfirmDialog from '../components/ConfirmDialog'
 import ImageUpload from '../components/ImageUpload'
 import MessagePopup from '../components/MessagePopup'
 import OrderReviewModal from '../components/OrderReviewModal'
+import AffiliateTab from '../components/AffiliateTab'
 import './Dashboard.css'
 
 const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, companyName }) => {
@@ -107,13 +108,14 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
       { id: 'profile', name: 'Profil', icon: '👤' },
       { id: 'messages', name: 'Messages', icon: '💬' },
       { id: 'purchases', name: 'Mes Commandes', icon: '🛒' },
+      { id: 'affiliate', name: 'Affiliation', icon: '💰' },
       { id: 'settings', name: 'Paramètres', icon: '⚙️' },
       { id: 'dev', name: 'Dev Tools', icon: '🛠️' },
     ]
     
     // Ajouter les onglets de vente uniquement pour professionnels et grossistes
     if (userType === 'professionnel' || userType === 'grossiste') {
-      baseTabs.splice(3, 0, 
+      baseTabs.splice(4, 0, 
         { id: 'products', name: 'Mes Produits', icon: '📦' },
         { id: 'orders', name: 'Orders (Vendeur)', icon: '📋' },
         { id: 'analytics', name: 'Statistiques', icon: '📊' }
@@ -1198,6 +1200,11 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
             </div>
           )}
 
+          {activeTab === 'affiliate' && (
+            <div className="tab-content">
+              <AffiliateTab userId={userId} />
+            </div>
+          )}
 
           {activeTab === 'settings' && (
             <div className="tab-content">

@@ -13,6 +13,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as affiliateSystem from "../affiliateSystem.js";
 import type * as auth from "../auth.js";
 import type * as commissions from "../commissions.js";
 import type * as community from "../community.js";
@@ -25,6 +26,7 @@ import type * as functions_queries_blog from "../functions/queries/blog.js";
 import type * as functions_queries_coupons from "../functions/queries/coupons.js";
 import type * as functions_queries_search from "../functions/queries/search.js";
 import type * as initializeFBGroupCoupon from "../initializeFBGroupCoupon.js";
+import type * as initializeTestReviews from "../initializeTestReviews.js";
 import type * as messaging from "../messaging.js";
 import type * as netVendeur from "../netVendeur.js";
 import type * as orderReviews from "../orderReviews.js";
@@ -42,6 +44,7 @@ import type * as sellerPosts from "../sellerPosts.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  affiliateSystem: typeof affiliateSystem;
   auth: typeof auth;
   commissions: typeof commissions;
   community: typeof community;
@@ -54,6 +57,7 @@ declare const fullApi: ApiFromModules<{
   "functions/queries/coupons": typeof functions_queries_coupons;
   "functions/queries/search": typeof functions_queries_search;
   initializeFBGroupCoupon: typeof initializeFBGroupCoupon;
+  initializeTestReviews: typeof initializeTestReviews;
   messaging: typeof messaging;
   netVendeur: typeof netVendeur;
   orderReviews: typeof orderReviews;

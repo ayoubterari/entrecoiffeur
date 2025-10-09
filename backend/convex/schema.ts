@@ -87,12 +87,18 @@ export default defineSchema({
       postalCode: v.string(),
       country: v.string(),
     }),
+    // Champs d'affiliation
+    affiliateCode: v.optional(v.string()), // Code d'affiliation utilisé
+    affiliateId: v.optional(v.id("users")), // Utilisateur qui a référé
+    affiliateEarningProcessed: v.optional(v.boolean()), // Si les gains ont été traités
     createdAt: v.number(),
     updatedAt: v.number(),
   }).index("by_buyer", ["buyerId"])
     .index("by_seller", ["sellerId"])
     .index("by_status", ["status"])
-    .index("by_order_number", ["orderNumber"]),
+    .index("by_order_number", ["orderNumber"])
+    .index("by_affiliate", ["affiliateId"])
+    .index("by_affiliate_code", ["affiliateCode"]),
   
   // Reviews table
   reviews: defineTable({
@@ -324,4 +330,96 @@ export default defineSchema({
   }).index("by_post", ["postId"])
     .index("by_user", ["userId"])
     .index("by_post_created", ["postId", "createdAt"]),
+
+  // Affiliate Links table - Liens d'affiliation générés par les utilisateurs
+  affiliateLinks: defineTable({
+    affiliateId: v.id("users"), // Utilisateur qui partage (affilié)
+    sellerId: v.id("users"), // Vendeur dont le store est partagé
+    linkCode: v.string(), // Code unique du lien (ex: "ABC123")
+    linkUrl: v.string(), // URL complète du lien d'affiliation
+    clicksCount: v.number(), // Nombre de clics sur le lien
+    conversionsCount: v.number(), // Nombre de commandes passées via ce lien
+    totalEarnings: v.number(), // Total des points gagnés via ce lien
+    isActive: v.boolean(), // Si le lien est actif
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_affiliate", ["affiliateId"])
+    .index("by_seller", ["sellerId"])
+    .index("by_link_code", ["linkCode"])
+    .index("by_active", ["isActive"])
+    .index("by_affiliate_seller", ["affiliateId", "sellerId"]),
+
+  // Affiliate Clicks table - Tracking des clics sur les liens d'affiliation
+  affiliateClicks: defineTable({
+    linkId: v.id("affiliateLinks"),
+    affiliateId: v.id("users"), // Affilié qui a généré le lien
+    sellerId: v.id("users"), // Vendeur visité
+    visitorId: v.optional(v.string()), // ID anonyme du visiteur (cookie/session)
+    ipAddress: v.optional(v.string()), // Adresse IP du visiteur
+    userAgent: v.optional(v.string()), // User agent du navigateur
+    referrer: v.optional(v.string()), // Site de provenance
+    convertedToOrder: v.boolean(), // Si ce clic a mené à une commande
+    orderId: v.optional(v.id("orders")), // ID de la commande si conversion
+    createdAt: v.number(),
+  }).index("by_link", ["linkId"])
+    .index("by_affiliate", ["affiliateId"])
+    .index("by_seller", ["sellerId"])
+    .index("by_visitor", ["visitorId"])
+    .index("by_converted", ["convertedToOrder"])
+    .index("by_order", ["orderId"]),
+
+  // Affiliate Earnings table - Points gagnés par les affiliés
+  affiliateEarnings: defineTable({
+    affiliateId: v.id("users"), // Utilisateur qui a gagné les points
+    orderId: v.id("orders"), // Commande qui a généré les points
+    linkId: v.id("affiliateLinks"), // Lien d'affiliation utilisé
+    sellerId: v.id("users"), // Vendeur de la commande
+    buyerId: v.id("users"), // Acheteur de la commande
+    orderAmount: v.number(), // Montant de la commande
+    pointsEarned: v.number(), // Points gagnés (ex: 5% du montant)
+    pointsRate: v.number(), // Taux de commission utilisé (ex: 0.05 pour 5%)
+    status: v.union(
+      v.literal("pending"), // En attente (commande pas encore livrée)
+      v.literal("confirmed"), // Confirmé (commande livrée)
+      v.literal("cancelled") // Annulé (commande annulée/remboursée)
+    ),
+    paidAt: v.optional(v.number()), // Quand les points ont été crédités
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_affiliate", ["affiliateId"])
+    .index("by_order", ["orderId"])
+    .index("by_link", ["linkId"])
+    .index("by_seller", ["sellerId"])
+    .index("by_status", ["status"])
+    .index("by_affiliate_status", ["affiliateId", "status"]),
+
+  // User Points table - Solde de points des utilisateurs
+  userPoints: defineTable({
+    userId: v.id("users"),
+    totalPoints: v.number(), // Total des points disponibles
+    totalEarned: v.number(), // Total des points gagnés (historique)
+    totalSpent: v.number(), // Total des points dépensés
+    pendingPoints: v.number(), // Points en attente de confirmation
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"]),
+
+  // Point Transactions table - Historique des transactions de points
+  pointTransactions: defineTable({
+    userId: v.id("users"),
+    type: v.union(
+      v.literal("earned"), // Points gagnés
+      v.literal("spent"), // Points dépensés
+      v.literal("bonus"), // Bonus administrateur
+      v.literal("refund") // Remboursement
+    ),
+    amount: v.number(), // Montant de la transaction (positif ou négatif)
+    description: v.string(), // Description de la transaction
+    relatedOrderId: v.optional(v.id("orders")), // Commande liée si applicable
+    relatedEarningId: v.optional(v.id("affiliateEarnings")), // Gain d'affiliation lié
+    balanceAfter: v.number(), // Solde après la transaction
+    createdAt: v.number(),
+  }).index("by_user", ["userId"])
+    .index("by_type", ["type"])
+    .index("by_order", ["relatedOrderId"])
+    .index("by_user_created", ["userId", "createdAt"]),
 });

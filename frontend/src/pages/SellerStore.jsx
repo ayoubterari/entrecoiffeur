@@ -5,6 +5,9 @@ import { api } from '../lib/convex'
 import ProductCard from '../components/ProductCard'
 import MessagePopup from '../components/MessagePopup'
 import SellerPostsTab from '../components/SellerPostsTab'
+import SellerReviewsTab from '../components/SellerReviewsTab'
+import ShareModal from '../components/ShareModal'
+import { useAffiliateTracking } from '../hooks/useAffiliateTracking'
 import './SellerStore.css'
 
 const SellerStore = () => {
@@ -13,6 +16,7 @@ const SellerStore = () => {
   const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState([])
   const [isMessagePopupOpen, setIsMessagePopupOpen] = useState(false)
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('boutique')
 
   // Get current user ID from localStorage with safety check
@@ -49,7 +53,16 @@ const SellerStore = () => {
     { followerId: currentUserId, followedId: sellerId } : "skip"
   )
 
+  // Get seller review stats for rating display
+  const sellerReviewStats = useQuery(
+    api.orderReviews.getSellerReviewStats,
+    sellerId && sellerId !== 'undefined' ? { sellerId } : "skip"
+  )
+
   const toggleFollow = useMutation(api.follows.toggleFollow)
+
+  // Hook pour le tracking d'affiliation
+  useAffiliateTracking()
 
   // Afficher tous les produits sans filtrage - avec vérification de sécurité
   const filteredProducts = Array.isArray(sellerProducts) ? sellerProducts : []
@@ -219,8 +232,16 @@ const SellerStore = () => {
                     <span className="stat-label">Followers</span>
                   </div>
                   <div className="stat-item">
-                    <span className="stat-number">4.8</span>
-                    <span className="stat-label">Rating</span>
+                    <span className="stat-number">
+                      {sellerReviewStats?.averageRating ? 
+                        sellerReviewStats.averageRating : 'Nouveau'
+                      }
+                    </span>
+                    <span className="stat-label">
+                      {sellerReviewStats?.totalReviews > 0 ? 
+                        `Rating (${sellerReviewStats.totalReviews} avis)` : 'Rating'
+                      }
+                    </span>
                   </div>
                 </div>
               </div>
@@ -264,7 +285,12 @@ const SellerStore = () => {
                 >
                   Message
                 </button>
-                <button className="share-btn">Partager</button>
+                <button 
+                  className="share-btn"
+                  onClick={() => setIsShareModalOpen(true)}
+                >
+                  Partager
+                </button>
               </div>
             </div>
             
@@ -368,15 +394,7 @@ const SellerStore = () => {
         )}
 
         {activeTab === 'avis' && (
-          <div className="reviews-tab">
-            <div className="coming-soon">
-              <div className="empty-state">
-                <span className="empty-icon">⭐</span>
-                <h3>Avis et évaluations</h3>
-                <p>Cette section sera bientôt disponible</p>
-              </div>
-            </div>
-          </div>
+          <SellerReviewsTab sellerId={sellerId} />
         )}
 
         {activeTab === 'apropos' && (
@@ -421,6 +439,15 @@ const SellerStore = () => {
       <MessagePopup
         isOpen={isMessagePopupOpen}
         onClose={() => setIsMessagePopupOpen(false)}
+        sellerId={sellerId}
+        sellerName={`${seller.firstName} ${seller.lastName}`}
+        currentUserId={currentUserId}
+      />
+
+      {/* Share Modal */}
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
         sellerId={sellerId}
         sellerName={`${seller.firstName} ${seller.lastName}`}
         currentUserId={currentUserId}
