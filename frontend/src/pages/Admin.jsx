@@ -11,8 +11,10 @@ import CommissionManagement from '../components/CommissionManagement'
 import NetVendeurManagement from '../components/NetVendeurManagement'
 import PaymentConfig from '../components/PaymentConfig'
 import CouponsManagement from '../components/CouponsManagement'
+import SupportManagement from '../components/SupportManagement'
+import './Admin.css'
 
-const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userType, onLogout }) => {
+const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userType, userId, onLogout }) => {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('dashboard')
 
@@ -21,6 +23,7 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
   const allProducts = useQuery(api.products.getProducts, { limit: 1000 })
   const allOrders = useQuery(api.orders.getAllOrders)
   const allCategories = useQuery(api.products.getCategories)
+  const supportStats = useQuery(api.functions.queries.support.getSupportTicketStats)
 
   // Calculer les statistiques
   const stats = {
@@ -49,6 +52,12 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
       total: allCategories?.length || 0,
       withIcons: allCategories?.filter(c => c.icon && c.icon !== '📦').length || 0,
       withDescriptions: allCategories?.filter(c => c.description).length || 0
+    },
+    support: {
+      total: supportStats?.totalTickets || 0,
+      open: supportStats?.openTickets || 0,
+      inProgress: supportStats?.inProgressTickets || 0,
+      resolved: supportStats?.resolvedTickets || 0
     }
   }
 
@@ -199,6 +208,16 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
             <span>Coupons</span>
           </div>
           <div 
+            className={`nav-item ${activeTab === 'support' ? 'active' : ''}`}
+            onClick={() => setActiveTab('support')}
+          >
+            <span className="nav-icon">🎧</span>
+            <span>Support</span>
+            {stats.support.open > 0 && (
+              <span className="nav-badge">{stats.support.open}</span>
+            )}
+          </div>
+          <div 
             className={`nav-item ${activeTab === 'stats' ? 'active' : ''}`}
             onClick={() => setActiveTab('stats')}
           >
@@ -265,6 +284,16 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
                       </div>
                     </div>
                   </div>
+                  <div className="stat-preview-card">
+                    <div className="stat-icon">🎧</div>
+                    <div className="stat-info">
+                      <h3>{stats.support.total}</h3>
+                      <p>Tickets Support</p>
+                      <div className="stat-breakdown">
+                        <span>🔓 {stats.support.open} • ⏳ {stats.support.inProgress} • ✅ {stats.support.resolved}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -324,6 +353,21 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
                     </button>
                     
                     <button 
+                      className="quick-action-item support"
+                      onClick={() => setActiveTab('support')}
+                    >
+                      <div className="quick-icon">🎧</div>
+                      <div className="quick-content">
+                        <h4>Support</h4>
+                        <p>Tickets clients</p>
+                        {stats.support.open > 0 && (
+                          <span className="urgent-badge">{stats.support.open} ouverts</span>
+                        )}
+                      </div>
+                      <div className="quick-arrow">→</div>
+                    </button>
+                    
+                    <button 
                       className="quick-action-item stats"
                       onClick={() => setActiveTab('stats')}
                     >
@@ -349,6 +393,16 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
                         <div className="activity-content">
                           <span className="activity-text">{stats.orders.pending} commande(s) en attente</span>
                           <span className="activity-action" onClick={() => setActiveTab('orders')}>Traiter →</span>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {stats.support.open > 0 && (
+                      <div className="activity-item urgent">
+                        <span className="activity-icon support">🎧</span>
+                        <div className="activity-content">
+                          <span className="activity-text">{stats.support.open} ticket(s) de support ouverts</span>
+                          <span className="activity-action" onClick={() => setActiveTab('support')}>Traiter →</span>
                         </div>
                       </div>
                     )}
@@ -418,6 +472,10 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
 
           {activeTab === 'coupons' && (
             <CouponsManagement />
+          )}
+
+          {activeTab === 'support' && (
+            <SupportManagement adminId={userId} />
           )}
 
           {activeTab === 'stats' && (

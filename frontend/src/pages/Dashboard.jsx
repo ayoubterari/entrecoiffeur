@@ -9,6 +9,8 @@ import ImageUpload from '../components/ImageUpload'
 import MessagePopup from '../components/MessagePopup'
 import OrderReviewModal from '../components/OrderReviewModal'
 import AffiliateTab from '../components/AffiliateTab'
+import SupportResponses from '../components/SupportResponses'
+import SellerComplaintsManagement from '../components/SellerComplaintsManagement'
 import './Dashboard.css'
 
 const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, companyName }) => {
@@ -108,6 +110,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
       { id: 'profile', name: 'Profil', icon: '👤' },
       { id: 'messages', name: 'Messages', icon: '💬' },
       { id: 'purchases', name: 'Mes Commandes', icon: '🛒' },
+      { id: 'support', name: 'Support', icon: '🎧' },
       { id: 'affiliate', name: 'Affiliation', icon: '💰' },
       { id: 'settings', name: 'Paramètres', icon: '⚙️' },
       { id: 'dev', name: 'Dev Tools', icon: '🛠️' },
@@ -115,9 +118,10 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
     
     // Ajouter les onglets de vente uniquement pour professionnels et grossistes
     if (userType === 'professionnel' || userType === 'grossiste') {
-      baseTabs.splice(4, 0, 
+      baseTabs.splice(5, 0, 
         { id: 'products', name: 'Mes Produits', icon: '📦' },
         { id: 'orders', name: 'Orders (Vendeur)', icon: '📋' },
+        { id: 'complaints', name: 'Réclamations', icon: '😠' },
         { id: 'analytics', name: 'Statistiques', icon: '📊' }
       )
     }
@@ -550,6 +554,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                 </div>
                 <button className="save-btn">Sauvegarder</button>
               </div>
+
 
               {/* Section Coupon de Groupe */}
               {currentUser?.isGroupMember && fbGroupCoupon && (
@@ -1197,6 +1202,18 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {activeTab === 'support' && (
+            <div className="tab-content">
+              <SupportResponses userId={userId} userEmail={userEmail} />
+            </div>
+          )}
+
+          {activeTab === 'complaints' && (
+            <div className="tab-content">
+              <SellerComplaintsManagement sellerId={userId} />
             </div>
           )}
 

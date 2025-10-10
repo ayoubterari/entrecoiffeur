@@ -6,6 +6,7 @@ import Carousel from '../components/Carousel'
 import ProductCard from '../components/ProductCard'
 import SmartSearch from '../components/SmartSearch'
 import GroupWelcomeModal from '../components/GroupWelcomeModal'
+import SupportModal from '../components/SupportModal'
 import styles from '../components/Home.module.css'
 
 const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName, onAddToCart, cart, onOpenCart, onShowLogin, onToggleFavorite, favoritesCount, userId, onOpenFavorites }) => {
@@ -17,6 +18,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   const [favorites, setFavorites] = useState([])
   const [currentSlide, setCurrentSlide] = useState(0)
   const [showGroupWelcomeModal, setShowGroupWelcomeModal] = useState(false)
+  const [showSupportModal, setShowSupportModal] = useState(false)
 
   // Get real data from Convex
   const categoriesData = useQuery(api.products.getCategories)
@@ -447,6 +449,30 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         </div>
       </section>
 
+      {/* Support Section */}
+      <section className={styles.supportSection}>
+        <div className={styles.container}>
+          <div className={styles.supportCard}>
+            <div className={styles.supportContent}>
+              <div className={styles.supportIcon}>🎧</div>
+              <div className={styles.supportText}>
+                <h3>Besoin d'aide ?</h3>
+                <p>Notre équipe support est là pour vous accompagner. Posez vos questions, signalez un problème ou demandez des clarifications.</p>
+              </div>
+            </div>
+            <div className={styles.supportActions}>
+              <button 
+                className={styles.supportBtn}
+                onClick={() => setShowSupportModal(true)}
+              >
+                <span>💬</span>
+                Contacter le support
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer Mobile */}
       <footer className={styles.ecommerceFooter}>
         <div className={styles.footerContent}>
@@ -482,6 +508,16 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         isOpen={showGroupWelcomeModal}
         onClose={() => setShowGroupWelcomeModal(false)}
         userId={userId}
+      />
+
+      {/* Modal de support */}
+      <SupportModal
+        isOpen={showSupportModal}
+        onClose={() => setShowSupportModal(false)}
+        userId={userId}
+        userEmail={userEmail}
+        userFirstName={userFirstName}
+        userLastName={userLastName}
       />
     </div>
   )

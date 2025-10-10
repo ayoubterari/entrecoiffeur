@@ -422,4 +422,80 @@ export default defineSchema({
     .index("by_type", ["type"])
     .index("by_order", ["relatedOrderId"])
     .index("by_user_created", ["userId", "createdAt"]),
+
+  // Support Tickets table - Tickets de support client
+  supportTickets: defineTable({
+    ticketNumber: v.string(), // Numéro unique du ticket (ex: "SUP-2025-001")
+    userId: v.optional(v.id("users")), // Utilisateur qui a créé le ticket (optionnel pour les non-connectés)
+    email: v.string(), // Email de contact
+    firstName: v.optional(v.string()), // Prénom
+    lastName: v.optional(v.string()), // Nom
+    subject: v.string(), // Sujet du ticket
+    category: v.union(
+      v.literal("complaint"), // Réclamation
+      v.literal("clarification"), // Demande de clarification
+      v.literal("technical"), // Problème technique
+      v.literal("billing"), // Problème de facturation
+      v.literal("other") // Autre
+    ),
+    priority: v.union(
+      v.literal("low"), // Faible
+      v.literal("medium"), // Moyenne
+      v.literal("high"), // Élevée
+      v.literal("urgent") // Urgente
+    ),
+    status: v.union(
+      v.literal("open"), // Ouvert
+      v.literal("in_progress"), // En cours
+      v.literal("waiting_response"), // En attente de réponse client
+      v.literal("resolved"), // Résolu
+      v.literal("closed") // Fermé
+    ),
+    description: v.string(), // Description détaillée du problème
+    voiceRecording: v.optional(v.id("_storage")), // Enregistrement vocal optionnel
+    attachments: v.optional(v.array(v.union(v.string(), v.id("_storage")))), // Pièces jointes
+    relatedSellerId: v.optional(v.id("users")), // Vendeur/boutique concerné(e) par le problème
+    assignedTo: v.optional(v.id("users")), // Admin assigné au ticket
+    tags: v.optional(v.array(v.string())), // Tags pour catégoriser
+    lastResponseAt: v.optional(v.number()), // Dernière réponse
+    resolvedAt: v.optional(v.number()), // Date de résolution
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"])
+    .index("by_email", ["email"])
+    .index("by_status", ["status"])
+    .index("by_category", ["category"])
+    .index("by_priority", ["priority"])
+    .index("by_assigned", ["assignedTo"])
+    .index("by_related_seller", ["relatedSellerId"])
+    .index("by_ticket_number", ["ticketNumber"])
+    .index("by_created_date", ["createdAt"]),
+
+  // Support Ticket Responses table - Réponses aux tickets de support
+  supportTicketResponses: defineTable({
+    ticketId: v.id("supportTickets"),
+    responderId: v.id("users"), // Utilisateur qui répond (client ou admin)
+    responderType: v.union(v.literal("client"), v.literal("admin"), v.literal("seller")),
+    content: v.string(), // Contenu de la réponse
+    attachments: v.optional(v.array(v.union(v.string(), v.id("_storage")))), // Pièces jointes
+    isInternal: v.boolean(), // Note interne (visible seulement par les admins)
+    createdAt: v.number(),
+  }).index("by_ticket", ["ticketId"])
+    .index("by_responder", ["responderId"])
+    .index("by_responder_type", ["responderType"])
+    .index("by_ticket_created", ["ticketId", "createdAt"]),
+
+  // Notifications table - Notifications pour les utilisateurs
+  notifications: defineTable({
+    userId: v.id("users"), // Utilisateur qui reçoit la notification
+    type: v.string(), // Type de notification (support_complaint, order_update, etc.)
+    title: v.string(), // Titre de la notification
+    message: v.string(), // Message de la notification
+    data: v.optional(v.any()), // Données additionnelles (JSON)
+    isRead: v.boolean(), // Statut de lecture
+    createdAt: v.number(),
+  }).index("by_user", ["userId"])
+    .index("by_user_unread", ["userId", "isRead"])
+    .index("by_type", ["type"])
+    .index("by_created_date", ["createdAt"]),
 });

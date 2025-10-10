@@ -243,6 +243,7 @@ function AppContent() {
                 userFirstName={userFirstName || ''}
                 userLastName={userLastName || ''}
                 userType={localStorage.getItem('userType') || ''}
+                userId={userId}
                 onLogout={handleLogout}
               />
             } 
