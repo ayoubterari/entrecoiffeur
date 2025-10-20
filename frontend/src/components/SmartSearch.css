@@ -16,28 +16,51 @@
   position: relative;
   display: flex;
   align-items: center;
-  background: #f6f6f6;
-  border: none !important;
-  outline: none !important;
+  background: #f2f4f5;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.2s ease;
-  height: 48px;
+  height: 52px;
 }
 
 .search-input-container:hover {
-  background: #eeeeee;
+  background: #e8eaed;
+  border-color: #d1d5db;
 }
 
 .search-input-container:focus-within {
   background: #ffffff;
-  box-shadow: 0 0 0 2px #ff6b9d !important;
-  outline: none !important;
-  border: none !important;
+  border-color: #ff6b9d;
+  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
 }
 
 .search-icon {
-  display: none;
+  position: absolute;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #ff6b9d 0%, #ff8fb3 100%);
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.search-icon:hover {
+  background: linear-gradient(135deg, #ff5a8c 0%, #ff7ea2 100%);
+  transform: scale(1.05);
+}
+
+.search-icon svg {
+  width: 20px;
+  height: 20px;
+  color: white;
 }
 
 .search-icon-emoji {
@@ -46,28 +69,27 @@
 
 .search-input {
   flex: 1;
-  padding: 0 20px;
-  border: none !important;
+  padding: 0 60px 0 20px;
+  border: none;
   background: transparent;
-  font-size: 14px;
+  font-size: 15px;
   color: #1a1a1a;
-  outline: none !important;
+  outline: none;
   font-weight: 400;
   height: 100%;
-  box-shadow: none !important;
 }
 
 .search-input::placeholder {
-  color: #8b8b8b;
+  color: #9ca3af;
   font-weight: 400;
 }
 
 .clear-button {
   padding: 8px;
-  margin-right: 4px;
+  margin-right: 56px;
   background: transparent;
   border: none;
-  color: #8b8b8b;
+  color: #9ca3af;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -76,6 +98,7 @@
   transition: all 0.2s ease;
   flex-shrink: 0;
   font-size: 16px;
+  z-index: 3;
 }
 
 .clear-button:hover {

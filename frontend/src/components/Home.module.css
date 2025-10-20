@@ -19,20 +19,30 @@
 }
 
 .headerContent {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto auto;
-  gap: 0.25rem;
-  padding: 0 0.5rem;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+  padding: 0 0.5rem;
   max-width: 1280px;
   margin: 0 auto;
+  position: relative;
 }
 
-.logoSection {
-  grid-column: 1;
-  grid-row: 1;
-  text-align: left;
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: flex-start;
+  flex: 1;
+}
+
+.marketplaceLogo {
+  text-align: center;
+  flex-shrink: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .marketplaceTitle {
@@ -51,13 +61,31 @@
 }
 
 .headerActions {
-  grid-column: 2;
-  grid-row: 1;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.5rem;
   justify-content: flex-end;
   flex-wrap: nowrap;
+  flex-shrink: 0;
+  flex: 1;
+  z-index: 10;
+}
+
+.searchBtn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.searchBtn:hover {
+  background: rgba(255, 107, 157, 0.1);
 }
 
 .headerBtn {
@@ -214,7 +242,7 @@
 
 .carousel {
   border-radius: 8px;
-  margin: 0 0.5rem;
+  margin: 3rem 0.5rem 0 0.5rem;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(45, 52, 54, 0.1);
   position: relative;
@@ -329,11 +357,308 @@
   transform: scale(1.2);
 }
 
+/* Call to Action Banner */
+.ctaBanner {
+  background: linear-gradient(135deg, #ffe8e8 0%, #ffd4d4 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 2rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1.5rem;
+  box-shadow: 0 4px 16px rgba(255, 107, 157, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.ctaBanner::before {
+  content: '';
+  position: absolute;
+  bottom: -50px;
+  left: -50px;
+  width: 150px;
+  height: 150px;
+  background: rgba(255, 107, 157, 0.1);
+  border-radius: 50%;
+}
+
+.ctaBanner::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 150px;
+  height: 150px;
+  background: rgba(78, 205, 196, 0.1);
+  border-radius: 50%;
+}
+
+.ctaBannerText {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2d3436;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.ctaBannerButton {
+  background: linear-gradient(135deg, #ff6b9d 0%, #ff8fb3 100%);
+  color: white;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ctaBannerButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+}
+
+.ctaBannerButton:active {
+  transform: translateY(0);
+}
+
+/* Featured Products Carousel */
+.featuredCarousel {
+  position: relative;
+  overflow: hidden;
+  margin: 0 -0.5rem;
+}
+
+.featuredCarouselWrapper {
+  overflow: hidden;
+  padding: 0 0.5rem;
+}
+
+.featuredCarouselContent {
+  display: flex;
+  gap: 0.75rem;
+  transition: transform 0.4s ease;
+  padding: 0.5rem 0;
+}
+
+.featuredProductCard {
+  min-width: 160px;
+  max-width: 160px;
+  flex-shrink: 0;
+}
+
+.carouselNavBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.carouselNavBtn:hover {
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carouselNavBtn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.carouselNavBtnPrev {
+  left: 0.25rem;
+}
+
+.carouselNavBtnNext {
+  right: 0.25rem;
+}
+
+.carouselNavBtn svg {
+  width: 20px;
+  height: 20px;
+  color: #2d3436;
+}
+
+/* User Type Banners */
+.userTypeBanners {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 2rem 0.5rem;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.userTypeBanner {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 16px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.userTypeBanner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.userTypeBanner:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.userTypeBanner:hover::before {
+  opacity: 1;
+}
+
+.userTypeBanner.particulier {
+  border-color: rgba(255, 107, 157, 0.2);
+}
+
+.userTypeBanner.particulier::before {
+  background: linear-gradient(90deg, #ff6b9d, #ff8fb3);
+}
+
+.userTypeBanner.particulier:hover {
+  border-color: rgba(255, 107, 157, 0.4);
+  box-shadow: 0 12px 32px rgba(255, 107, 157, 0.2);
+}
+
+.userTypeBanner.grossiste {
+  border-color: rgba(76, 217, 100, 0.2);
+}
+
+.userTypeBanner.grossiste::before {
+  background: linear-gradient(90deg, #4cd964, #5ac8fa);
+}
+
+.userTypeBanner.grossiste:hover {
+  border-color: rgba(76, 217, 100, 0.4);
+  box-shadow: 0 12px 32px rgba(76, 217, 100, 0.2);
+}
+
+.userTypeBanner.professionnel {
+  border-color: rgba(102, 126, 234, 0.2);
+}
+
+.userTypeBanner.professionnel::before {
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.userTypeBanner.professionnel:hover {
+  border-color: rgba(102, 126, 234, 0.4);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
+}
+
+.bannerIcon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.bannerTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2d3436;
+  margin: 0 0 0.5rem 0;
+}
+
+.bannerDescription {
+  font-size: 0.85rem;
+  color: #636e72;
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
+}
+
+.bannerCTA {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.userTypeBanner.particulier .bannerCTA {
+  background: linear-gradient(135deg, #ff6b9d, #ff8fb3);
+  color: white;
+}
+
+.userTypeBanner.grossiste .bannerCTA {
+  background: linear-gradient(135deg, #4cd964, #5ac8fa);
+  color: white;
+}
+
+.userTypeBanner.professionnel .bannerCTA {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.bannerCTA:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .userTypeBanners {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .userTypeBanner {
+    padding: 1.25rem 1rem;
+  }
+  
+  .bannerIcon {
+    font-size: 2rem;
+  }
+  
+  .bannerTitle {
+    font-size: 1rem;
+  }
+}
+
 /* Categories Mobile */
 .categoriesSection {
   padding: 0.5rem 0;
   max-width: 1280px;
-  margin: 0 auto;
+  margin: 3rem auto 0 auto;
 }
 
 .sectionTitle {
@@ -477,31 +802,34 @@
   box-shadow: 0 8px 32px rgba(255, 107, 157, 0.3);
 }
 
-/* Footer Mobile */
+/* Footer - Horizontal Layout */
 .ecommerceFooter {
   background: #2d3436;
   color: white;
-  padding: 1.25rem 0 0.75rem;
+  padding: 2rem 0 1rem;
 }
 
 .footerContent {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  text-align: center;
-  padding: 0 0.5rem;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 3rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  align-items: start;
 }
 
 .footerSection h4 {
   color: white;
-  margin: 0 0 0.5rem 0;
-  font-size: 0.85rem;
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 .footerSection p {
   color: #b2bec3;
-  line-height: 1.5;
-  font-size: 0.7rem;
+  line-height: 1.6;
+  font-size: 0.875rem;
   margin: 0;
 }
 
@@ -512,14 +840,14 @@
 }
 
 .footerSection ul li {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.75rem;
 }
 
 .footerSection ul li a {
   color: #b2bec3;
   text-decoration: none;
   transition: color 0.3s ease;
-  font-size: 0.7rem;
+  font-size: 0.875rem;
 }
 
 .footerSection ul li a:hover {
@@ -601,6 +929,12 @@
   
   .bannerImage {
     font-size: 2rem;
+  }
+  
+  .footerContent {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 0.75rem;
   }
 }
 

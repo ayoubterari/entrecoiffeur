@@ -4,7 +4,6 @@ import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
 import Carousel from '../components/Carousel'
 import ProductCard from '../components/ProductCard'
-import SmartSearch from '../components/SmartSearch'
 import GroupWelcomeModal from '../components/GroupWelcomeModal'
 import SupportModal from '../components/SupportModal'
 import styles from '../components/Home.module.css'
@@ -19,6 +18,8 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   const [currentSlide, setCurrentSlide] = useState(0)
   const [showGroupWelcomeModal, setShowGroupWelcomeModal] = useState(false)
   const [showSupportModal, setShowSupportModal] = useState(false)
+  const [featuredCarouselIndex, setFeaturedCarouselIndex] = useState(0)
+  const [flashSaleCarouselIndex, setFlashSaleCarouselIndex] = useState(0)
 
   // Get real data from Convex
   const categoriesData = useQuery(api.products.getCategories)
@@ -227,23 +228,11 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
       {/* Header Mobile-First */}
       <header className={styles.mobileHeader}>
         <div className={styles.headerContent}>
-          {/* Logo à gauche */}
-          <div className={styles.logoSection}>
-            <h1 className={styles.marketplaceTitle}>Entre Coiffeur</h1>
-            <p className={styles.marketplaceSubtitle}>Marketplace beauté & coiffure</p>
-          </div>
-          
-          {/* Barre de recherche intelligente au centre */}
-          <div className={styles.headerSearch}>
-            <SmartSearch
-              onSearch={handleSearch}
-              onProductSelect={handleProductSelect}
-              placeholder="Rechercher des produits..."
-            />
-          </div>
-
-          {/* Actions à droite */}
-          <div className={styles.headerActions}>
+          {/* Gauche: Recherche, Favoris, Panier */}
+          <div className={styles.headerLeft}>
+            <button className={styles.searchBtn} title="Rechercher">
+              🔍
+            </button>
             <button 
               className={styles.headerBtn} 
               title="Favoris"
@@ -259,6 +248,15 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
               🛒 <span className={styles.badge}>{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
             </button>
             
+            {/* Logo au centre (dans la section gauche pour le layout) */}
+            <div className={styles.marketplaceLogo}>
+              <h1 className={styles.marketplaceTitle}>Entre Coiffeur</h1>
+              <p className={styles.marketplaceSubtitle}>Marketplace beauté & coiffure</p>
+            </div>
+          </div>
+
+          {/* Droite: Profil/Connexion */}
+          <div className={styles.headerActions}>
             {isAuthenticated ? (
               <>
                 <button className={styles.userProfileBtn} onClick={() => navigate('/dashboard')}>
@@ -284,6 +282,24 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
           </div>
         </div>
       </header>
+
+      {/* Categories Mobile - Moved after header */}
+      <section className={styles.categoriesSection}>
+        <div className={styles.container}>
+          <div className={styles.categoriesGrid}>
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                className={`${styles.categoryCard} ${selectedCategory === category.id ? styles.active : ''}`}
+                onClick={() => setSelectedCategory(category.id)}
+              >
+                <span className={styles.categoryIcon}>{category.icon}</span>
+                <span className={styles.categoryName}>{category.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Hero Carousel Mobile */}
       <section className={styles.heroCarousel}>
@@ -327,45 +343,120 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         </div>
       </section>
 
-      {/* Categories Mobile */}
-      <section className={styles.categoriesSection}>
-        <div className={styles.container}>
-          <h3 className={styles.sectionTitle}>Catégories</h3>
-          <div className={styles.categoriesGrid}>
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                className={`${styles.categoryCard} ${selectedCategory === category.id ? styles.active : ''}`}
-                onClick={() => setSelectedCategory(category.id)}
-              >
-                <span className={styles.categoryIcon}>{category.icon}</span>
-                <span className={styles.categoryName}>{category.name}</span>
-              </button>
-            ))}
-          </div>
+      {/* User Type Banners */}
+      <div className={styles.userTypeBanners}>
+        <div className={`${styles.userTypeBanner} ${styles.particulier}`}>
+          <span className={styles.bannerIcon}>🛍️</span>
+          <h3 className={styles.bannerTitle}>Particulier</h3>
+          <p className={styles.bannerDescription}>
+            Découvrez nos produits de qualité à prix attractifs
+          </p>
+          <button className={styles.bannerCTA} onClick={() => navigate('/products')}>
+            <span>Voir les produits</span>
+            <span>→</span>
+          </button>
         </div>
-      </section>
 
-      {/* Flash Sales - Simplified for mobile */}
+        <div className={`${styles.userTypeBanner} ${styles.grossiste}`}>
+          <span className={styles.bannerIcon}>📦</span>
+          <h3 className={styles.bannerTitle}>Grossiste</h3>
+          <p className={styles.bannerDescription}>
+            Commandes en gros avec tarifs préférentiels
+          </p>
+          <button className={styles.bannerCTA} onClick={() => isAuthenticated ? navigate('/dashboard') : handleShowLogin('signup')}>
+            <span>Devenir grossiste</span>
+            <span>→</span>
+          </button>
+        </div>
+
+        <div className={`${styles.userTypeBanner} ${styles.professionnel}`}>
+          <span className={styles.bannerIcon}>💼</span>
+          <h3 className={styles.bannerTitle}>Professionnel</h3>
+          <p className={styles.bannerDescription}>
+            Solutions adaptées aux professionnels de la beauté
+          </p>
+          <button className={styles.bannerCTA} onClick={() => isAuthenticated ? navigate('/dashboard') : handleShowLogin('signup')}>
+            <span>Espace pro</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Flash Sales - Carousel */}
       {displaySaleProducts.length > 0 && (
         <section className={styles.productsSection}>
           <div className={styles.container}>
             <h3 className={styles.sectionTitle}>⚡ Ventes Flash - Offres limitées</h3>
-            <div className={styles.productsGrid}>
-              {displaySaleProducts.slice(0, 2).map((product) => (
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  onAddToCart={handleAddToCart}
-                  onToggleFavorite={onToggleFavorite}
-                  onViewDetails={() => navigate(`/product/${product._id}`)}
-                  isFavorite={isProductFavorite(product._id)}
-                />
-              ))}
+            <div className={styles.featuredCarousel}>
+              <div className={styles.featuredCarouselWrapper}>
+                <div 
+                  className={styles.featuredCarouselContent}
+                  style={{
+                    transform: `translateX(-${flashSaleCarouselIndex * (160 + 12)}px)`
+                  }}
+                >
+                  {displaySaleProducts.slice(0, 10).map((product) => (
+                    <div key={product._id} className={styles.featuredProductCard}>
+                      <ProductCard
+                        product={product}
+                        onAddToCart={handleAddToCart}
+                        onToggleFavorite={onToggleFavorite}
+                        onViewDetails={() => navigate(`/product/${product._id}`)}
+                        isFavorite={isProductFavorite(product._id)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {displaySaleProducts.length > 2 && (
+                <>
+                  <button
+                    className={`${styles.carouselNavBtn} ${styles.carouselNavBtnPrev}`}
+                    onClick={() => setFlashSaleCarouselIndex(Math.max(0, flashSaleCarouselIndex - 1))}
+                    disabled={flashSaleCarouselIndex === 0}
+                    style={{ opacity: flashSaleCarouselIndex === 0 ? 0.3 : 1 }}
+                  >
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    className={`${styles.carouselNavBtn} ${styles.carouselNavBtnNext}`}
+                    onClick={() => setFlashSaleCarouselIndex(Math.min(displaySaleProducts.length - 2, flashSaleCarouselIndex + 1))}
+                    disabled={flashSaleCarouselIndex >= displaySaleProducts.length - 2}
+                    style={{ opacity: flashSaleCarouselIndex >= displaySaleProducts.length - 2 ? 0.3 : 1 }}
+                  >
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </section>
       )}
+
+      {/* Call to Action Banner */}
+      <div className={styles.ctaBanner}>
+        <h2 className={styles.ctaBannerText}>C'est le moment de vendre</h2>
+        <button 
+          className={styles.ctaBannerButton} 
+          onClick={() => {
+            if (isAuthenticated) {
+              // Rediriger vers le dashboard avec l'onglet "Mes Produits" actif
+              navigate('/dashboard', { state: { activeTab: 'products' } })
+            } else {
+              // Rediriger vers la page de connexion
+              onShowLogin()
+            }
+          }}
+        >
+          <span>📦</span>
+          Déposer une annonce
+        </button>
+      </div>
 
       {/* Featured Products Mobile */}
       <section className={styles.productsSection}>
@@ -379,57 +470,93 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
               `Catégorie: ${categories.find(c => c.id === selectedCategory)?.name}`
             )}
           </h3>
-          <div className={styles.productsGrid}>
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map((product) => (
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  onAddToCart={handleAddToCart}
-                  onToggleFavorite={onToggleFavorite}
-                  onViewDetails={() => navigate(`/product/${product._id}`)}
-                  isFavorite={isProductFavorite(product._id)}
-                />
-              ))
-            ) : (
-              <div style={{ textAlign: 'center', padding: '3rem 1.5rem' }}>
-                {isSearching && searchQuery ? (
-                  <div>
-                    <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>😔</div>
-                    <h4 style={{ color: '#2d3436', marginBottom: '1rem' }}>
-                      Aucun produit trouvé pour "{searchQuery}"
-                    </h4>
-                    <p style={{ color: '#636e72', marginBottom: '1.5rem' }}>
-                      Essayez avec des mots-clés différents ou plus généraux
-                    </p>
-                    <button 
-                      className={styles.signupBtn}
-                      onClick={() => handleSearch('')}
-                    >
-                      Voir tous les produits
-                    </button>
-                  </div>
-                ) : !isAuthenticated ? (
-                  <p style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
-                    <button 
-                      className={styles.signupBtn} 
-                      onClick={() => handleShowLogin('signup')}
-                    >
-                      Inscrivez-vous
-                    </button> 
-                    pour commencer à vendre vos produits !
-                  </p>
-                ) : (
-                  <div>
-                    <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🛍️</div>
-                    <p style={{ color: '#636e72' }}>
-                      Aucun produit disponible dans cette catégorie pour le moment.
-                    </p>
-                  </div>
-                )}
+          
+          {filteredProducts.length > 0 ? (
+            <div className={styles.featuredCarousel}>
+              <div className={styles.featuredCarouselWrapper}>
+                <div 
+                  className={styles.featuredCarouselContent}
+                  style={{
+                    transform: `translateX(-${featuredCarouselIndex * (160 + 12)}px)`
+                  }}
+                >
+                  {filteredProducts.slice(0, 10).map((product) => (
+                    <div key={product._id} className={styles.featuredProductCard}>
+                      <ProductCard
+                        product={product}
+                        onAddToCart={handleAddToCart}
+                        onToggleFavorite={onToggleFavorite}
+                        onViewDetails={() => navigate(`/product/${product._id}`)}
+                        isFavorite={isProductFavorite(product._id)}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
-            )}
-          </div>
+              
+              {filteredProducts.length > 2 && (
+                <>
+                  <button
+                    className={`${styles.carouselNavBtn} ${styles.carouselNavBtnPrev}`}
+                    onClick={() => setFeaturedCarouselIndex(Math.max(0, featuredCarouselIndex - 1))}
+                    disabled={featuredCarouselIndex === 0}
+                    style={{ opacity: featuredCarouselIndex === 0 ? 0.3 : 1 }}
+                  >
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    className={`${styles.carouselNavBtn} ${styles.carouselNavBtnNext}`}
+                    onClick={() => setFeaturedCarouselIndex(Math.min(filteredProducts.length - 2, featuredCarouselIndex + 1))}
+                    disabled={featuredCarouselIndex >= filteredProducts.length - 2}
+                    style={{ opacity: featuredCarouselIndex >= filteredProducts.length - 2 ? 0.3 : 1 }}
+                  >
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </>
+              )}
+            </div>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '3rem 1.5rem' }}>
+              {isSearching && searchQuery ? (
+                <div>
+                  <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>😔</div>
+                  <h4 style={{ color: '#2d3436', marginBottom: '1rem' }}>
+                    Aucun produit trouvé pour "{searchQuery}"
+                  </h4>
+                  <p style={{ color: '#636e72', marginBottom: '1.5rem' }}>
+                    Essayez avec des mots-clés différents ou plus généraux
+                  </p>
+                  <button 
+                    className={styles.signupBtn}
+                    onClick={() => handleSearch('')}
+                  >
+                    Voir tous les produits
+                  </button>
+                </div>
+              ) : !isAuthenticated ? (
+                <p style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
+                  <button 
+                    className={styles.signupBtn} 
+                    onClick={() => handleShowLogin('signup')}
+                  >
+                    Inscrivez-vous
+                  </button> 
+                  pour commencer à vendre vos produits !
+                </p>
+              ) : (
+                <div>
+                  <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🛍️</div>
+                  <p style={{ color: '#636e72' }}>
+                    Aucun produit disponible dans cette catégorie pour le moment.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
