@@ -432,7 +432,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
       {/* Header */}
       <div className="dashboard-header">
         <button className="back-btn" onClick={() => navigate('/')}>
-          ← Retour au marketplace
+          Retour au marketplace
         </button>
         <h1 className="dashboard-title">Mon Dashboard</h1>
       </div>
@@ -963,7 +963,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                     </div>
 
                     <button type="submit" className="save-btn">
-                      Créer le produit
+                      Enregistrer le produit
                     </button>
                   </form>
                 </div>

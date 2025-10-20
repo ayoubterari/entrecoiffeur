@@ -251,7 +251,7 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
     <div className="checkout-page">
       <div className="checkout-header">
         <button className="back-button" onClick={() => navigate(-1)}>
-          ← Retour
+          Retour
         </button>
         <h1>Finaliser la commande</h1>
       </div>

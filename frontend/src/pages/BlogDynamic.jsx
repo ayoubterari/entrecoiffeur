@@ -65,7 +65,7 @@ const BlogDynamic = () => {
             className="back-btn"
             onClick={() => window.history.back()}
           >
-            ← Retour
+            Retour
           </button>
           
           <div className="blog-hero">

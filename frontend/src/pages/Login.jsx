@@ -60,7 +60,7 @@ const Login = ({ onLogin, onBack }) => {
       <div className="auth-container">
         {onBack && (
           <button className="back-to-home-btn" onClick={onBack}>
-            ← Retour au marketplace
+            Retour au marketplace
           </button>
         )}
         

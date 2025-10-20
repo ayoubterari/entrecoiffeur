@@ -172,7 +172,7 @@ const SellerStore = () => {
           <h3>Erreur de chargement</h3>
           <p>Impossible de charger les informations du vendeur</p>
           <button onClick={() => navigate(-1)} className="back-btn">
-            ← Retour
+            Retour
           </button>
         </div>
       </div>
@@ -206,7 +206,7 @@ const SellerStore = () => {
               visibility: 'visible'
             }}
           >
-            ← Retour
+            Retour
           </button>
           
           {/* Profile Section - Social Media Style */}

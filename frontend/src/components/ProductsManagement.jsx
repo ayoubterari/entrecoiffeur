@@ -452,7 +452,7 @@ const ProductsManagement = () => {
                   Annuler
                 </button>
                 <button type="submit" className="save-btn">
-                  Créer le produit
+                  Enregistrer le produit
                 </button>
               </div>
             </form>

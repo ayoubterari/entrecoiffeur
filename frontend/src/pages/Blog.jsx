@@ -68,7 +68,7 @@ const Blog = () => {
             className="back-btn"
             onClick={() => navigate('/')}
           >
-            ← Retour à l'accueil
+            Retour à l'accueil
           </button>
           
           <div className="blog-hero">

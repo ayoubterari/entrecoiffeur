@@ -106,7 +106,7 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
       {/* Header avec navigation */}
       <div className="product-detail-header">
         <button className="back-button" onClick={onBack}>
-          ← Retour aux produits
+          Retour aux produits
         </button>
         <div className="breadcrumb">
           <span>Accueil</span> / <span>Produits</span> / <span className="current">{product.name}</span>
