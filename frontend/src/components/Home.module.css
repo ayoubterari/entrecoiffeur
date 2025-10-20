@@ -177,24 +177,16 @@
   grid-column: 1 / -1;
   grid-row: 2;
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .searchBarHeader {
-  display: flex;
-  background: #f8f9fa;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(45, 52, 54, 0.1);
-  width: 100%;
+  display: none; /* Ancienne barre de recherche désactivée */
 }
 
 .searchInputHeader {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  border: none;
-  background: transparent;
-  color: #2d3436;
-  font-size: 0.9rem;
+  display: none; /* Ancienne barre de recherche désactivée */
 }
 
 .searchInputHeader:focus {

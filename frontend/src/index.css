@@ -7780,6 +7780,78 @@ body.dashboard-body #root {
   margin: 0;
 }
 
+/* Upload Buttons */
+.upload-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.upload-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.upload-btn:hover:not(:disabled) {
+  border-color: #ff6b9d;
+  background: rgba(255, 107, 157, 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.15);
+}
+
+.upload-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.upload-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.upload-btn .btn-icon {
+  font-size: 2.5rem;
+}
+
+.upload-btn .btn-text {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.gallery-btn:hover:not(:disabled) {
+  border-color: #ff6b9d;
+}
+
+.camera-btn:hover:not(:disabled) {
+  border-color: #ff6b9d;
+}
+
+@media (max-width: 480px) {
+  .upload-buttons {
+    flex-direction: column;
+  }
+  
+  .upload-btn {
+    flex-direction: row;
+    justify-content: center;
+    padding: 1rem;
+  }
+  
+  .upload-btn .btn-icon {
+    font-size: 1.8rem;
+  }
+}
+
 .upload-dropzone {
   border: 2px dashed #e0e0e0;
   border-radius: 12px;

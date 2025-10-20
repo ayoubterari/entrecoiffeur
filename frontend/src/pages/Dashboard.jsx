@@ -109,7 +109,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
     const baseTabs = [
       { id: 'profile', name: 'Profil', icon: '👤' },
       { id: 'messages', name: 'Messages', icon: '💬' },
-      { id: 'purchases', name: 'Mes Commandes', icon: '🛒' },
+      { id: 'purchases', name: 'Mes achats', icon: '🛒' },
       { id: 'support', name: 'Support', icon: '🎧' },
       { id: 'affiliate', name: 'Affiliation', icon: '💰' },
       { id: 'settings', name: 'Paramètres', icon: '⚙️' },
@@ -120,7 +120,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
     if (userType === 'professionnel' || userType === 'grossiste') {
       baseTabs.splice(5, 0, 
         { id: 'products', name: 'Mes Produits', icon: '📦' },
-        { id: 'orders', name: 'Orders (Vendeur)', icon: '📋' },
+        { id: 'orders', name: 'Mes ventes', icon: '📋' },
         { id: 'complaints', name: 'Réclamations', icon: '😠' },
         { id: 'analytics', name: 'Statistiques', icon: '📊' }
       )
@@ -712,7 +712,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
           {activeTab === 'orders' && (
             <div className="tab-content">
               <div className="orders-header">
-                <h2>📋 Orders - Commandes reçues</h2>
+                <h2>📋 Mes ventes - Commandes reçues</h2>
                 <p>Gérez les commandes de vos produits</p>
               </div>
 
@@ -1256,7 +1256,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
           {activeTab === 'purchases' && (
             <div className="tab-content">
               <div className="purchases-header">
-                <h2>🛒 Mes Commandes</h2>
+                <h2>🛒 Mes achats</h2>
                 <p>Suivez vos achats et commandes</p>
               </div>
 

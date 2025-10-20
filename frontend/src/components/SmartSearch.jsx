@@ -171,8 +171,21 @@ const SmartSearch = ({ onSearch, onProductSelect, placeholder = "Rechercher des 
             className="search-input"
             autoComplete="off"
           />
-          <button type="submit" className="search-button">
-            🔍
+          {query && (
+            <button 
+              type="button" 
+              className="clear-button"
+              onClick={() => {
+                setQuery('')
+                setIsOpen(false)
+              }}
+              aria-label="Effacer"
+            >
+              <span>✕</span>
+            </button>
+          )}
+          <button type="submit" className="search-button" aria-label="Rechercher">
+            <span>🔍</span>
           </button>
         </div>
       </form>
@@ -196,7 +209,9 @@ const SmartSearch = ({ onSearch, onProductSelect, placeholder = "Rechercher des 
                     {product.images?.[0] ? (
                       <img src={product.images[0]} alt={product.name} />
                     ) : (
-                      <span className="product-placeholder">🛍️</span>
+                      <div className="product-placeholder">
+                        <span>✨</span>
+                      </div>
                     )}
                   </div>
                   <div className="product-info">
@@ -252,7 +267,7 @@ const SmartSearch = ({ onSearch, onProductSelect, placeholder = "Rechercher des 
                   className="search-item trending-item"
                   onClick={() => handleTrendingClick(trending.term)}
                 >
-                  <span className="trending-icon">🔥</span>
+                  <span className="trending-icon">📈</span>
                   <span className="trending-text">{trending.term}</span>
                   <span className="trending-count">{trending.count}</span>
                 </div>
@@ -264,7 +279,7 @@ const SmartSearch = ({ onSearch, onProductSelect, placeholder = "Rechercher des 
           {query.length >= 2 && (!searchResults || searchResults.length === 0) && (
             <div className="search-section">
               <div className="no-results">
-                <span className="no-results-icon">😔</span>
+                <span className="no-results-icon">🔍</span>
                 <span className="no-results-text">
                   Aucun produit trouvé pour "{query}"
                 </span>

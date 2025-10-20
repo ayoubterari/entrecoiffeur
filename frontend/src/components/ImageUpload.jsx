@@ -6,6 +6,10 @@ const ImageUpload = ({ images, onImagesChange, maxImages = 5 }) => {
   const [dragActive, setDragActive] = useState(false)
   const [uploading, setUploading] = useState(false)
   const inputRef = useRef(null)
+  const cameraInputRef = useRef(null)
+  
+  // Détecter si l'utilisateur est sur mobile
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
   
   const generateUploadUrl = useMutation(api.files.generateUploadUrl)
   const storeFile = useMutation(api.files.storeFile)
@@ -132,6 +136,10 @@ const ImageUpload = ({ images, onImagesChange, maxImages = 5 }) => {
     inputRef.current?.click()
   }
 
+  const onCameraClick = () => {
+    cameraInputRef.current?.click()
+  }
+
   return (
     <div className="image-upload-container">
       <div className="upload-header">
@@ -139,7 +147,18 @@ const ImageUpload = ({ images, onImagesChange, maxImages = 5 }) => {
         <p className="upload-hint">Ajoutez jusqu'à {maxImages} photos. La première sera l'image principale.</p>
       </div>
 
-      {/* Zone de drop */}
+      {/* Input pour les images */}
+      <input
+        ref={inputRef}
+        type="file"
+        multiple
+        accept="image/*"
+        onChange={handleChange}
+        style={{ display: 'none' }}
+        disabled={images.length >= maxImages}
+      />
+
+      {/* Zone de drop cliquable */}
       <div
         className={`upload-dropzone ${dragActive ? 'drag-active' : ''} ${images.length >= maxImages ? 'disabled' : ''}`}
         onDragEnter={handleDrag}
@@ -148,15 +167,6 @@ const ImageUpload = ({ images, onImagesChange, maxImages = 5 }) => {
         onDrop={handleDrop}
         onClick={images.length < maxImages ? onButtonClick : undefined}
       >
-        <input
-          ref={inputRef}
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleChange}
-          style={{ display: 'none' }}
-          disabled={images.length >= maxImages}
-        />
         
         {uploading ? (
           <div className="upload-content">
