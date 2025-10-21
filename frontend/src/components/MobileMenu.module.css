@@ -210,15 +210,86 @@
 }
 
 .notAuthMessage {
-  padding: 2rem 1.5rem;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
   text-align: center;
 }
 
 .notAuthMessage p {
   color: #636e72;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   line-height: 1.5;
   margin: 0;
+}
+
+/* Auth Buttons */
+.authButton {
+  width: calc(100% - 3rem);
+  margin: 0.75rem 1.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #ff6b9d, #e84393);
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+}
+
+.authButton:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .authButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 107, 157, 0.4);
+  }
+}
+
+.authButtonContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.authIcon {
+  font-size: 1.25rem;
+}
+
+.authText {
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Sign In Button - Variant */
+.signInButton {
+  background: transparent;
+  border: 2px solid #ff6b9d;
+  box-shadow: none;
+}
+
+.signInButton .authText {
+  color: #ff6b9d;
+}
+
+.signInButton:active {
+  background: rgba(255, 107, 157, 0.08);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .signInButton:hover {
+    background: rgba(255, 107, 157, 0.05);
+    border-color: #e84393;
+  }
+  
+  .signInButton:hover .authText {
+    color: #e84393;
+  }
 }
 
 /* Responsive adjustments */

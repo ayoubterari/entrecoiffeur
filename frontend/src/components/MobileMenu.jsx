@@ -11,7 +11,8 @@ const MobileMenu = ({
   onOpenCart, 
   favoritesCount, 
   cartCount,
-  userFirstName 
+  userFirstName,
+  onShowLogin
 }) => {
   const navigate = useNavigate()
 
@@ -34,6 +35,16 @@ const MobileMenu = ({
 
   const handleCart = () => {
     onOpenCart()
+    onClose()
+  }
+
+  const handleSignIn = () => {
+    onShowLogin('signin')
+    onClose()
+  }
+
+  const handleSignUp = () => {
+    onShowLogin('signup')
     onClose()
   }
 
@@ -94,9 +105,28 @@ const MobileMenu = ({
               </button>
             </>
           ) : (
-            <div className={styles.notAuthMessage}>
-              <p>Connectez-vous pour accéder à votre profil</p>
-            </div>
+            <>
+              {/* Message d'information */}
+              <div className={styles.notAuthMessage}>
+                <p>Connectez-vous pour accéder à toutes les fonctionnalités</p>
+              </div>
+
+              {/* Bouton S'inscrire */}
+              <button className={styles.authButton} onClick={handleSignUp}>
+                <div className={styles.authButtonContent}>
+                  <span className={styles.authIcon}>✨</span>
+                  <span className={styles.authText}>S'inscrire</span>
+                </div>
+              </button>
+
+              {/* Bouton Se connecter */}
+              <button className={`${styles.authButton} ${styles.signInButton}`} onClick={handleSignIn}>
+                <div className={styles.authButtonContent}>
+                  <span className={styles.authIcon}>🔑</span>
+                  <span className={styles.authText}>Se connecter</span>
+                </div>
+              </button>
+            </>
           )}
         </div>
       </div>

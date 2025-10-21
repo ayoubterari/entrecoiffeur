@@ -671,6 +671,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         favoritesCount={favoritesCount}
         cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)}
         userFirstName={userFirstName}
+        onShowLogin={onShowLogin}
       />
     </div>
   )
