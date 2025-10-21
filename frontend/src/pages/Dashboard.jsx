@@ -1039,10 +1039,10 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                 </div>
                 {canAddProduct() && (
                   <button 
-                    className="add-product-btn"
+                    className={`add-product-btn ${isMobile ? 'mobile-fab' : ''}`}
                     onClick={() => setShowAddProduct(!showAddProduct)}
                   >
-                    {showAddProduct ? '❌ Annuler' : '➕ Ajouter un produit'}
+                    {isMobile ? (showAddProduct ? '✕' : '➕') : (showAddProduct ? '❌ Annuler' : '➕ Ajouter un produit')}
                   </button>
                 )}
                 {!canAddProduct() && userType !== 'particulier' && (
@@ -1414,8 +1414,69 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                     </div>
 
                     <div className="products-table-container">
-                      <table className="products-table">
-                      <thead>
+                      {isMobile ? (
+                        // Vue mobile avec cartes
+                        <div className="mobile-cards-container">
+                          {filteredProducts?.map((product) => (
+                            <div key={product._id} className="mobile-product-card">
+                              <div className="mobile-card-header">
+                                <div className="product-image-mobile">
+                                  <ProductImageDisplay 
+                                    images={product.images || []}
+                                    productName={product.name}
+                                    className="mobile-product-image"
+                                  />
+                                </div>
+                                <div className="product-header-info">
+                                  <strong>{product.name}</strong>
+                                  <span className="mobile-price">{product.price}€</span>
+                                </div>
+                              </div>
+                              <div className="mobile-card-body">
+                                <div className="mobile-card-row">
+                                  <span className="mobile-card-label">Description</span>
+                                  <span className="mobile-card-value">{product.description}</span>
+                                </div>
+                                <div className="mobile-card-row">
+                                  <span className="mobile-card-label">Stock</span>
+                                  <span className={`stock-badge ${product.stock > 10 ? 'in-stock' : product.stock > 0 ? 'low-stock' : 'out-of-stock'}`}>
+                                    {product.stock > 0 ? `${product.stock} unités` : 'Rupture'}
+                                  </span>
+                                </div>
+                                <div className="mobile-card-row">
+                                  <span className="mobile-card-label">Catégorie</span>
+                                  <span className="category-badge">{product.categoryName || 'Non catégorisé'}</span>
+                                </div>
+                                <div className="mobile-card-row">
+                                  <span className="mobile-card-label">Statut</span>
+                                  <div className="status-badges">
+                                    {product.featured && <span className="status-badge featured-badge">⭐</span>}
+                                    {product.onSale && <span className="status-badge sale-badge">🔥</span>}
+                                    {!product.featured && !product.onSale && <span className="status-badge normal-badge">Standard</span>}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="mobile-card-actions">
+                                <button 
+                                  className="mobile-action-btn edit-btn"
+                                  onClick={() => handleEditProduct(product)}
+                                >
+                                  ✏️ Modifier
+                                </button>
+                                <button 
+                                  className="mobile-action-btn delete-btn"
+                                  onClick={() => handleDeleteProduct(product)}
+                                >
+                                  🗑️ Supprimer
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        // Vue desktop avec tableau
+                        <table className="products-table">
+                        <thead>
                         <tr>
                           <th>Image</th>
                           <th>Produit</th>
@@ -1485,7 +1546,8 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                         ))}
                       </tbody>
                     </table>
-                  </div>
+                      )}
+                    </div>
                   </>
                 )}
               </div>
