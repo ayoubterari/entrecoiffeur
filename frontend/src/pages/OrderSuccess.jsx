@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import ProductImageDisplay from '../components/ProductImageDisplay'
 
 const OrderSuccess = () => {
   const navigate = useNavigate()
@@ -75,7 +76,11 @@ const OrderSuccess = () => {
               {orderData.items.map((item, index) => (
                 <div key={index} className="ordered-item">
                   <div className="item-image">
-                    {item.image || '🛍️'}
+                    <ProductImageDisplay 
+                      images={item.image ? [item.image] : []}
+                      productName={item.name}
+                      className="order-success-product-image"
+                    />
                   </div>
                   <div className="item-info">
                     <h4>{item.name}</h4>

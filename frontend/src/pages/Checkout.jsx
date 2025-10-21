@@ -4,6 +4,7 @@ import { useMutation, useQuery } from 'convex/react'
 import { api } from '../lib/convex'
 import CouponInput from '../components/CouponInput'
 import { useAffiliateTracking } from '../hooks/useAffiliateTracking'
+import ProductImageDisplay from '../components/ProductImageDisplay'
 import './Checkout.css'
 
 const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLastName }) => {
@@ -265,7 +266,11 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
             {orderData.items.map((item, index) => (
               <div key={index} className="order-item">
                 <div className="item-image">
-                  {item.image || '🛍️'}
+                  <ProductImageDisplay 
+                    images={item.image ? [item.image] : []}
+                    productName={item.name}
+                    className="checkout-product-image"
+                  />
                 </div>
                 <div className="item-details">
                   <h4>{item.name}</h4>

@@ -274,21 +274,13 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
 
             <div className="action-buttons">
               <button 
-                className="add-to-cart-btn"
-                onClick={handleAddToCart}
-                disabled={product.stock === 0}
-              >
-                {!isAuthenticated ? '🔐 Se connecter pour acheter' : 
-                 product.stock === 0 ? '❌ Rupture de stock' : 
-                 '🛒 Ajouter au panier'}
-              </button>
-              
-              <button 
                 className="buy-now-btn" 
                 onClick={handleBuyNow}
                 disabled={!isAuthenticated || product.stock === 0}
               >
-                ⚡ Acheter maintenant
+                {!isAuthenticated ? 'Se connecter pour acheter' : 
+                 product.stock === 0 ? 'Rupture de stock' : 
+                 'Acheter'}
               </button>
             </div>
 
