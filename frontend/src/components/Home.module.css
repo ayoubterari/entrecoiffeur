@@ -94,8 +94,9 @@ body {
 
 .headerContent {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   gap: var(--spacing-xs);
   padding: var(--spacing-xs) var(--spacing-sm);
   max-width: 100%;
@@ -106,15 +107,42 @@ body {
   padding: clamp(0.5rem, 2vw, 1rem) clamp(0.75rem, 3vw, 1.5rem);
 }
 
-/* Logo Section - Toujours visible */
+/* Logo Section - Responsive */
 .marketplaceLogo {
-  width: 100%;
-  text-align: center;
-  order: 1;
+  flex: 1;
+  text-align: left;
   padding: 0 var(--spacing-xs);
   box-sizing: border-box;
   /* Prevent text overflow */
   overflow: hidden;
+  order: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Desktop: Logo à gauche avec les icônes */
+@media (min-width: 768px) {
+  .marketplaceLogo {
+    text-align: left;
+    order: 2;
+    align-items: flex-start;
+    padding: 0;
+    flex-direction: column;
+    gap: 0;
+    height: auto;
+  }
+  
+  .marketplaceTitle {
+    font-size: 1.25rem;
+    line-height: 1.2;
+    margin: 0;
+  }
+  
+  .marketplaceSubtitle {
+    display: block;
+    font-size: 0.75rem;
+  }
 }
 
 .marketplaceTitle {
@@ -145,41 +173,80 @@ body {
   user-select: none;
 }
 
-/* Actions Row - Optimisé pour mobile */
-.headerLeft {
+/* Hamburger Button - Mobile only */
+.hamburgerBtn {
   display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  justify-content: center;
-  order: 2;
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  padding: 0 var(--spacing-xs);
-  /* Ensure buttons are accessible */
-  min-height: 44px; /* iOS touch target */
+  flex-direction: column;
+  justify-content: space-around;
+  width: 2.75rem;
+  height: 2.75rem;
+  background: var(--bg-light);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  padding: 0.625rem;
+  order: 1;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background 0.2s ease;
 }
 
-.headerLeft::-webkit-scrollbar {
+.hamburgerBtn span {
+  width: 100%;
+  height: 2px;
+  background: var(--dark);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.hamburgerBtn:active {
+  background: rgba(255, 107, 157, 0.15);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hamburgerBtn:hover {
+    background: rgba(255, 107, 157, 0.1);
+  }
+}
+
+/* Desktop: Hide hamburger */
+@media (min-width: 768px) {
+  .hamburgerBtn {
+    display: none;
+  }
+}
+
+/* Header Actions Left - Desktop only (Search, Favoris, Panier) */
+.headerActionsLeft {
   display: none;
-}
-
-.headerActions {
-  display: flex;
   align-items: center;
   gap: var(--spacing-xs);
-  justify-content: center;
-  order: 3;
-  width: 100%;
-  max-width: 100%;
-  flex-wrap: wrap;
-  padding: 0 var(--spacing-xs);
-  /* Ensure buttons don't get too small */
+  justify-content: flex-start;
+  order: 1;
+  flex-wrap: nowrap;
   min-height: 44px;
+}
+
+/* Header Actions Right - Desktop only (Profil/Connexion) */
+.headerActions {
+  display: none;
+  align-items: center;
+  gap: var(--spacing-xs);
+  justify-content: flex-end;
+  order: 3;
+  flex-wrap: nowrap;
+  min-height: 44px;
+}
+
+/* Desktop: Show actions */
+@media (min-width: 768px) {
+  .headerActionsLeft {
+    display: flex;
+  }
+  
+  .headerActions {
+    display: flex;
+  }
 }
 
 /* Boutons d'action - Touch targets optimisés (44x44px minimum Apple HIG) */
@@ -1606,6 +1673,61 @@ body {
   }
   50% {
     transform: translateY(-10px);
+  }
+}
+
+/* Desktop - Header Layout */
+@media (min-width: 768px) {
+  .headerContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    min-height: 4rem;
+  }
+
+  .hamburgerBtn {
+    display: none;
+  }
+
+  .marketplaceLogo {
+    order: 2;
+    text-align: left;
+    flex: none;
+    align-self: center;
+  }
+
+  .headerActions {
+    order: 3;
+    justify-self: end;
+    align-items: center;
+    align-self: center;
+  }
+
+  /* Groupe gauche : icônes + logo */
+  .headerActionsLeft {
+    order: 1;
+    justify-self: start;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    align-self: center;
+  }
+  
+  /* S'assurer que tous les boutons ont la même hauteur */
+  .searchBtn,
+  .headerBtn,
+  .userProfileBtn,
+  .signinBtn,
+  .signupBtn,
+  .logoutBtn {
+    height: 2.75rem;
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

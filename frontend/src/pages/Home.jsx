@@ -6,6 +6,7 @@ import Carousel from '../components/Carousel'
 import ProductCard from '../components/ProductCard'
 import GroupWelcomeModal from '../components/GroupWelcomeModal'
 import SupportModal from '../components/SupportModal'
+import MobileMenu from '../components/MobileMenu'
 import styles from '../components/Home.module.css'
 
 const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName, onAddToCart, cart, onOpenCart, onShowLogin, onToggleFavorite, favoritesCount, userId, onOpenFavorites }) => {
@@ -20,6 +21,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   const [showSupportModal, setShowSupportModal] = useState(false)
   const [featuredCarouselIndex, setFeaturedCarouselIndex] = useState(0)
   const [flashSaleCarouselIndex, setFlashSaleCarouselIndex] = useState(0)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   // Get real data from Convex
   const categoriesData = useQuery(api.products.getCategories)
@@ -228,8 +230,19 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
       {/* Header Mobile-First */}
       <header className={styles.mobileHeader}>
         <div className={styles.headerContent}>
-          {/* Gauche: Recherche, Favoris, Panier */}
-          <div className={styles.headerLeft}>
+          {/* Mobile: Hamburger à gauche */}
+          <button 
+            className={styles.hamburgerBtn} 
+            onClick={() => setIsMobileMenuOpen(true)}
+            title="Menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          {/* Desktop: Actions à gauche (Search, Favoris, Panier) */}
+          <div className={styles.headerActionsLeft}>
             <button className={styles.searchBtn} title="Rechercher">
               🔍
             </button>
@@ -247,15 +260,15 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
             >
               🛒 <span className={styles.badge}>{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
             </button>
-            
-            {/* Logo au centre (dans la section gauche pour le layout) */}
-            <div className={styles.marketplaceLogo}>
-              <h1 className={styles.marketplaceTitle}>Entre Coiffeur</h1>
-              <p className={styles.marketplaceSubtitle}>Marketplace beauté & coiffure</p>
-            </div>
           </div>
 
-          {/* Droite: Profil/Connexion */}
+          {/* Logo - Centré sur desktop, à droite sur mobile */}
+          <div className={styles.marketplaceLogo}>
+            <h1 className={styles.marketplaceTitle}>Entre Coiffeur</h1>
+            <p className={styles.marketplaceSubtitle}>Marketplace beauté & coiffure</p>
+          </div>
+
+          {/* Desktop: Actions à droite (Profil/Connexion) */}
           <div className={styles.headerActions}>
             {isAuthenticated ? (
               <>
@@ -645,6 +658,19 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         userEmail={userEmail}
         userFirstName={userFirstName}
         userLastName={userLastName}
+      />
+
+      {/* Menu Mobile */}
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        isAuthenticated={isAuthenticated}
+        onLogout={onLogout}
+        onOpenFavorites={onOpenFavorites}
+        onOpenCart={onOpenCart}
+        favoritesCount={favoritesCount}
+        cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)}
+        userFirstName={userFirstName}
       />
     </div>
   )

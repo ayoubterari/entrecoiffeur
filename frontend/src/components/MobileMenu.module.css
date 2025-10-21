@@ -1,0 +1,229 @@
+/* ============================================
+   MOBILE MENU POPUP
+   ============================================ */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.menuPopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 85%;
+  max-width: 320px;
+  height: 100vh;
+  height: 100dvh;
+  background: #ffffff;
+  z-index: 9999;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  animation: slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.menuHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: linear-gradient(135deg, #ff6b9d, #e84393);
+  color: white;
+}
+
+.menuHeader h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.closeBtn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: white;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.closeBtn:active {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0.9);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .closeBtn:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.menuContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.menuItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  text-align: left;
+  position: relative;
+  min-height: 3.5rem;
+}
+
+.menuItem:active {
+  background: rgba(255, 107, 157, 0.08);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .menuItem:hover {
+    background: rgba(255, 107, 157, 0.05);
+  }
+}
+
+.menuIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  background: rgba(255, 107, 157, 0.1);
+  border-radius: 0.75rem;
+}
+
+.userAvatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b9d, #e84393);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+}
+
+.menuText {
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d3436;
+  letter-spacing: -0.01em;
+}
+
+.menuArrow {
+  font-size: 1.5rem;
+  color: #b2bec3;
+  font-weight: 300;
+}
+
+.menuBadge {
+  background: linear-gradient(135deg, #ff6b9d, #e84393);
+  color: white;
+  border-radius: 1rem;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(255, 107, 157, 0.3);
+}
+
+.menuDivider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+  margin: 0.5rem 1.5rem;
+}
+
+.logoutItem {
+  color: #636e72;
+}
+
+.logoutItem .menuIcon {
+  background: rgba(255, 59, 48, 0.1);
+}
+
+.logoutItem .menuText {
+  color: #ff3b30;
+}
+
+.logoutItem:active {
+  background: rgba(255, 59, 48, 0.08);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .logoutItem:hover {
+    background: rgba(255, 59, 48, 0.05);
+  }
+}
+
+.notAuthMessage {
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.notAuthMessage p {
+  color: #636e72;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .menuPopup {
+    max-width: 360px;
+  }
+}
