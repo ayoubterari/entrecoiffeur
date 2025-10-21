@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../lib/convex'
@@ -29,6 +29,29 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
   const [couponCopied, setCouponCopied] = useState(false)
   const [showReviewModal, setShowReviewModal] = useState(false)
   const [selectedOrderForReview, setSelectedOrderForReview] = useState(null)
+  
+  // États pour les filtres et recherche
+  const [productsSearch, setProductsSearch] = useState('')
+  const [productsFilter, setProductsFilter] = useState('all')
+  const [ordersSearch, setOrdersSearch] = useState('')
+  const [ordersFilter, setOrdersFilter] = useState('all')
+  const [purchasesSearch, setPurchasesSearch] = useState('')
+  const [purchasesFilter, setPurchasesFilter] = useState('all')
+  
+  // État pour détecter si on est sur mobile
+  const [isMobile, setIsMobile] = useState(false)
+  
+  // Détecter la taille de l'écran
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Fonction pour vérifier les permissions d'ajout de produit
   const canAddProduct = () => {
@@ -99,6 +122,49 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
   const pendingReviewOrders = useQuery(api.orderReviews.getPendingReviewOrders,
     userId ? { buyerId: userId } : "skip"
   )
+  
+  // Fonctions de filtrage pour les produits
+  const filteredProducts = userProducts?.filter(product => {
+    // Filtre de recherche
+    const matchesSearch = product.name.toLowerCase().includes(productsSearch.toLowerCase()) ||
+                         product.description.toLowerCase().includes(productsSearch.toLowerCase())
+    
+    // Filtre par statut
+    let matchesFilter = true
+    if (productsFilter === 'featured') matchesFilter = product.featured
+    else if (productsFilter === 'onSale') matchesFilter = product.onSale
+    else if (productsFilter === 'inStock') matchesFilter = product.stock > 0
+    else if (productsFilter === 'outOfStock') matchesFilter = product.stock === 0
+    else if (productsFilter === 'lowStock') matchesFilter = product.stock > 0 && product.stock <= 10
+    
+    return matchesSearch && matchesFilter
+  })
+  
+  // Fonctions de filtrage pour les ventes
+  const filteredOrders = sellerOrders?.filter(order => {
+    // Filtre de recherche
+    const matchesSearch = order.orderNumber.toLowerCase().includes(ordersSearch.toLowerCase()) ||
+                         order.productName.toLowerCase().includes(ordersSearch.toLowerCase()) ||
+                         order.billingInfo.firstName.toLowerCase().includes(ordersSearch.toLowerCase()) ||
+                         order.billingInfo.lastName.toLowerCase().includes(ordersSearch.toLowerCase())
+    
+    // Filtre par statut
+    const matchesFilter = ordersFilter === 'all' || order.status === ordersFilter
+    
+    return matchesSearch && matchesFilter
+  })
+  
+  // Fonctions de filtrage pour les achats
+  const filteredPurchases = buyerOrders?.filter(order => {
+    // Filtre de recherche
+    const matchesSearch = order.orderNumber.toLowerCase().includes(purchasesSearch.toLowerCase()) ||
+                         order.productName.toLowerCase().includes(purchasesSearch.toLowerCase())
+    
+    // Filtre par statut
+    const matchesFilter = purchasesFilter === 'all' || order.status === purchasesFilter
+    
+    return matchesSearch && matchesFilter
+  })
 
   // Get buyer reviews
   const buyerReviews = useQuery(api.orderReviews.getBuyerReviews,
@@ -730,88 +796,221 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                 <p>Gérez les commandes de vos produits</p>
               </div>
 
+              {/* Filtres et recherche pour les ventes */}
+              <div className="table-filters">
+                <div className="search-box">
+                  <span className="search-icon">🔍</span>
+                  <input
+                    type="text"
+                    placeholder="Rechercher par N° commande, produit, client..."
+                    value={ordersSearch}
+                    onChange={(e) => setOrdersSearch(e.target.value)}
+                    className="search-input"
+                  />
+                  {ordersSearch && (
+                    <button 
+                      className="clear-search"
+                      onClick={() => setOrdersSearch('')}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+                <div className="filter-buttons">
+                  <button 
+                    className={`filter-btn ${ordersFilter === 'all' ? 'active' : ''}`}
+                    onClick={() => setOrdersFilter('all')}
+                  >
+                    📋 Toutes
+                  </button>
+                  <button 
+                    className={`filter-btn ${ordersFilter === 'confirmed' ? 'active' : ''}`}
+                    onClick={() => setOrdersFilter('confirmed')}
+                  >
+                    ✅ Confirmées
+                  </button>
+                  <button 
+                    className={`filter-btn ${ordersFilter === 'preparing' ? 'active' : ''}`}
+                    onClick={() => setOrdersFilter('preparing')}
+                  >
+                    📦 Préparation
+                  </button>
+                  <button 
+                    className={`filter-btn ${ordersFilter === 'shipped' ? 'active' : ''}`}
+                    onClick={() => setOrdersFilter('shipped')}
+                  >
+                    🚚 Expédiées
+                  </button>
+                  <button 
+                    className={`filter-btn ${ordersFilter === 'delivered' ? 'active' : ''}`}
+                    onClick={() => setOrdersFilter('delivered')}
+                  >
+                    🏠 Livrées
+                  </button>
+                </div>
+              </div>
+
               {orderStats && (
                 <div className="order-stats">
                   <div className="stat-card">
                     <div className="stat-icon">📊</div>
                     <div className="stat-info">
                       <h3>{orderStats.totalOrders}</h3>
-                      <p>Total commandes</p>
                     </div>
                   </div>
                   <div className="stat-card">
                     <div className="stat-icon">💰</div>
                     <div className="stat-info">
                       <h3>{orderStats.totalRevenue?.toFixed(2)}€</h3>
-                      <p>Chiffre d'affaires</p>
                     </div>
                   </div>
                   <div className="stat-card">
                     <div className="stat-icon">⏳</div>
                     <div className="stat-info">
                       <h3>{orderStats.confirmedOrders}</h3>
-                      <p>En cours</p>
                     </div>
                   </div>
                   <div className="stat-card">
                     <div className="stat-icon">✅</div>
                     <div className="stat-info">
                       <h3>{orderStats.deliveredOrders}</h3>
-                      <p>Livrées</p>
                     </div>
                   </div>
                 </div>
               )}
 
-              <div className="orders-list">
-                {sellerOrders && sellerOrders.length > 0 ? (
-                  sellerOrders.map((order) => (
-                    <div key={order._id} className="order-card">
-                      <div className="order-header">
-                        <div className="order-number">#{order.orderNumber}</div>
-                        <div className={`order-status status-${order.status}`}>
-                          {order.status === 'confirmed' && '✅ Confirmée'}
-                          {order.status === 'preparing' && '📦 Préparation'}
-                          {order.status === 'shipped' && '🚚 Expédiée'}
-                          {order.status === 'delivered' && '🏠 Livrée'}
-                          {order.status === 'cancelled' && '❌ Annulée'}
+              <div className="orders-table-container">
+                {filteredOrders && filteredOrders.length > 0 ? (
+                  isMobile ? (
+                    // Vue mobile avec cartes
+                    <div className="mobile-cards-container">
+                      {filteredOrders.map((order) => (
+                        <div key={order._id} className="mobile-order-card">
+                          <div className="mobile-card-header">
+                            <span className="order-number-badge">#{order.orderNumber}</span>
+                            <span className={`status-badge status-${order.status}`}>
+                              {order.status === 'confirmed' && '✅ Confirmée'}
+                              {order.status === 'preparing' && '📦 Préparation'}
+                              {order.status === 'shipped' && '🚚 Expédiée'}
+                              {order.status === 'delivered' && '🏠 Livrée'}
+                              {order.status === 'cancelled' && '❌ Annulée'}
+                            </span>
+                          </div>
+                          <div className="mobile-card-body">
+                            <div className="mobile-card-row">
+                              <span className="mobile-card-label">Produit</span>
+                              <span className="mobile-card-value">{order.productName}</span>
+                            </div>
+                            <div className="mobile-card-row">
+                              <span className="mobile-card-label">Client</span>
+                              <span className="mobile-card-value">
+                                {order.billingInfo.firstName} {order.billingInfo.lastName}
+                              </span>
+                            </div>
+                            <div className="mobile-card-row">
+                              <span className="mobile-card-label">Quantité</span>
+                              <span className="mobile-card-value">{order.quantity}</span>
+                            </div>
+                            <div className="mobile-card-row">
+                              <span className="mobile-card-label">Total</span>
+                              <span className="mobile-card-value" style={{color: '#00b894', fontWeight: 'bold'}}>
+                                {order.total.toFixed(2)}€
+                              </span>
+                            </div>
+                            <div className="mobile-card-row">
+                              <span className="mobile-card-label">Date</span>
+                              <span className="mobile-card-value">
+                                {new Date(order.createdAt).toLocaleDateString('fr-FR')}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="mobile-card-actions">
+                            <select
+                              value={order.status}
+                              onChange={(e) => handleUpdateOrderStatus(order._id, e.target.value)}
+                              className="mobile-status-select"
+                              style={{width: '100%', padding: '0.5rem', borderRadius: '8px'}}
+                            >
+                              <option value="confirmed">✅ Confirmée</option>
+                              <option value="preparing">📦 Préparation</option>
+                              <option value="shipped">🚚 Expédiée</option>
+                              <option value="delivered">🏠 Livrée</option>
+                              <option value="cancelled">❌ Annulée</option>
+                            </select>
+                          </div>
                         </div>
-                      </div>
-                      
-                      <div className="order-content">
-                        <div className="order-product">
-                          <h4>{order.productName}</h4>
-                          <p>Quantité: {order.quantity} × {order.productPrice}€</p>
-                        </div>
-                        
-                        <div className="order-customer">
-                          <h5>Client:</h5>
-                          <p>{order.billingInfo.firstName} {order.billingInfo.lastName}</p>
-                          <p>{order.billingInfo.email}</p>
-                          <p>{order.billingInfo.address}, {order.billingInfo.city}</p>
-                        </div>
-                        
-                        <div className="order-total">
-                          <h4>{order.total.toFixed(2)}€</h4>
-                          <p>{new Date(order.createdAt).toLocaleDateString('fr-FR')}</p>
-                        </div>
-                      </div>
-                      
-                      <div className="order-actions">
-                        <select 
-                          value={order.status} 
-                          onChange={(e) => handleUpdateOrderStatus(order._id, e.target.value)}
-                          className="status-select"
-                        >
-                          <option value="confirmed">✅ Confirmée</option>
-                          <option value="preparing">📦 Préparation</option>
-                          <option value="shipped">🚚 Expédiée</option>
-                          <option value="delivered">🏠 Livrée</option>
-                          <option value="cancelled">❌ Annulée</option>
-                        </select>
-                      </div>
+                      ))}
                     </div>
-                  ))
+                  ) : (
+                    // Vue desktop avec tableau
+                    <table className="orders-table">
+                    <thead>
+                      <tr>
+                        <th>N° Commande</th>
+                        <th>Produit</th>
+                        <th>Client</th>
+                        <th>Quantité</th>
+                        <th>Total</th>
+                        <th>Date</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredOrders.map((order) => (
+                        <tr key={order._id} className="order-row">
+                          <td className="order-number-cell">
+                            <span className="order-number-badge">#{order.orderNumber}</span>
+                          </td>
+                          <td className="product-cell">
+                            <div className="product-info">
+                              <strong>{order.productName}</strong>
+                              <span className="product-price">{order.productPrice}€</span>
+                            </div>
+                          </td>
+                          <td className="customer-cell">
+                            <div className="customer-info">
+                              <strong>{order.billingInfo.firstName} {order.billingInfo.lastName}</strong>
+                              <span className="customer-email">{order.billingInfo.email}</span>
+                              <span className="customer-address">{order.billingInfo.city}</span>
+                            </div>
+                          </td>
+                          <td className="quantity-cell">
+                            <span className="quantity-badge">{order.quantity}</span>
+                          </td>
+                          <td className="total-cell">
+                            <strong className="total-amount">{order.total.toFixed(2)}€</strong>
+                          </td>
+                          <td className="date-cell">
+                            {new Date(order.createdAt).toLocaleDateString('fr-FR')}
+                          </td>
+                          <td className="status-cell">
+                            <span className={`status-badge status-${order.status}`}>
+                              {order.status === 'confirmed' && '✅ Confirmée'}
+                              {order.status === 'preparing' && '📦 Préparation'}
+                              {order.status === 'shipped' && '🚚 Expédiée'}
+                              {order.status === 'delivered' && '🏠 Livrée'}
+                              {order.status === 'cancelled' && '❌ Annulée'}
+                            </span>
+                          </td>
+                          <td className="actions-cell">
+                            <select 
+                              value={order.status} 
+                              onChange={(e) => handleUpdateOrderStatus(order._id, e.target.value)}
+                              className="status-select-table"
+                            >
+                              <option value="confirmed">✅ Confirmée</option>
+                              <option value="preparing">📦 Préparation</option>
+                              <option value="shipped">🚚 Expédiée</option>
+                              <option value="delivered">🏠 Livrée</option>
+                              <option value="cancelled">❌ Annulée</option>
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  )
                 ) : (
                   <div className="empty-state">
                     <div className="empty-icon">📋</div>
@@ -1153,56 +1352,141 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                     )}
                   </div>
                 ) : (
-                  <div className="products-grid">
-                    {userProducts?.map((product) => (
-                      <div key={product._id} className="product-management-card">
-                        <div className="product-card-header">
-                          <div className="product-image">
-                            <ProductImageDisplay 
-                              images={product.images || []}
-                              productName={product.name}
-                              className="dashboard-product-image"
-                            />
-                          </div>
-                          <div className="action-icons">
-                            <button 
-                              className="action-icon edit-icon"
-                              onClick={() => handleEditProduct(product)}
-                              title="Modifier le produit"
-                            >
-                              ✏️
-                            </button>
-                            <button 
-                              className="action-icon delete-icon"
-                              onClick={() => handleDeleteProduct(product)}
-                              title="Supprimer le produit"
-                            >
-                              🗑️
-                            </button>
-                          </div>
-                        </div>
-                        
-                        <div className="product-details">
-                          <div className="product-main-info">
-                            <h4 className="product-title">{product.name}</h4>
-                            <p className="product-description">{product.description}</p>
-                          </div>
-                          
-                          <div className="product-meta">
-                            <div className="price-stock-info">
-                              <span className="product-price">{product.price}€</span>
-                              <span className="product-stock">Stock: {product.stock}</span>
-                            </div>
-                          </div>
-                          
-                          <div className="product-badges">
-                            {product.featured && <span className="badge featured">⭐ Vedette</span>}
-                            {product.onSale && <span className="badge sale">🔥 Promo</span>}
-                          </div>
-                        </div>
+                  <>
+                    {/* Filtres et recherche pour les produits */}
+                    <div className="table-filters">
+                      <div className="search-box">
+                        <span className="search-icon">🔍</span>
+                        <input
+                          type="text"
+                          placeholder="Rechercher par nom, description..."
+                          value={productsSearch}
+                          onChange={(e) => setProductsSearch(e.target.value)}
+                          className="search-input"
+                        />
+                        {productsSearch && (
+                          <button 
+                            className="clear-search"
+                            onClick={() => setProductsSearch('')}
+                          >
+                            ✕
+                          </button>
+                        )}
                       </div>
-                    ))}
+                      <div className="filter-buttons">
+                        <button 
+                          className={`filter-btn ${productsFilter === 'all' ? 'active' : ''}`}
+                          onClick={() => setProductsFilter('all')}
+                        >
+                          📦 Tous
+                        </button>
+                        <button 
+                          className={`filter-btn ${productsFilter === 'featured' ? 'active' : ''}`}
+                          onClick={() => setProductsFilter('featured')}
+                        >
+                          ⭐ Vedettes
+                        </button>
+                        <button 
+                          className={`filter-btn ${productsFilter === 'onSale' ? 'active' : ''}`}
+                          onClick={() => setProductsFilter('onSale')}
+                        >
+                          🔥 Promos
+                        </button>
+                        <button 
+                          className={`filter-btn ${productsFilter === 'inStock' ? 'active' : ''}`}
+                          onClick={() => setProductsFilter('inStock')}
+                        >
+                          ✅ En stock
+                        </button>
+                        <button 
+                          className={`filter-btn ${productsFilter === 'lowStock' ? 'active' : ''}`}
+                          onClick={() => setProductsFilter('lowStock')}
+                        >
+                          ⚠️ Stock faible
+                        </button>
+                        <button 
+                          className={`filter-btn ${productsFilter === 'outOfStock' ? 'active' : ''}`}
+                          onClick={() => setProductsFilter('outOfStock')}
+                        >
+                          ❌ Rupture
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="products-table-container">
+                      <table className="products-table">
+                      <thead>
+                        <tr>
+                          <th>Image</th>
+                          <th>Produit</th>
+                          <th>Description</th>
+                          <th>Prix</th>
+                          <th>Stock</th>
+                          <th>Catégorie</th>
+                          <th>Statut</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredProducts?.map((product) => (
+                          <tr key={product._id} className="product-row">
+                            <td className="product-image-cell">
+                              <div className="product-image-thumb">
+                                <ProductImageDisplay 
+                                  images={product.images || []}
+                                  productName={product.name}
+                                  className="table-product-image"
+                                />
+                              </div>
+                            </td>
+                            <td className="product-name-cell">
+                              <strong>{product.name}</strong>
+                            </td>
+                            <td className="product-description-cell">
+                              <span className="description-text">{product.description}</span>
+                            </td>
+                            <td className="product-price-cell">
+                              <strong className="price-amount">{product.price}€</strong>
+                            </td>
+                            <td className="product-stock-cell">
+                              <span className={`stock-badge ${product.stock > 10 ? 'in-stock' : product.stock > 0 ? 'low-stock' : 'out-of-stock'}`}>
+                                {product.stock > 0 ? `${product.stock} unités` : 'Rupture'}
+                              </span>
+                            </td>
+                            <td className="product-category-cell">
+                              <span className="category-badge">{product.categoryName || 'Non catégorisé'}</span>
+                            </td>
+                            <td className="product-status-cell">
+                              <div className="status-badges">
+                                {product.featured && <span className="status-badge featured-badge">⭐ Vedette</span>}
+                                {product.onSale && <span className="status-badge sale-badge">🔥 Promo</span>}
+                                {!product.featured && !product.onSale && <span className="status-badge normal-badge">Standard</span>}
+                              </div>
+                            </td>
+                            <td className="product-actions-cell">
+                              <div className="action-buttons">
+                                <button 
+                                  className="action-btn edit-btn-table"
+                                  onClick={() => handleEditProduct(product)}
+                                  title="Modifier"
+                                >
+                                  ✏️
+                                </button>
+                                <button 
+                                  className="action-btn delete-btn-table"
+                                  onClick={() => handleDeleteProduct(product)}
+                                  title="Supprimer"
+                                >
+                                  🗑️
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
+                  </>
                 )}
               </div>
             </div>
@@ -1305,58 +1589,180 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                 </div>
               )}
 
-              <div className="purchases-list">
-                {buyerOrders && buyerOrders.length > 0 ? (
-                  buyerOrders.map((order) => (
-                    <div key={order._id} className="purchase-card">
-                      <div className="purchase-header">
-                        <div className="order-number">#{order.orderNumber}</div>
-                        <div className={`order-status status-${order.status}`}>
-                          {order.status === 'confirmed' && '✅ Confirmée'}
-                          {order.status === 'preparing' && '📦 Préparation'}
-                          {order.status === 'shipped' && '🚚 En transit'}
-                          {order.status === 'delivered' && '🏠 Livrée'}
-                          {order.status === 'cancelled' && '❌ Annulée'}
+              {/* Filtres et recherche pour les achats */}
+              <div className="table-filters">
+                <div className="search-box">
+                  <span className="search-icon">🔍</span>
+                  <input
+                    type="text"
+                    placeholder="Rechercher par N° commande, produit..."
+                    value={purchasesSearch}
+                    onChange={(e) => setPurchasesSearch(e.target.value)}
+                    className="search-input"
+                  />
+                  {purchasesSearch && (
+                    <button 
+                      className="clear-search"
+                      onClick={() => setPurchasesSearch('')}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+                <div className="filter-buttons">
+                  <button 
+                    className={`filter-btn ${purchasesFilter === 'all' ? 'active' : ''}`}
+                    onClick={() => setPurchasesFilter('all')}
+                  >
+                    📋 Toutes
+                  </button>
+                  <button 
+                    className={`filter-btn ${purchasesFilter === 'confirmed' ? 'active' : ''}`}
+                    onClick={() => setPurchasesFilter('confirmed')}
+                  >
+                    ✅ Confirmées
+                  </button>
+                  <button 
+                    className={`filter-btn ${purchasesFilter === 'preparing' ? 'active' : ''}`}
+                    onClick={() => setPurchasesFilter('preparing')}
+                  >
+                    📦 Préparation
+                  </button>
+                  <button 
+                    className={`filter-btn ${purchasesFilter === 'shipped' ? 'active' : ''}`}
+                    onClick={() => setPurchasesFilter('shipped')}
+                  >
+                    🚚 En transit
+                  </button>
+                  <button 
+                    className={`filter-btn ${purchasesFilter === 'delivered' ? 'active' : ''}`}
+                    onClick={() => setPurchasesFilter('delivered')}
+                  >
+                    🏠 Livrées
+                  </button>
+                </div>
+              </div>
+
+              <div className="purchases-table-container">
+                {filteredPurchases && filteredPurchases.length > 0 ? (
+                  isMobile ? (
+                    // Vue mobile avec cartes
+                    <div className="mobile-cards-container">
+                      {filteredPurchases.map((order) => (
+                        <div key={order._id} className="mobile-purchase-card">
+                          <div className="mobile-card-header">
+                            <span className="order-number-badge">#{order.orderNumber}</span>
+                            <span className={`status-badge status-${order.status}`}>
+                              {order.status === 'confirmed' && '✅ Confirmée'}
+                              {order.status === 'preparing' && '📦 Préparation'}
+                              {order.status === 'shipped' && '🚚 En transit'}
+                              {order.status === 'delivered' && '🏠 Livrée'}
+                              {order.status === 'cancelled' && '❌ Annulée'}
+                            </span>
+                          </div>
+                          <div className="mobile-card-body">
+                            <div className="mobile-card-row">
+                              <span className="mobile-card-label">Produit</span>
+                              <span className="mobile-card-value">{order.productName}</span>
+                            </div>
+                            <div className="mobile-card-row">
+                              <span className="mobile-card-label">Quantité</span>
+                              <span className="mobile-card-value">{order.quantity}</span>
+                            </div>
+                            <div className="mobile-card-row">
+                              <span className="mobile-card-label">Paiement</span>
+                              <span className="mobile-card-value">{order.paymentMethod}</span>
+                            </div>
+                            <div className="mobile-card-row">
+                              <span className="mobile-card-label">Total</span>
+                              <span className="mobile-card-value" style={{color: '#0984e3', fontWeight: 'bold'}}>
+                                {order.total.toFixed(2)}€
+                              </span>
+                            </div>
+                            <div className="mobile-card-row">
+                              <span className="mobile-card-label">Date</span>
+                              <span className="mobile-card-value">
+                                {new Date(order.createdAt).toLocaleDateString('fr-FR')}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="mobile-tracking-progress">
+                            <div className={`tracking-step ${['confirmed', 'preparing', 'shipped', 'delivered'].includes(order.status) ? 'active' : ''}`}>✅</div>
+                            <div className={`tracking-step ${['preparing', 'shipped', 'delivered'].includes(order.status) ? 'active' : ''}`}>📦</div>
+                            <div className={`tracking-step ${['shipped', 'delivered'].includes(order.status) ? 'active' : ''}`}>🚚</div>
+                            <div className={`tracking-step ${order.status === 'delivered' ? 'active' : ''}`}>🏠</div>
+                          </div>
                         </div>
-                      </div>
-                      
-                      <div className="purchase-content">
-                        <div className="purchase-product">
-                          <h4>{order.productName}</h4>
-                          <p>Quantité: {order.quantity} × {order.productPrice}€</p>
-                        </div>
-                        
-                        <div className="purchase-details">
-                          <p><strong>Paiement:</strong> {order.paymentMethod}</p>
-                          <p><strong>Livraison:</strong> {order.billingInfo.address}</p>
-                        </div>
-                        
-                        <div className="purchase-total">
-                          <h4>{order.total.toFixed(2)}€</h4>
-                          <p>{new Date(order.createdAt).toLocaleDateString('fr-FR')}</p>
-                        </div>
-                      </div>
-                      
-                      <div className="purchase-timeline">
-                        <div className={`timeline-step ${['confirmed', 'preparing', 'shipped', 'delivered'].includes(order.status) ? 'completed' : ''}`}>
-                          <div className="step-icon">✅</div>
-                          <span>Confirmée</span>
-                        </div>
-                        <div className={`timeline-step ${['preparing', 'shipped', 'delivered'].includes(order.status) ? 'completed' : ''}`}>
-                          <div className="step-icon">📦</div>
-                          <span>Préparation</span>
-                        </div>
-                        <div className={`timeline-step ${['shipped', 'delivered'].includes(order.status) ? 'completed' : ''}`}>
-                          <div className="step-icon">🚚</div>
-                          <span>Expédition</span>
-                        </div>
-                        <div className={`timeline-step ${order.status === 'delivered' ? 'completed' : ''}`}>
-                          <div className="step-icon">🏠</div>
-                          <span>Livraison</span>
-                        </div>
-                      </div>
+                      ))}
                     </div>
-                  ))
+                  ) : (
+                    // Vue desktop avec tableau
+                    <table className="purchases-table">
+                    <thead>
+                      <tr>
+                        <th>N° Commande</th>
+                        <th>Produit</th>
+                        <th>Quantité</th>
+                        <th>Paiement</th>
+                        <th>Livraison</th>
+                        <th>Total</th>
+                        <th>Date</th>
+                        <th>Statut</th>
+                        <th>Suivi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredPurchases.map((order) => (
+                        <tr key={order._id} className="purchase-row">
+                          <td className="order-number-cell">
+                            <span className="order-number-badge">#{order.orderNumber}</span>
+                          </td>
+                          <td className="product-cell">
+                            <div className="product-info">
+                              <strong>{order.productName}</strong>
+                              <span className="product-price">{order.productPrice}€/unité</span>
+                            </div>
+                          </td>
+                          <td className="quantity-cell">
+                            <span className="quantity-badge">{order.quantity}</span>
+                          </td>
+                          <td className="payment-cell">
+                            <span className="payment-method">{order.paymentMethod}</span>
+                          </td>
+                          <td className="delivery-cell">
+                            <div className="delivery-info">
+                              <span>{order.billingInfo.address}</span>
+                              <span className="delivery-city">{order.billingInfo.city}</span>
+                            </div>
+                          </td>
+                          <td className="total-cell">
+                            <strong className="total-amount">{order.total.toFixed(2)}€</strong>
+                          </td>
+                          <td className="date-cell">
+                            {new Date(order.createdAt).toLocaleDateString('fr-FR')}
+                          </td>
+                          <td className="status-cell">
+                            <span className={`status-badge status-${order.status}`}>
+                              {order.status === 'confirmed' && '✅ Confirmée'}
+                              {order.status === 'preparing' && '📦 Préparation'}
+                              {order.status === 'shipped' && '🚚 En transit'}
+                              {order.status === 'delivered' && '🏠 Livrée'}
+                              {order.status === 'cancelled' && '❌ Annulée'}
+                            </span>
+                          </td>
+                          <td className="tracking-cell">
+                            <div className="tracking-progress">
+                              <div className={`tracking-step ${['confirmed', 'preparing', 'shipped', 'delivered'].includes(order.status) ? 'active' : ''}`} title="Confirmée">✅</div>
+                              <div className={`tracking-step ${['preparing', 'shipped', 'delivered'].includes(order.status) ? 'active' : ''}`} title="Préparation">📦</div>
+                              <div className={`tracking-step ${['shipped', 'delivered'].includes(order.status) ? 'active' : ''}`} title="Expédition">🚚</div>
+                              <div className={`tracking-step ${order.status === 'delivered' ? 'active' : ''}`} title="Livrée">🏠</div>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  )
                 ) : (
                   <div className="empty-state">
                     <div className="empty-icon">🛒</div>

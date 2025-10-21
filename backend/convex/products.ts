@@ -222,11 +222,13 @@ export const updateProduct = mutation({
       )
     );
 
-    // If categoryId is provided, convert it to category name
+    // If categoryId is provided, save both categoryId and category name
     if (categoryId) {
       const category = await ctx.db.get(categoryId);
       if (category) {
+        cleanUpdates.categoryId = categoryId;
         cleanUpdates.category = category.name;
+        cleanUpdates.categoryName = category.name;
       }
     }
 
