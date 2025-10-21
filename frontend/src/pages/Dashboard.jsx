@@ -11,6 +11,7 @@ import OrderReviewModal from '../components/OrderReviewModal'
 import AffiliateTab from '../components/AffiliateTab'
 import SupportResponses from '../components/SupportResponses'
 import SellerComplaintsManagement from '../components/SellerComplaintsManagement'
+import ProductImageDisplay from '../components/ProductImageDisplay'
 import './Dashboard.css'
 
 const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, companyName }) => {
@@ -108,23 +109,36 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
   const getAvailableTabs = () => {
     const baseTabs = [
       { id: 'profile', name: 'Profil', icon: '👤' },
-      { id: 'messages', name: 'Messages', icon: '💬' },
       { id: 'purchases', name: 'Mes achats', icon: '🛒' },
-      { id: 'support', name: 'Support', icon: '🎧' },
-      { id: 'affiliate', name: 'Affiliation', icon: '💰' },
-      { id: 'settings', name: 'Paramètres', icon: '⚙️' },
-      { id: 'dev', name: 'Dev Tools', icon: '🛠️' },
     ]
     
     // Ajouter les onglets de vente uniquement pour professionnels et grossistes
     if (userType === 'professionnel' || userType === 'grossiste') {
-      baseTabs.splice(5, 0, 
+      baseTabs.push(
         { id: 'products', name: 'Mes Produits', icon: '📦' },
-        { id: 'orders', name: 'Mes ventes', icon: '📋' },
+        { id: 'orders', name: 'Mes ventes', icon: '📋' }
+      )
+    }
+    
+    // Ajouter Messages après les onglets de vente
+    baseTabs.push(
+      { id: 'messages', name: 'Messages', icon: '💬' },
+      { id: 'support', name: 'Support', icon: '🎧' },
+      { id: 'affiliate', name: 'Affiliation', icon: '💰' }
+    )
+    
+    // Ajouter les onglets supplémentaires pour professionnels et grossistes
+    if (userType === 'professionnel' || userType === 'grossiste') {
+      baseTabs.push(
         { id: 'complaints', name: 'Réclamations', icon: '😠' },
         { id: 'analytics', name: 'Statistiques', icon: '📊' }
       )
     }
+    
+    baseTabs.push(
+      { id: 'settings', name: 'Paramètres', icon: '⚙️' },
+      { id: 'dev', name: 'Dev Tools', icon: '🛠️' }
+    )
     
     // Ajouter l'onglet Coupons uniquement pour les membres de groupe
     if (currentUser?.isGroupMember) {
@@ -1142,59 +1156,48 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                   <div className="products-grid">
                     {userProducts?.map((product) => (
                       <div key={product._id} className="product-management-card">
-                        <div className="product-image">
-                          {product.images && product.images[0] ? (
-                            // Vérifier si c'est une URL d'image ou un emoji
-                            product.images[0].startsWith('blob:') || product.images[0].startsWith('http') || product.images[0].startsWith('data:') ? (
-                              <img 
-                                src={product.images[0]} 
-                                alt={product.name}
-                                className="dashboard-product-image"
-                                onError={(e) => {
-                                  // Fallback en cas d'erreur de chargement
-                                  e.target.style.display = 'none'
-                                  e.target.nextSibling.style.display = 'flex'
-                                }}
-                              />
-                            ) : (
-                              <span className="product-emoji">{product.images[0]}</span>
-                            )
-                          ) : (
-                            <div className="product-placeholder">🛍️</div>
-                          )}
-                          {/* Fallback emoji caché par défaut */}
-                          <div className="product-placeholder" style={{ display: 'none' }}>🛍️</div>
+                        <div className="product-card-header">
+                          <div className="product-image">
+                            <ProductImageDisplay 
+                              images={product.images || []}
+                              productName={product.name}
+                              className="dashboard-product-image"
+                            />
+                          </div>
+                          <div className="action-icons">
+                            <button 
+                              className="action-icon edit-icon"
+                              onClick={() => handleEditProduct(product)}
+                              title="Modifier le produit"
+                            >
+                              ✏️
+                            </button>
+                            <button 
+                              className="action-icon delete-icon"
+                              onClick={() => handleDeleteProduct(product)}
+                              title="Supprimer le produit"
+                            >
+                              🗑️
+                            </button>
+                          </div>
                         </div>
+                        
                         <div className="product-details">
-                          <div className="product-header">
-                            <h4>{product.name}</h4>
-                            <div className="action-icons">
-                              <button 
-                                className="action-icon edit-icon"
-                                onClick={() => handleEditProduct(product)}
-                                title="Modifier le produit"
-                                aria-label={`Modifier le produit ${product.name}`}
-                              >
-                                ✏️
-                              </button>
-                              <button 
-                                className="action-icon delete-icon"
-                                onClick={() => handleDeleteProduct(product)}
-                                title="Supprimer le produit"
-                                aria-label={`Supprimer le produit ${product.name}`}
-                              >
-                                🗑️
-                              </button>
+                          <div className="product-main-info">
+                            <h4 className="product-title">{product.name}</h4>
+                            <p className="product-description">{product.description}</p>
+                          </div>
+                          
+                          <div className="product-meta">
+                            <div className="price-stock-info">
+                              <span className="product-price">{product.price}€</span>
+                              <span className="product-stock">Stock: {product.stock}</span>
                             </div>
                           </div>
-                          <p className="product-description">{product.description}</p>
-                          <div className="product-meta">
-                            <span className="product-price">{product.price}€</span>
-                            <span className="product-stock">Stock: {product.stock}</span>
-                          </div>
+                          
                           <div className="product-badges">
-                            {product.featured && <span className="badge featured">Vedette</span>}
-                            {product.onSale && <span className="badge sale">Promo</span>}
+                            {product.featured && <span className="badge featured">⭐ Vedette</span>}
+                            {product.onSale && <span className="badge sale">🔥 Promo</span>}
                           </div>
                         </div>
                       </div>
