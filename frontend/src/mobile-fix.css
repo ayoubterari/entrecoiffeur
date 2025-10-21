@@ -1,121 +1,403 @@
-/* MOBILE FIX - Styles de secours pour forcer le responsive */
+/* ============================================
+   MOBILE RESPONSIVE FIX - ENTRECOIFFEUR
+   Comprehensive Mobile-First Responsive Design
+   Supports: iOS Safari, Android Chrome, All Modern Mobile Browsers
+   ============================================ */
 
-/* Force mobile styles avec !important */
+/* Reset and Base Mobile Styles */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Prevent iOS bounce and ensure smooth scrolling */
+html, body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* ============================================
+   MOBILE STYLES (All Mobile Devices)
+   ============================================ */
 @media screen and (max-width: 768px) {
   
-  /* Header mobile forcé */
-  .ecommerce-header .header-content {
-    display: grid !important;
-    grid-template-columns: 1fr auto !important;
-    grid-template-rows: auto auto !important;
-    gap: 1rem !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
   }
   
-  .logo-section {
-    grid-column: 1 !important;
-    grid-row: 1 !important;
-    text-align: left !important;
-  }
-  
-  .marketplace-title {
-    font-size: 1.4rem !important;
-  }
-  
-  .marketplace-subtitle {
-    font-size: 0.8rem !important;
-  }
-  
-  .header-actions {
-    grid-column: 2 !important;
-    grid-row: 1 !important;
-    display: flex !important;
-    gap: 0.5rem !important;
-    justify-content: flex-end !important;
-  }
-  
-  .header-search {
-    grid-column: 1 / -1 !important;
-    grid-row: 2 !important;
+  /* Container fixes */
+  .homeContainer {
     width: 100% !important;
-    max-width: none !important;
-    flex: none !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
   }
   
-  /* Boutons mobiles */
-  .signin-btn, .signup-btn, .logout-btn {
+  /* Header Mobile Responsive */
+  .mobileHeader {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+  
+  .headerContent {
+    padding: 0.5rem 0.75rem !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .marketplaceLogo {
+    width: 100% !important;
+    text-align: center !important;
+  }
+  
+  .marketplaceTitle {
+    font-size: clamp(1.1rem, 4vw, 1.5rem) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  
+  .marketplaceSubtitle {
+    font-size: clamp(0.65rem, 2vw, 0.8rem) !important;
+  }
+  
+  /* Action Buttons Mobile */
+  .headerLeft, .headerActions {
+    width: 100% !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .searchBtn, .headerBtn {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    width: 44px !important;
+    height: 44px !important;
+  }
+  
+  .signinBtn, .signupBtn, .logoutBtn {
     font-size: 0.8rem !important;
     padding: 0.6rem 1rem !important;
     min-height: 44px !important;
+    white-space: nowrap !important;
   }
   
-  /* Categories mobile */
-  .categories-grid {
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)) !important;
-    gap: 0.75rem !important;
+  /* Categories Mobile Grid */
+  .categoriesSection {
+    padding: 0.75rem 0 !important;
+    width: 100% !important;
+    overflow: hidden !important;
   }
   
-  .category-card {
-    padding: 1rem 0.75rem !important;
-    min-height: 100px !important;
+  .categoriesGrid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(75px, 1fr)) !important;
+    gap: 0.5rem !important;
+    padding: 0 0.75rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
   
-  .category-icon {
-    font-size: 1.8rem !important;
+  .categoryCard {
+    padding: 0.75rem 0.25rem !important;
+    min-height: 80px !important;
+    touch-action: manipulation !important;
   }
   
-  .category-name {
-    font-size: 0.8rem !important;
+  .categoryIcon {
+    font-size: clamp(1.5rem, 4vw, 2rem) !important;
   }
   
-  /* Products mobile */
-  .products-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
-    gap: 1.25rem !important;
+  .categoryName {
+    font-size: clamp(0.65rem, 2vw, 0.8rem) !important;
+    line-height: 1.2 !important;
   }
   
-  /* Carousel mobile */
-  .banner-slide {
-    height: 200px !important;
+  /* Hero Carousel Mobile */
+  .heroCarousel {
+    margin: 0.75rem 0 !important;
+    padding: 0 0.75rem !important;
+    width: 100% !important;
+  }
+  
+  .carousel {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .bannerSlide {
+    height: clamp(160px, 35vh, 220px) !important;
+    padding: 1.5rem 1rem !important;
     flex-direction: column !important;
     text-align: center !important;
   }
   
-  .banner-content h2 {
-    font-size: 1.6rem !important;
+  .bannerContentH2 {
+    font-size: clamp(1.2rem, 4vw, 1.8rem) !important;
+    margin-bottom: 0.5rem !important;
   }
   
-  .banner-content p {
-    font-size: 0.9rem !important;
+  .bannerContentP {
+    font-size: clamp(0.8rem, 2.5vw, 1rem) !important;
+    margin-bottom: 0.75rem !important;
   }
   
-  /* Container mobile */
-  .container {
-    padding: 0 1rem !important;
+  .bannerImage {
+    font-size: 2rem !important;
   }
-}
-
-/* Très petits écrans */
-@media screen and (max-width: 480px) {
   
-  .marketplace-title {
+  /* Carousel Navigation */
+  .carouselBtn {
+    width: 36px !important;
+    height: 36px !important;
     font-size: 1.2rem !important;
   }
   
-  .categories-grid {
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)) !important;
+  .carouselBtnPrev {
+    left: 0.5rem !important;
   }
   
-  .products-grid {
+  .carouselBtnNext {
+    right: 0.5rem !important;
+  }
+  
+  /* Product Cards Mobile */
+  .productsSection {
+    padding: 1rem 0 !important;
+    width: 100% !important;
+  }
+  
+  .featuredCarousel {
+    margin: 0 -0.5rem !important;
+  }
+  
+  .featuredCarouselWrapper {
+    padding: 0 0.5rem !important;
+  }
+  
+  .featuredCarouselContent {
+    gap: 0.5rem !important;
+  }
+  
+  .featuredProductCard {
+    min-width: 140px !important;
+    max-width: 140px !important;
+  }
+  
+  /* Product Grid for browsing */
+  .productsGrid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+    padding: 0 0.75rem !important;
+  }
+  
+  /* User Type Banners Mobile */
+  .userTypeBanners {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+    margin: 1rem 0.75rem !important;
+    width: calc(100% - 1.5rem) !important;
+  }
+  
+  .userTypeBanner {
+    padding: 1.5rem 1rem !important;
+  }
+  
+  .bannerIcon {
+    font-size: 2.5rem !important;
+  }
+  
+  .bannerTitle {
+    font-size: 1.1rem !important;
+  }
+  
+  .bannerDescription {
+    font-size: 0.85rem !important;
+  }
+  
+  /* CTA Banner Mobile */
+  .ctaBanner {
+    padding: 1.5rem 1rem !important;
+    margin: 1rem 0.75rem !important;
+    width: calc(100% - 1.5rem) !important;
+  }
+  
+  .ctaBannerText {
+    font-size: 1.3rem !important;
+  }
+  
+  .ctaBannerButton {
+    padding: 0.875rem 1.5rem !important;
+    font-size: 0.9rem !important;
+    width: 100% !important;
+    max-width: 280px !important;
+  }
+  
+  /* Newsletter Mobile */
+  .newsletterSection {
+    margin: 1rem 0.75rem !important;
+    width: calc(100% - 1.5rem) !important;
+  }
+  
+  .newsletterCard {
+    padding: 2rem 1rem !important;
+  }
+  
+  .newsletterCard h3 {
+    font-size: 1.3rem !important;
+  }
+  
+  .newsletterCard p {
+    font-size: 0.85rem !important;
+  }
+  
+  .newsletterForm {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+  
+  .newsletterInput {
+    width: 100% !important;
+    padding: 0.875rem 1rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .newsletterBtn {
+    width: 100% !important;
+    padding: 0.875rem !important;
+  }
+  
+  /* Support Section Mobile */
+  .supportSection {
+    margin: 1rem 0.75rem !important;
+    width: calc(100% - 1.5rem) !important;
+  }
+  
+  .supportCard {
+    padding: 1.5rem 1rem !important;
+  }
+  
+  .supportContent {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 1rem !important;
+  }
+  
+  .supportIcon {
+    font-size: 2rem !important;
+  }
+  
+  .supportText h3 {
+    font-size: 1.3rem !important;
+  }
+  
+  .supportText p {
+    font-size: 0.85rem !important;
+  }
+  
+  .supportBtn {
+    width: 100% !important;
+    padding: 0.875rem 1.5rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  /* Footer Mobile */
+  .ecommerceFooter {
+    padding: 2rem 0.75rem 1.5rem !important;
+    width: 100% !important;
+  }
+  
+  .footerContent {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+    padding: 0 0.5rem !important;
+  }
+  
+  .footerSection h4 {
+    font-size: 1.1rem !important;
+  }
+  
+  .footerSection p,
+  .footerSection ul li a {
+    font-size: 0.85rem !important;
+  }
+  
+  .footerBottom {
+    padding-top: 1rem !important;
+    margin-top: 1.5rem !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+/* ============================================
+   SMALL MOBILE (iPhone SE, Small Android)
+   ============================================ */
+@media screen and (max-width: 380px) {
+  
+  .marketplaceTitle {
+    font-size: 1.1rem !important;
+  }
+  
+  .marketplaceSubtitle {
+    font-size: 0.6rem !important;
+  }
+  
+  /* Even smaller categories grid */
+  .categoriesGrid {
+    grid-template-columns: repeat(auto-fit, minmax(65px, 1fr)) !important;
+    gap: 0.4rem !important;
+  }
+  
+  .categoryCard {
+    padding: 0.5rem 0.25rem !important;
+    min-height: 70px !important;
+  }
+  
+  .categoryIcon {
+    font-size: 1.3rem !important;
+  }
+  
+  .categoryName {
+    font-size: 0.6rem !important;
+  }
+  
+  /* Single column product grid */
+  .productsGrid {
     grid-template-columns: 1fr !important;
   }
   
-  .banner-slide {
-    height: 180px !important;
+  /* Smaller product cards in carousel */
+  .featuredProductCard {
+    min-width: 120px !important;
+    max-width: 120px !important;
   }
   
-  .banner-content h2 {
-    font-size: 1.3rem !important;
+  /* Smaller banner */
+  .bannerSlide {
+    height: 150px !important;
+    padding: 1rem !important;
+  }
+  
+  .bannerContentH2 {
+    font-size: 1.1rem !important;
+  }
+  
+  .bannerContentP {
+    font-size: 0.75rem !important;
+  }
+  
+  /* Smaller buttons */
+  .signinBtn, .signupBtn, .logoutBtn {
+    font-size: 0.75rem !important;
+    padding: 0.5rem 0.75rem !important;
   }
 }
