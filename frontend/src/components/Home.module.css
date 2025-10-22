@@ -23,12 +23,12 @@
   --radius-xl: 1.5rem;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   
-  /* Responsive spacing */
-  --spacing-xs: clamp(0.25rem, 1vw, 0.5rem);
-  --spacing-sm: clamp(0.5rem, 2vw, 1rem);
-  --spacing-md: clamp(0.75rem, 3vw, 1.5rem);
-  --spacing-lg: clamp(1rem, 4vw, 2rem);
-  --spacing-xl: clamp(1.5rem, 5vw, 3rem);
+  /* Responsive spacing - Reduced by 25% */
+  --spacing-xs: clamp(0.1875rem, 0.75vw, 0.375rem);
+  --spacing-sm: clamp(0.375rem, 1.5vw, 0.75rem);
+  --spacing-md: clamp(0.5625rem, 2.25vw, 1.125rem);
+  --spacing-lg: clamp(0.75rem, 3vw, 1.5rem);
+  --spacing-xl: clamp(1.125rem, 3.75vw, 2.25rem);
 }
 
 * {
@@ -146,7 +146,7 @@ body {
 }
 
 .marketplaceTitle {
-  font-size: clamp(1rem, 4vw + 0.5rem, 1.75rem);
+  font-size: clamp(0.75rem, 3vw + 0.375rem, 1.3125rem);
   font-weight: 800;
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   -webkit-background-clip: text;
@@ -164,9 +164,9 @@ body {
 }
 
 .marketplaceSubtitle {
-  font-size: clamp(0.625rem, 2vw, 0.75rem);
+  font-size: clamp(0.46875rem, 1.5vw, 0.5625rem);
   color: var(--gray);
-  margin: 0.125rem 0 0 0;
+  margin: 0.09375rem 0 0 0;
   opacity: 0.85;
   font-weight: 500;
   -webkit-user-select: none;
@@ -178,13 +178,13 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 2.0625rem;
+  height: 2.0625rem;
   background: var(--bg-light);
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
-  padding: 0.625rem;
+  padding: 0.46875rem;
   order: 1;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
@@ -253,7 +253,7 @@ body {
 .searchBtn {
   background: var(--bg-light);
   border: none;
-  font-size: 1.25rem;
+  font-size: 0.9375rem;
   cursor: pointer;
   padding: 0;
   border-radius: var(--radius-md);
@@ -261,10 +261,10 @@ body {
   align-items: center;
   justify-content: center;
   /* Touch target minimum 44x44px (iOS) et 48x48px (Android) */
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  width: 2.75rem;
-  height: 2.75rem;
+  min-width: 2.0625rem;
+  min-height: 2.0625rem;
+  width: 2.0625rem;
+  height: 2.0625rem;
   /* Améliorer le feedback tactile */
   -webkit-tap-highlight-color: rgba(255, 107, 157, 0.1);
   touch-action: manipulation;
@@ -286,14 +286,14 @@ body {
 .headerBtn {
   background: var(--bg-light);
   border: none;
-  font-size: 1.25rem;
+  font-size: 0.9375rem;
   cursor: pointer;
   padding: 0;
   border-radius: var(--radius-md);
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  width: 2.75rem;
-  height: 2.75rem;
+  min-width: 2.0625rem;
+  min-height: 2.0625rem;
+  width: 2.0625rem;
+  height: 2.0625rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -526,7 +526,7 @@ body {
 
 .bannerSlide {
   min-width: 100%;
-  height: clamp(10rem, 30vh, 14rem);
+  height: clamp(7.5rem, 22.5vh, 10.5rem);
   padding: var(--spacing-md) var(--spacing-sm);
   display: flex;
   flex-direction: column;
@@ -566,7 +566,7 @@ body {
 }
 
 .bannerContentH2 {
-  font-size: clamp(1.25rem, 4vw, 2rem);
+  font-size: clamp(0.9375rem, 3vw, 1.5rem);
   margin: 0 0 var(--spacing-xs) 0;
   line-height: 1.2;
   font-weight: 800;
@@ -574,7 +574,7 @@ body {
 }
 
 .bannerContentP {
-  font-size: clamp(0.75rem, 2.5vw, 1rem);
+  font-size: clamp(0.5625rem, 1.875vw, 0.75rem);
   margin: 0 0 var(--spacing-sm) 0;
   opacity: 0.95;
   line-height: 1.5;
@@ -582,9 +582,9 @@ body {
 }
 
 .bannerImage {
-  font-size: 2.5rem;
-  margin-top: 0.5rem;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  font-size: 1.875rem;
+  margin-top: 0.375rem;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
 }
 
 .carouselBtn {
@@ -671,19 +671,19 @@ body {
 .ctaBanner {
   background: linear-gradient(135deg, rgba(255, 107, 157, 0.08) 0%, rgba(255, 107, 157, 0.12) 100%);
   border-radius: var(--radius-xl);
-  padding: 2rem 1.25rem;
-  margin: 1.5rem 0.75rem;
+  padding: 1.5rem 0.9375rem;
+  margin: 1.125rem 0.5625rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 1.25rem;
+  gap: 0.9375rem;
   box-shadow: var(--shadow-md);
   position: relative;
   overflow: hidden;
   border: 2px solid rgba(255, 107, 157, 0.15);
-  width: calc(100% - 1.5rem);
+  width: calc(100% - 1.125rem);
   box-sizing: border-box;
 }
 
@@ -712,7 +712,7 @@ body {
 }
 
 .ctaBannerText {
-  font-size: 1.5rem;
+  font-size: 1.125rem;
   font-weight: 800;
   color: var(--dark);
   margin: 0;
@@ -725,18 +725,18 @@ body {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
   border: none;
-  padding: 1rem 2.5rem;
+  padding: 0.75rem 1.875rem;
   border-radius: var(--radius-lg);
-  font-size: 1rem;
+  font-size: 0.75rem;
   font-weight: 700;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: 0 6px 20px rgba(255, 107, 157, 0.35);
+  box-shadow: 0 4.5px 15px rgba(255, 107, 157, 0.35);
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5625rem;
 }
 
 .ctaBannerButton:hover {
@@ -777,8 +777,8 @@ body {
 }
 
 .featuredProductCard {
-  min-width: 10rem;
-  max-width: 10rem;
+  min-width: 7.5rem;
+  max-width: 7.5rem;
   flex-shrink: 0;
 }
 
@@ -831,17 +831,17 @@ body {
 .userTypeBanners {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.875rem;
-  margin: 1.5rem 0.75rem;
+  gap: 0.65625rem;
+  margin: 1.125rem 0.5625rem;
   max-width: 100%;
-  width: calc(100% - 1.5rem);
+  width: calc(100% - 1.125rem);
   box-sizing: border-box;
 }
 
 .userTypeBanner {
   background: var(--white);
   border-radius: var(--radius-xl);
-  padding: 2rem 1.5rem;
+  padding: 1.5rem 1.125rem;
   text-align: center;
   cursor: pointer;
   transition: var(--transition);
@@ -897,40 +897,40 @@ body {
 }
 
 .bannerIcon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: 2.25rem;
+  margin-bottom: 0.75rem;
   display: block;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.1));
   animation: bounce-subtle 3s ease-in-out infinite;
 }
 
 .bannerTitle {
-  font-size: 1.25rem;
+  font-size: 0.9375rem;
   font-weight: 800;
   color: var(--dark);
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.5625rem 0;
   letter-spacing: -0.01em;
 }
 
 .bannerDescription {
-  font-size: 0.875rem;
+  font-size: 0.65625rem;
   color: var(--gray);
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1.125rem 0;
   line-height: 1.6;
 }
 
 .bannerCTA {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.875rem 1.75rem;
+  gap: 0.375rem;
+  padding: 0.65625rem 1.3125rem;
   border-radius: var(--radius-lg);
-  font-size: 0.875rem;
+  font-size: 0.65625rem;
   font-weight: 700;
   border: none;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.15);
 }
 
 .userTypeBanner.particulier .bannerCTA {
@@ -984,12 +984,12 @@ body {
 }
 
 .sectionTitle {
-  font-size: 1.125rem;
-  margin: 0 0 1rem 0;
+  font-size: 0.84375rem;
+  margin: 0 0 0.75rem 0;
   text-align: left;
   font-weight: 800;
   color: var(--dark);
-  padding: 0 0.75rem;
+  padding: 0 0.5625rem;
   letter-spacing: -0.02em;
 }
 
@@ -1005,7 +1005,7 @@ body {
 }
 
 .categoryCard {
-  padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.25rem, 1vw, 0.5rem);
+  padding: clamp(0.375rem, 1.5vw, 0.5625rem) clamp(0.1875rem, 0.75vw, 0.375rem);
   background: var(--white);
   border: 2px solid rgba(45, 52, 54, 0.08);
   border-radius: var(--radius-md);
@@ -1013,7 +1013,7 @@ body {
   transition: var(--transition);
   text-decoration: none;
   color: var(--dark);
-  min-height: clamp(4rem, 15vw, 5rem);
+  min-height: clamp(3rem, 11.25vw, 3.75rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1039,13 +1039,13 @@ body {
 }
 
 .categoryIcon {
-  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  font-size: clamp(0.9375rem, 3vw, 1.3125rem);
   margin-bottom: var(--spacing-xs);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 1.5px 3px rgba(0, 0, 0, 0.1));
 }
 
 .categoryName {
-  font-size: clamp(0.625rem, 2vw, 0.875rem);
+  font-size: clamp(0.46875rem, 1.5vw, 0.65625rem);
   font-weight: 700;
   text-align: center;
   line-height: 1.2;
@@ -1098,33 +1098,33 @@ body {
 
 .newsletterSection {
   padding: 0;
-  margin: 1.5rem 0.75rem;
+  margin: 1.125rem 0.5625rem;
   background: linear-gradient(135deg, rgba(255, 107, 157, 0.05), rgba(102, 126, 234, 0.05));
   border-radius: var(--radius-xl);
   border: 2px solid rgba(255, 107, 157, 0.1);
   box-shadow: var(--shadow-md);
-  width: calc(100% - 1.5rem);
+  width: calc(100% - 1.125rem);
   box-sizing: border-box;
 }
 
 .newsletterCard {
   text-align: center;
-  padding: 2.5rem 1.5rem;
+  padding: 1.875rem 1.125rem;
   background: transparent;
 }
 
 .newsletterCard h3 {
-  font-size: 1.5rem;
+  font-size: 1.125rem;
   color: var(--dark);
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.5625rem 0;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
 
 .newsletterCard p {
   color: var(--gray);
-  margin: 0 0 1.5rem 0;
-  font-size: 0.875rem;
+  margin: 0 0 1.125rem 0;
+  font-size: 0.65625rem;
   line-height: 1.6;
 }
 
@@ -1387,12 +1387,12 @@ body {
   }
   
   .marketplaceTitle {
-    font-size: 1.75rem;
+    font-size: 1.3125rem;
   }
   
   .marketplaceSubtitle {
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
+    font-size: 0.65625rem;
+    margin-top: 0.1875rem;
   }
   
   .headerLeft {
@@ -1463,16 +1463,16 @@ body {
   
   .userTypeBanners {
     grid-template-columns: repeat(3, 1fr);
-    margin: 3rem 2rem;
-    gap: 1.5rem;
+    margin: 2.25rem 1.5rem;
+    gap: 1.125rem;
   }
   
   .bannerSlide {
-    height: 14rem;
+    height: 10.5rem;
     flex-direction: row;
     text-align: left;
     justify-content: space-between;
-    padding: 3rem;
+    padding: 2.25rem;
   }
   
   .bannerContent {
@@ -1480,24 +1480,24 @@ body {
   }
   
   .bannerContentH2 {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
   
   .bannerContentP {
-    font-size: 1rem;
+    font-size: 0.75rem;
   }
   
   .bannerImage {
-    font-size: 4rem;
+    font-size: 3rem;
   }
   
   .ctaBanner {
-    margin: 3rem 2rem;
-    padding: 3rem 2rem;
+    margin: 2.25rem 1.5rem;
+    padding: 2.25rem 1.5rem;
   }
   
   .newsletterSection {
-    margin: 3rem 2rem;
+    margin: 2.25rem 1.5rem;
   }
   
   .newsletterForm {
@@ -1734,11 +1734,11 @@ body {
 /* Desktop - Support Section */
 @media (min-width: 768px) {
   .supportSection {
-    margin: 3rem 2rem;
+    margin: 2.25rem 1.5rem;
   }
   
   .supportCard {
-    padding: 3rem 2rem;
+    padding: 2.25rem 1.5rem;
   }
   
   .supportContent {
@@ -1749,15 +1749,15 @@ body {
   }
   
   .supportIcon {
-    font-size: 3.5rem;
+    font-size: 2.625rem;
   }
   
   .supportText h3 {
-    font-size: 1.75rem;
+    font-size: 1.3125rem;
   }
   
   .supportText p {
-    font-size: 1rem;
+    font-size: 0.75rem;
   }
   
   .supportBtn {
