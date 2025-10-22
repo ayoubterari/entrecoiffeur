@@ -132,6 +132,29 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
               <p>{userEmail}</p>
               <span className="admin-badge">🔒 Super Admin</span>
             </div>
+            <button 
+              className="logout-btn"
+              onClick={() => {
+                console.log('Admin - Logout clicked')
+                // Nettoyage complet du localStorage
+                localStorage.removeItem('userId')
+                localStorage.removeItem('userEmail')
+                localStorage.removeItem('userFirstName')
+                localStorage.removeItem('userLastName')
+                localStorage.removeItem('userType')
+                localStorage.removeItem('companyName')
+                
+                // Appeler onLogout si fourni
+                if (onLogout) {
+                  onLogout()
+                }
+                
+                // Redirection forcée
+                window.location.href = '/'
+              }}
+            >
+              🚪 Déconnexion
+            </button>
           </div>
         </div>
 
@@ -493,35 +516,7 @@ const Admin = ({ isAuthenticated, userEmail, userFirstName, userLastName, userTy
           )}
         </div>
 
-        {/* Footer Admin */}
-        <div className="admin-footer">
-          <p>&copy; 2025 Entre Coiffeur - Administration</p>
-          <div className="footer-actions">
-            <button 
-              className="logout-btn"
-              onClick={() => {
-                console.log('Admin - Logout clicked')
-                // Nettoyage complet du localStorage
-                localStorage.removeItem('userId')
-                localStorage.removeItem('userEmail')
-                localStorage.removeItem('userFirstName')
-                localStorage.removeItem('userLastName')
-                localStorage.removeItem('userType')
-                localStorage.removeItem('companyName')
-                
-                // Appeler onLogout si fourni
-                if (onLogout) {
-                  onLogout()
-                }
-                
-                // Redirection forcée
-                window.location.href = '/'
-              }}
-            >
-              🚪 Déconnexion
-            </button>
-          </div>
-        </div>
+
       </div>
     </div>
   )
