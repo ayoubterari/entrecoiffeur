@@ -108,9 +108,6 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
         <button className="back-button" onClick={onBack}>
           Retour aux produits
         </button>
-        <div className="breadcrumb">
-          <span>Accueil</span> / <span>Produits</span> / <span className="current">{product.name}</span>
-        </div>
       </div>
 
       <div className="product-detail-container">
