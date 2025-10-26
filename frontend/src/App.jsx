@@ -51,6 +51,7 @@ function AppContent() {
   const [lastAddedItem, setLastAddedItem] = useState(null)
   const [showCartModal, setShowCartModal] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
+  const [showFavoriteToast, setShowFavoriteToast] = useState(false)
   const [showFavoritesModal, setShowFavoritesModal] = useState(false)
   const [loginMode, setLoginMode] = useState('signin')
 
@@ -184,6 +185,10 @@ function AppContent() {
         userId,
         productId: product._id
       })
+      
+      // Afficher notification
+      setShowFavoriteToast(true)
+      setTimeout(() => setShowFavoriteToast(false), 3000)
     } catch (error) {
       console.error('Erreur lors de la gestion des favoris:', error)
     }
@@ -285,7 +290,14 @@ function AppContent() {
           {/* Store du vendeur */}
           <Route 
             path="/seller/:sellerId" 
-            element={<SellerStore />} 
+            element={
+              <SellerStore 
+                onAddToCart={handleAddToCart}
+                onToggleFavorite={handleToggleFavorite}
+                isAuthenticated={isAuthenticated}
+                userId={userId}
+              />
+            } 
           />
           
           {/* Blog */}
@@ -342,6 +354,29 @@ function AppContent() {
           product={lastAddedItem}
           onClose={() => setShowCartToast(false)}
         />
+        
+        {/* Favorite Toast Notification */}
+        {showFavoriteToast && (
+          <div style={{
+            position: 'fixed',
+            bottom: '2rem',
+            right: '2rem',
+            background: 'linear-gradient(135deg, #ff6b9d, #fd79a8)',
+            color: 'white',
+            padding: '1rem 1.5rem',
+            borderRadius: '12px',
+            boxShadow: '0 8px 25px rgba(255, 107, 157, 0.3)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            animation: 'slideIn 0.3s ease-out',
+            fontWeight: '600',
+            fontSize: '0.9rem'
+          }}>
+            ❤️ Favori mis à jour
+          </div>
+        )}
         
         {/* Cart Modal */}
         <CartModal

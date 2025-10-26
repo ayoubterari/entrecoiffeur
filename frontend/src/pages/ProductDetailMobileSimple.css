@@ -1,0 +1,124 @@
+/* Correction simple et efficace pour la barre blanche mobile */
+
+@media (max-width: 768px) {
+  /* Reset complet pour la page produit */
+  .product-detail-page {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    overflow-x: hidden !important;
+  }
+  
+  /* Suppression de tous les pseudo-éléments qui pourraient créer des barres */
+  .product-detail-page::before,
+  .product-detail-page::after,
+  .product-detail-container::before,
+  .product-detail-container::after,
+  .product-detail-header::before,
+  .product-detail-header::after {
+    display: none !important;
+    content: none !important;
+  }
+  
+  /* Header sans barre blanche */
+  .product-detail-header {
+    position: relative !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0.5rem 1rem !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    z-index: 10 !important;
+  }
+  
+  /* Bouton retour sans problème de positionnement */
+  .back-button {
+    position: relative !important;
+    display: inline-block !important;
+    margin: 0 !important;
+    padding: 0.5rem 1rem !important;
+    background: rgba(248, 249, 250, 0.95) !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 8px !important;
+    color: #495057 !important;
+    font-size: 0.875rem !important;
+    z-index: 11 !important;
+  }
+  
+  /* Container principal sans débordement */
+  .product-detail-container {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 1rem !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    z-index: 2 !important;
+    display: block !important;
+    grid-template-columns: none !important;
+    gap: 1rem !important;
+  }
+  
+  /* Sections sans superposition */
+  .product-images-section,
+  .product-info-section {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 1rem 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    z-index: 3 !important;
+  }
+  
+  /* Image container propre */
+  .image-container {
+    position: relative !important;
+    width: 100% !important;
+    margin: 0 0 1rem 0 !important;
+    padding: 1rem !important;
+    background: #ffffff !important;
+    border: 1px solid #e9ecef !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    z-index: 4 !important;
+  }
+  
+  /* Suppression de tous les éléments flottants */
+  .product-detail-page * {
+    float: none !important;
+    clear: both !important;
+  }
+  
+  /* Assurer que rien ne déborde */
+  .product-detail-page *,
+  .product-detail-page *::before,
+  .product-detail-page *::after {
+    box-sizing: border-box !important;
+  }
+}
+
+/* Correction pour très petits écrans */
+@media (max-width: 480px) {
+  .product-detail-container {
+    padding: 0 0.5rem !important;
+  }
+  
+  .product-detail-header {
+    padding: 0.25rem 0.5rem !important;
+  }
+  
+  .back-button {
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.8rem !important;
+  }
+}

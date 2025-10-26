@@ -1,0 +1,378 @@
+/* Fix pour la barre blanche en mobile sur la page produit */
+
+/* Correction générale pour éviter les superpositions */
+@media (max-width: 768px) {
+
+    /* Reset complet pour éviter les barres blanches */
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    /* Correction spécifique pour la barre blanche en haut à gauche */
+    .product-detail-page {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        background: var(--bg-primary);
+        margin: 0;
+        padding: 0;
+    }
+
+    .product-detail-page::before,
+    .product-detail-page::after {
+        display: none !important;
+    }
+
+    /* Assurer que tous les éléments principaux ont un z-index correct */
+    .product-detail-page {
+        position: relative;
+        z-index: 1;
+        overflow-x: hidden;
+    }
+
+    .product-detail-header {
+        position: relative;
+        z-index: 10;
+        background: transparent;
+        margin-bottom: 0;
+        padding: 0.5rem 1rem;
+    }
+
+    .back-button {
+        position: relative;
+        z-index: 11;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-detail-container {
+        position: relative;
+        z-index: 2;
+        background: transparent;
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+    /* Correction spécifique pour les sections qui pourraient causer la barre blanche */
+    .product-images-section {
+        position: relative;
+        z-index: 3;
+        background: transparent;
+    }
+
+    .main-image {
+        position: relative;
+        z-index: 4;
+        background: transparent;
+    }
+
+    .image-container {
+        position: relative;
+        z-index: 5;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .product-badges {
+        position: absolute;
+        top: 0.5rem;
+        left: 0.5rem;
+        z-index: 6;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .product-info-section {
+        position: relative;
+        z-index: 3;
+        background: transparent;
+        margin-top: 1rem;
+    }
+
+    /* Correction pour éviter les éléments flottants qui créent des barres blanches */
+    .product-header {
+        position: relative;
+        z-index: 4;
+        background: transparent;
+        margin-bottom: 1rem;
+    }
+
+    .product-title {
+        position: relative;
+        z-index: 5;
+        background: transparent;
+        margin: 0 0 0.5rem 0;
+        padding: 0;
+    }
+
+    .price-section {
+        position: relative;
+        z-index: 5;
+        background: transparent;
+        margin: 0 0 0.5rem 0;
+        padding: 0;
+    }
+
+    .rating-section {
+        position: relative;
+        z-index: 5;
+        background: transparent;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Correction pour les sections qui pourraient créer des superpositions */
+    .seller-section {
+        position: relative;
+        z-index: 4;
+        background: transparent;
+        margin: 1rem 0;
+    }
+
+    .purchase-section {
+        position: relative;
+        z-index: 4;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        margin-top: 1rem;
+    }
+
+    /* Correction pour les éléments de navigation et boutons */
+    .action-buttons {
+        position: relative;
+        z-index: 5;
+    }
+
+    .buy-now-btn {
+        position: relative;
+        z-index: 6;
+    }
+
+    /* Suppression des éléments qui pourraient créer des barres blanches */
+    .product-detail-page::before,
+    .product-detail-page::after {
+        display: none !important;
+    }
+
+    .product-detail-container::before,
+    .product-detail-container::after {
+        display: none !important;
+    }
+
+    /* Assurer que le body et html n'ont pas d'éléments flottants */
+    body {
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* Correction pour les pseudo-éléments qui pourraient causer des problèmes */
+    *::before,
+    *::after {
+        z-index: inherit;
+    }
+
+    /* Correction spécifique pour éviter les barres blanches en haut */
+    .product-detail-page {
+        padding-top: 0;
+        margin-top: 0;
+    }
+
+    .product-detail-header {
+        margin-top: 0;
+        padding-top: 0.5rem;
+    }
+
+    /* Assurer que tous les conteneurs principaux sont bien positionnés */
+    .container,
+    .product-detail-container,
+    .product-images-section,
+    .product-info-section {
+        position: relative;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+    /* Correction pour les éléments sticky qui pourraient causer des problèmes */
+    .product-images-section {
+        position: static !important;
+        top: auto !important;
+    }
+
+    .purchase-section {
+        position: static !important;
+        top: auto !important;
+    }
+}
+
+/* Corrections spécifiques pour très petits écrans */
+@media (max-width: 480px) {
+    .product-detail-page {
+        padding: 0;
+        margin: 0;
+    }
+
+    .product-detail-header {
+        padding: 0.25rem 0.5rem;
+        margin: 0;
+    }
+
+    .product-detail-container {
+        padding: 0 0.5rem;
+        margin: 0;
+        gap: 1rem;
+    }
+
+    .back-button {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+/* Correction pour les éléments qui pourraient créer des overlay blancs */
+@media (max-width: 768px) {
+
+    /* Suppression de tous les pseudo-éléments potentiellement problématiques */
+    .product-detail-page *::before,
+    .product-detail-page *::after {
+        content: none !important;
+        display: none !important;
+    }
+
+    /* Assurer que rien ne flotte au-dessus du contenu */
+    .product-detail-page * {
+        position: relative;
+        z-index: auto;
+    }
+
+    /* Exceptions pour les éléments qui ont besoin d'un z-index spécifique */
+    .product-badges {
+        position: absolute !important;
+        z-index: 10 !important;
+    }
+
+    .back-button {
+        z-index: 20 !important;
+    }
+}
+
+/* Co
+rrection spécifique pour éliminer toute barre blanche */
+@media (max-width: 768px) {
+
+    /* Suppression de tous les éléments potentiellement problématiques */
+    .product-detail-page * {
+        position: relative !important;
+    }
+
+    /* Exceptions nécessaires */
+    .product-badges {
+        position: absolute !important;
+    }
+
+    /* Assurer qu'aucun élément ne déborde ou ne crée de barre */
+    .product-detail-container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0.5rem;
+        box-sizing: border-box;
+    }
+
+    /* Correction pour le header qui pourrait causer la barre blanche */
+    .product-detail-header {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0.5rem;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+    /* S'assurer que tous les conteneurs sont bien contenus */
+    .product-images-section,
+    .product-info-section {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+    /* Correction pour les éléments qui pourraient déborder */
+    .image-container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 1rem 0;
+        padding: 1rem;
+        box-sizing: border-box;
+    }
+
+    /* Assurer que le bouton retour ne crée pas de problème */
+    .back-button {
+        position: relative !important;
+        z-index: 10;
+        margin: 0;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* Correction pour très petits écrans */
+@media (max-width: 480px) {
+    .product-detail-page {
+        padding: 0;
+    }
+
+    .product-detail-container {
+        padding: 0.25rem;
+        gap: 0.5rem;
+    }
+
+    .product-detail-header {
+        padding: 0.25rem;
+    }
+}
+
+/* Force l'élimination de toute barre ou overlay blanc */
+@media (max-width: 768px) {
+
+    /* Suppression de tous les pseudo-éléments */
+    *::before,
+    *::after {
+        display: none !important;
+    }
+
+    /* Suppression de tous les backgrounds potentiellement problématiques */
+    .product-detail-page,
+    .product-detail-container,
+    .product-detail-header {
+        background: var(--bg-primary) !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Assurer que rien ne flotte */
+    * {
+        float: none !important;
+        clear: both !important;
+    }
+}

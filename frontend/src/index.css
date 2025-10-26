@@ -72,6 +72,13 @@ body::before {
   z-index: -1;
 }
 
+/* Désactiver le background animé en mobile pour éviter les conflits */
+@media (max-width: 768px) {
+  body::before {
+    display: none;
+  }
+}
+
 @keyframes backgroundShift {
 
   0%,
@@ -4281,6 +4288,8 @@ body.dashboard-body #root {
 @media (max-width: 768px) {
   .product-detail-page {
     padding: 0.7rem 0;
+    position: relative;
+    overflow-x: hidden;
   }
 
   .product-detail-header {
@@ -4289,6 +4298,9 @@ body.dashboard-body #root {
     align-items: center;
     justify-content: flex-end;
     padding: 0.3rem 0.7rem 0.2rem;
+    position: relative;
+    z-index: 10;
+    background: transparent;
   }
 
   /* Breadcrumb removed for mobile */
@@ -4297,10 +4309,14 @@ body.dashboard-body #root {
     padding: 0.4rem 0.8rem;
     font-size: 0.7rem;
     border-radius: 20px;
-    background: var(--bg-secondary);
+    background: rgba(255, 255, 255, 0.95);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
     min-width: auto;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 20;
   }
 
   .product-detail-container {
@@ -15796,5 +15812,56 @@ body.community-body #root {
   .thumbnail:focus {
     outline: 2px solid var(--text-pink);
     outline-offset: 2px;
+  }
+}/*
+ Correction spécifique pour éliminer la barre blanche en mobile */
+@media (max-width: 768px) {
+  /* Suppression du background animé qui pourrait causer des problèmes */
+  body::before {
+    display: none !important;
+  }
+  
+  /* Reset complet pour éviter les barres blanches */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+    background: #ffffff !important;
+  }
+  
+  #root {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    display: block !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+  }
+  
+  /* Suppression de tous les pseudo-éléments potentiellement problématiques */
+  *::before,
+  *::after {
+    content: none !important;
+    display: none !important;
+  }
+  
+  /* Exception pour les éléments qui en ont vraiment besoin */
+  .product-badges::before,
+  .product-badges::after {
+    display: block !important;
+  }
+}
+
+/* Animation pour les toasts de notification */
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }

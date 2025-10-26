@@ -4,6 +4,7 @@ import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
 import ProductDetailImages from '../components/ProductDetailImages'
 import './ProductDetail.css'
+import './ProductDetailMobileSimple.css'
 
 const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogin }) => {
   const navigate = useNavigate()
@@ -102,15 +103,15 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
   const savings = product.originalPrice ? ((product.originalPrice - product.price) * quantity).toFixed(2) : 0
 
   return (
-    <div className="product-detail-page">
+    <div className="product-detail-page" style={{ position: 'relative', width: '100%', minHeight: '100vh', background: 'var(--bg-primary)', margin: 0, padding: 0 }}>
       {/* Header avec navigation */}
-      <div className="product-detail-header">
-        <button className="back-button" onClick={onBack}>
+      <div className="product-detail-header" style={{ position: 'relative', width: '100%', background: 'transparent', zIndex: 10 }}>
+        <button className="back-button" onClick={onBack} style={{ position: 'relative', zIndex: 11 }}>
           Retour aux produits
         </button>
       </div>
 
-      <div className="product-detail-container">
+      <div className="product-detail-container" style={{ position: 'relative', width: '100%', background: 'transparent', zIndex: 2 }}>
         {/* Section Images */}
         <div className="product-images-section">
           <div className="main-image">

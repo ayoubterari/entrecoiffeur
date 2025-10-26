@@ -24,10 +24,6 @@ const CartToast = ({ show, product, onClose }) => {
         <div className="cart-toast-icon">✅</div>
         <div className="cart-toast-details">
           <div className="cart-toast-title">Produit ajouté au panier !</div>
-          <div className="cart-toast-product">
-            <span className="product-emoji">{product?.image || '🛍️'}</span>
-            <span className="product-name">{product?.name}</span>
-          </div>
           <div className="cart-toast-price">
             {product?.quantity}x {product?.price}€ = {(product?.quantity * product?.price).toFixed(2)}€
           </div>

@@ -10,23 +10,17 @@ import ShareModal from '../components/ShareModal'
 import { useAffiliateTracking } from '../hooks/useAffiliateTracking'
 import './SellerStore.css'
 
-const SellerStore = () => {
+const SellerStore = ({ onAddToCart, onToggleFavorite, isAuthenticated, userId }) => {
   const { sellerId } = useParams()
   const navigate = useNavigate()
-  const [cart, setCart] = useState([])
-  const [favorites, setFavorites] = useState([])
   const [isMessagePopupOpen, setIsMessagePopupOpen] = useState(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('boutique')
+  const [showCartToast, setShowCartToast] = useState(false)
+  const [showFavoriteToast, setShowFavoriteToast] = useState(false)
 
-  // Get current user ID from localStorage with safety check
-  const [currentUserId, setCurrentUserId] = useState(null)
-  
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setCurrentUserId(localStorage.getItem('userId'))
-    }
-  }, [])
+  // Use userId from props instead of localStorage
+  const currentUserId = userId
 
   // Récupérer les informations du vendeur
   const seller = useQuery(
@@ -59,6 +53,9 @@ const SellerStore = () => {
     sellerId && sellerId !== 'undefined' ? { sellerId } : "skip"
   )
 
+  // Get user favorite product IDs for efficient checking
+  const userFavoriteIds = useQuery(api.favorites.getUserFavoriteIds, currentUserId ? { userId: currentUserId } : "skip")
+
   const toggleFollow = useMutation(api.follows.toggleFollow)
 
   // Hook pour le tracking d'affiliation
@@ -67,9 +64,14 @@ const SellerStore = () => {
   // Afficher tous les produits sans filtrage - avec vérification de sécurité
   const filteredProducts = Array.isArray(sellerProducts) ? sellerProducts : []
 
+  // Helper function to check if a product is favorite
+  const isProductFavorite = (productId) => {
+    return userFavoriteIds?.includes(productId) || false
+  }
+
   const handleAddToCart = (product) => {
     // Vérifier si l'utilisateur est connecté
-    if (!currentUserId) {
+    if (!isAuthenticated) {
       // Préserver le code d'affiliation avant redirection
       preserveAffiliateForAuth()
       // Rediriger vers la page de connexion
@@ -77,28 +79,28 @@ const SellerStore = () => {
       return
     }
 
-    // Utilisateur connecté, ajouter au panier normalement
-    setCart(prev => {
-      const existingItem = prev.find(item => item._id === product._id)
-      if (existingItem) {
-        return prev.map(item =>
-          item._id === product._id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
-      }
-      return [...prev, { ...product, quantity: 1 }]
-    })
+    // Formater les données pour le panier global
+    const cartItem = {
+      productId: product._id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      image: product.images?.[0] || '🛍️'
+    }
+    
+    onAddToCart(cartItem)
+    
+    // Afficher notification
+    setShowCartToast(true)
+    setTimeout(() => setShowCartToast(false), 3000)
   }
 
   const handleToggleFavorite = (product) => {
-    setFavorites(prev => {
-      const isFavorite = prev.some(item => item._id === product._id)
-      if (isFavorite) {
-        return prev.filter(item => item._id !== product._id)
-      }
-      return [...prev, product]
-    })
+    onToggleFavorite(product)
+    
+    // Afficher notification
+    setShowFavoriteToast(true)
+    setTimeout(() => setShowFavoriteToast(false), 3000)
   }
 
   const handleFollowClick = async () => {
@@ -395,7 +397,7 @@ const SellerStore = () => {
                     onAddToCart={handleAddToCart}
                     onToggleFavorite={handleToggleFavorite}
                     onViewDetails={() => navigate(`/product/${product._id}`)}
-                    isFavorite={favorites.some(item => item._id === product._id)}
+                    isFavorite={isProductFavorite(product._id)}
                   />
                 ))}
               </div>
@@ -478,6 +480,51 @@ const SellerStore = () => {
         sellerName={`${seller.firstName} ${seller.lastName}`}
         currentUserId={currentUserId}
       />
+
+      {/* Toast Notifications */}
+      {showCartToast && (
+        <div style={{
+          position: 'fixed',
+          bottom: '2rem',
+          right: '2rem',
+          background: 'linear-gradient(135deg, #00d084, #00b894)',
+          color: 'white',
+          padding: '1rem 1.5rem',
+          borderRadius: '12px',
+          boxShadow: '0 8px 25px rgba(0, 208, 132, 0.3)',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          animation: 'slideIn 0.3s ease-out',
+          fontWeight: '600',
+          fontSize: '0.9rem'
+        }}>
+          ✓ Produit ajouté au panier
+        </div>
+      )}
+      
+      {showFavoriteToast && (
+        <div style={{
+          position: 'fixed',
+          bottom: '2rem',
+          right: '2rem',
+          background: 'linear-gradient(135deg, #ff6b9d, #fd79a8)',
+          color: 'white',
+          padding: '1rem 1.5rem',
+          borderRadius: '12px',
+          boxShadow: '0 8px 25px rgba(255, 107, 157, 0.3)',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          animation: 'slideIn 0.3s ease-out',
+          fontWeight: '600',
+          fontSize: '0.9rem'
+        }}>
+          ❤️ Favori mis à jour
+        </div>
+      )}
     </div>
   )
 }
