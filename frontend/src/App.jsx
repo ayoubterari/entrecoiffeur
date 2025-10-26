@@ -12,6 +12,7 @@ import Community from './pages/Community'
 import Checkout from './pages/Checkout'
 import OrderSuccess from './pages/OrderSuccess'
 import Favorites from './pages/Favorites'
+import Explore from './pages/Explore'
 import CartToast from './components/CartToast'
 import CartModal from './components/CartModal'
 import LoginModal from './components/LoginModal'
@@ -313,6 +314,20 @@ function AppContent() {
                 onToggleFavorite={handleToggleFavorite}
                 isAuthenticated={isAuthenticated}
                 onLogin={handleShowLogin}
+              />
+            } 
+          />
+          
+          {/* Explore */}
+          <Route 
+            path="/explore" 
+            element={
+              <Explore 
+                onAddToCart={handleAddToCart}
+                onToggleFavorite={handleToggleFavorite}
+                userId={userId}
+                isAuthenticated={isAuthenticated}
+                onShowLogin={handleShowLogin}
               />
             } 
           />

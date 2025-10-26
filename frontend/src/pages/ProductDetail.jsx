@@ -204,21 +204,12 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
               onClick={() => navigate(`/seller/${product.sellerId}`)}
               title="Cliquez pour visiter le store de ce vendeur"
             >
-              <div className="seller-store-badge">
-                🏪 Voir le Store
-              </div>
-              <div className="seller-avatar">
-                <div className="avatar-circle">
-                  {seller?.firstName?.charAt(0)?.toUpperCase() || 'V'}
+              <div className="seller-content">
+                <div className="seller-main-line">
+                  <span className="store-name">{seller?.firstName} {seller?.lastName}</span>
+                  <span className="seller-badge">{seller?.userType === 'professionnel' ? 'Pro' : 'Particulier'}</span>
+                  <span className="seller-company">{seller?.companyName || 'Disway'}</span>
                 </div>
-              </div>
-              <div className="seller-details">
-                <h3>{seller?.firstName} {seller?.lastName}</h3>
-                <span className="seller-badge">{seller?.userType === 'professionnel' ? 'Pro' : 'Particulier'}</span>
-                <p className="seller-company">{seller?.companyName || 'Disway'}</p>
-              </div>
-              <div className="seller-arrow">
-                →
               </div>
             </div>
           </div>
@@ -269,17 +260,40 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
               </div>
             </div>
 
-            <div className="action-buttons">
-              <button 
-                className="buy-now-btn" 
-                onClick={handleBuyNow}
-                disabled={!isAuthenticated || product.stock === 0}
-              >
-                {!isAuthenticated ? 'Se connecter pour acheter' : 
-                 product.stock === 0 ? 'Rupture de stock' : 
-                 'Acheter'}
-              </button>
-            </div>
+            <button 
+              onClick={handleBuyNow}
+              disabled={!isAuthenticated || product.stock === 0}
+              style={{
+                width: '100%',
+                background: 'linear-gradient(135deg, #ff6b9d 0%, #e91e63 50%, #c2185b 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '12px',
+                padding: '12px 30px',
+                fontSize: '1rem',
+                fontWeight: '700',
+                fontFamily: "'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif",
+                cursor: 'pointer',
+                marginTop: '1rem',
+                boxShadow: '0 4px 15px rgba(233, 30, 99, 0.25)',
+                transition: 'all 0.3s ease',
+                letterSpacing: '0.5px'
+              }}
+              onMouseEnter={(e) => {
+                if (!e.currentTarget.disabled) {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(233, 30, 99, 0.35)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(233, 30, 99, 0.25)';
+              }}
+            >
+              {!isAuthenticated ? 'Se connecter pour acheter' : 
+               product.stock === 0 ? 'Rupture de stock' : 
+               'Acheter'}
+            </button>
 
             {/* Informations de livraison */}
             <div className="shipping-info">
@@ -304,69 +318,25 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
       {productReviewStats && productReviewStats.totalReviews > 0 && (
         <div className="reviews-section">
           <div className="reviews-header">
-            <h3>⭐ Avis clients ({productReviewStats.totalReviews})</h3>
+            <h3>⭐ Avis clients</h3>
             
-            {/* Statistiques détaillées */}
-            <div className="review-stats">
-              <div className="overall-rating">
-                <div className="rating-display">
-                  <span className="big-rating">{productReviewStats.averageRating}</span>
-                  <div className="rating-details">
-                    <div className="stars-large">
+            {/* Résumé des avis */}
+            <div className="reviews-summary">
+              <div className="overall-score">
+                <div className="score-display">
+                  <span className="big-score">{productReviewStats.averageRating}</span>
+                  <div className="score-details">
+                    <div className="stars-row">
                       {[...Array(5)].map((_, i) => (
                         <span key={i} className={`star ${i < Math.floor(productReviewStats.averageRating) ? 'filled' : ''}`}>
                           ⭐
                         </span>
                       ))}
                     </div>
-                    <span className="rating-subtitle">sur 5 étoiles</span>
                   </div>
                 </div>
               </div>
 
-              {/* Distribution des notes */}
-              <div className="rating-distribution">
-                {[5, 4, 3, 2, 1].map((stars) => (
-                  <div key={stars} className="rating-bar">
-                    <span className="stars-count">{stars} ⭐</span>
-                    <div className="bar-container">
-                      <div 
-                        className="bar-fill" 
-                        style={{ 
-                          width: `${productReviewStats.totalReviews > 0 ? 
-                            (productReviewStats.ratingDistribution[stars] / productReviewStats.totalReviews) * 100 : 0}%` 
-                        }}
-                      ></div>
-                    </div>
-                    <span className="count">({productReviewStats.ratingDistribution[stars]})</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Statistiques détaillées */}
-              <div className="detailed-stats">
-                {productReviewStats.averageDeliveryRating > 0 && (
-                  <div className="stat-item">
-                    <span className="stat-icon">🚚</span>
-                    <span className="stat-label">Livraison</span>
-                    <span className="stat-value">{productReviewStats.averageDeliveryRating}/5</span>
-                  </div>
-                )}
-                {productReviewStats.averageProductQualityRating > 0 && (
-                  <div className="stat-item">
-                    <span className="stat-icon">📦</span>
-                    <span className="stat-label">Qualité</span>
-                    <span className="stat-value">{productReviewStats.averageProductQualityRating}/5</span>
-                  </div>
-                )}
-                {productReviewStats.averageSellerServiceRating > 0 && (
-                  <div className="stat-item">
-                    <span className="stat-icon">👤</span>
-                    <span className="stat-label">Service</span>
-                    <span className="stat-value">{productReviewStats.averageSellerServiceRating}/5</span>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
 
@@ -467,16 +437,7 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
         </div>
       )}
 
-      {/* Section produits similaires */}
-      <div className="related-products">
-        <h3>Produits similaires</h3>
-        <div className="related-grid">
-          {/* Cette section sera remplie avec des produits de la même catégorie */}
-          <div className="coming-soon">
-            <p>Produits similaires bientôt disponibles</p>
-          </div>
-        </div>
-      </div>
+
     </div>
   )
 }

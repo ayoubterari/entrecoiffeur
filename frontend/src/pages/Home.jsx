@@ -296,24 +296,6 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         </div>
       </header>
 
-      {/* Categories Mobile - Moved after header */}
-      <section className={styles.categoriesSection}>
-        <div className={styles.container}>
-          <div className={styles.categoriesGrid}>
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                className={`${styles.categoryCard} ${selectedCategory === category.id ? styles.active : ''}`}
-                onClick={() => setSelectedCategory(category.id)}
-              >
-                <span className={styles.categoryIcon}>{category.icon}</span>
-                <span className={styles.categoryName}>{category.name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Hero Carousel Mobile */}
       <section className={styles.heroCarousel}>
         <div className={styles.carousel}>
@@ -327,7 +309,12 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
                   <div className={styles.bannerContent}>
                     <h2 className={styles.bannerContentH2}>{slide.title}</h2>
                     <p className={styles.bannerContentP}>{slide.description}</p>
-                    <button className={styles.signupBtn}>{slide.buttonText}</button>
+                    <button 
+                      className={styles.signupBtn}
+                      onClick={() => navigate('/explore')}
+                    >
+                      {slide.buttonText}
+                    </button>
                   </div>
                   <div className={styles.bannerImage}>{slide.image}</div>
                 </div>

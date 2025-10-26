@@ -9,9 +9,13 @@ const CategoriesManagement = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [categoryToDelete, setCategoryToDelete] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedParentCategory, setSelectedParentCategory] = useState(null)
+  const [expandedCategories, setExpandedCategories] = useState(new Set())
+  const [showCategoriesPopup, setShowCategoriesPopup] = useState(false)
 
   // Convex queries et mutations
   const categories = useQuery(api.products.getCategories)
+  const mainCategories = useQuery(api.products.getMainCategories)
   const createCategory = useMutation(api.products.createCategory)
   const updateCategory = useMutation(api.products.updateCategory)
   const deleteCategory = useMutation(api.products.deleteCategory)
@@ -20,7 +24,9 @@ const CategoriesManagement = () => {
   const [categoryForm, setCategoryForm] = useState({
     name: '',
     icon: '',
-    description: ''
+    description: '',
+    parentCategoryId: null,
+    isSubcategory: false
   })
 
   // Filtrer les catégories
@@ -41,13 +47,17 @@ const CategoriesManagement = () => {
       await createCategory({
         name: categoryForm.name.trim(),
         icon: categoryForm.icon || '📦',
-        description: categoryForm.description.trim()
+        description: categoryForm.description.trim(),
+        parentCategoryId: categoryForm.isSubcategory ? categoryForm.parentCategoryId : undefined,
+        level: categoryForm.isSubcategory ? 1 : 0
       })
       
       setCategoryForm({
         name: '',
         icon: '',
-        description: ''
+        description: '',
+        parentCategoryId: null,
+        isSubcategory: false
       })
       setShowAddCategory(false)
       
@@ -70,7 +80,9 @@ const CategoriesManagement = () => {
     setCategoryForm({
       name: category.name,
       icon: category.icon,
-      description: category.description || ''
+      description: category.description || '',
+      parentCategoryId: category.parentCategoryId || null,
+      isSubcategory: !!category.parentCategoryId
     })
     setShowEditCategory(true)
   }
@@ -96,7 +108,9 @@ const CategoriesManagement = () => {
       setCategoryForm({
         name: '',
         icon: '',
-        description: ''
+        description: '',
+        parentCategoryId: null,
+        isSubcategory: false
       })
       
       console.log('Catégorie modifiée avec succès!')
@@ -151,93 +165,211 @@ const CategoriesManagement = () => {
         </button>
       </div>
 
-      {/* Filtres et recherche */}
-      <div className="categories-filters">
-        <div className="search-box">
-          <input
-            type="text"
-            placeholder="🔍 Rechercher une catégorie..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
-        </div>
+      {/* Bouton Toutes catégories */}
+      <div className="categories-quick-access">
+        <button 
+          className="all-categories-btn"
+          onClick={() => setShowCategoriesPopup(true)}
+        >
+          <div className="btn-icon">📋</div>
+          <div className="btn-content">
+            <h3>Toutes catégories</h3>
+            <p>{categories?.length || 0} catégories disponibles</p>
+          </div>
+          <div className="btn-arrow">→</div>
+        </button>
       </div>
 
-      {/* Statistiques rapides */}
-      <div className="categories-stats">
-        <div className="stat-card">
-          <div className="stat-icon">🏷️</div>
-          <div className="stat-info">
-            <h3>{categories?.length || 0}</h3>
-            <p>Total catégories</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">📦</div>
-          <div className="stat-info">
-            <h3>{filteredCategories.length}</h3>
-            <p>Affichées</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">🎨</div>
-          <div className="stat-info">
-            <h3>{categories?.filter(c => c.icon && c.icon !== '📦').length || 0}</h3>
-            <p>Avec icônes</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">📝</div>
-          <div className="stat-info">
-            <h3>{categories?.filter(c => c.description).length || 0}</h3>
-            <p>Avec description</p>
-          </div>
-        </div>
-      </div>
+      {/* Popup de gestion des catégories */}
+      {showCategoriesPopup && (
+        <div className="modal-overlay" onClick={() => setShowCategoriesPopup(false)}>
+          <div className="modal-content categories-popup" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>🏷️ Gestion des Catégories</h3>
+              <button className="modal-close" onClick={() => setShowCategoriesPopup(false)}>×</button>
+            </div>
 
-      {/* Liste des catégories */}
-      <div className="categories-list">
-        {filteredCategories.length > 0 ? (
-          <div className="categories-grid">
-            {filteredCategories.map((category) => (
-              <div key={category._id} className="category-card">
-                <div className="category-icon-large">
-                  {category.icon || '📦'}
-                </div>
-                
-                <div className="category-info">
-                  <h4>{category.name}</h4>
-                  {category.description && (
-                    <p className="category-description">{category.description}</p>
-                  )}
-                </div>
-                
-                <div className="category-actions">
-                  <button 
-                    className="edit-btn"
-                    onClick={() => handleEditCategory(category)}
-                  >
-                    ✏️ Modifier
-                  </button>
-                  <button 
-                    className="delete-btn"
-                    onClick={() => handleDeleteCategory(category)}
-                  >
-                    🗑️ Supprimer
-                  </button>
+            {/* Filtres et recherche dans la popup */}
+            <div className="categories-filters">
+              <div className="search-box">
+                <input
+                  type="text"
+                  placeholder="🔍 Rechercher une catégorie..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="search-input"
+                />
+              </div>
+            </div>
+
+            {/* Statistiques rapides dans la popup */}
+            <div className="categories-stats">
+              <div className="stat-card">
+                <div className="stat-icon">🏷️</div>
+                <div className="stat-info">
+                  <h3>{categories?.length || 0}</h3>
+                  <p>Total catégories</p>
                 </div>
               </div>
-            ))}
+              <div className="stat-card">
+                <div className="stat-icon">📦</div>
+                <div className="stat-info">
+                  <h3>{filteredCategories.length}</h3>
+                  <p>Affichées</p>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon">🎨</div>
+                <div className="stat-info">
+                  <h3>{categories?.filter(c => c.icon && c.icon !== '📦').length || 0}</h3>
+                  <p>Avec icônes</p>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon">📝</div>
+                <div className="stat-info">
+                  <h3>{categories?.filter(c => c.description).length || 0}</h3>
+                  <p>Avec description</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Liste des catégories hiérarchique dans la popup */}
+            <div className="categories-list popup-list">
+        {mainCategories && mainCategories.length > 0 ? (
+          <div className="categories-hierarchy">
+            {mainCategories
+              .filter(cat => 
+                !searchTerm || 
+                cat.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                cat.description?.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((category) => {
+                const subcategories = categories?.filter(c => c.parentCategoryId === category._id) || []
+                const isExpanded = expandedCategories.has(category._id)
+                
+                return (
+                  <div key={category._id} className="category-hierarchy-item">
+                    {/* Catégorie principale */}
+                    <div className="category-card main-category">
+                      <div className="category-header">
+                        {subcategories.length > 0 && (
+                          <button 
+                            className="expand-btn"
+                            onClick={() => {
+                              const newExpanded = new Set(expandedCategories)
+                              if (isExpanded) {
+                                newExpanded.delete(category._id)
+                              } else {
+                                newExpanded.add(category._id)
+                              }
+                              setExpandedCategories(newExpanded)
+                            }}
+                          >
+                            {isExpanded ? '▼' : '▶'}
+                          </button>
+                        )}
+                        <div className="category-icon-large">
+                          {category.icon || '📦'}
+                        </div>
+                        
+                        <div className="category-info">
+                          <h4>{category.name}</h4>
+                          {category.description && (
+                            <p className="category-description">{category.description}</p>
+                          )}
+                          {subcategories.length > 0 && (
+                            <span className="subcategory-count">
+                              {subcategories.length} sous-catégorie{subcategories.length > 1 ? 's' : ''}
+                            </span>
+                          )}
+                        </div>
+                        
+                        <div className="category-actions">
+                          <button 
+                            className="add-sub-btn"
+                            onClick={() => {
+                              setCategoryForm({
+                                name: '',
+                                icon: '',
+                                description: '',
+                                parentCategoryId: category._id,
+                                isSubcategory: true
+                              })
+                              setShowAddCategory(true)
+                            }}
+                            title="Ajouter une sous-catégorie"
+                          >
+                            ➕ Sous-catégorie
+                          </button>
+                          <button 
+                            className="edit-btn"
+                            onClick={() => handleEditCategory(category)}
+                          >
+                            ✏️
+                          </button>
+                          <button 
+                            className="delete-btn"
+                            onClick={() => handleDeleteCategory(category)}
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Sous-catégories */}
+                    {isExpanded && subcategories.length > 0 && (
+                      <div className="subcategories-list">
+                        {subcategories.map((subcat) => (
+                          <div key={subcat._id} className="category-card subcategory">
+                            <div className="subcategory-indicator">└─</div>
+                            <div className="category-icon-small">
+                              {subcat.icon || '📦'}
+                            </div>
+                            
+                            <div className="category-info">
+                              <h5>{subcat.name}</h5>
+                              {subcat.description && (
+                                <p className="category-description">{subcat.description}</p>
+                              )}
+                            </div>
+                            
+                            <div className="category-actions">
+                              <button 
+                                className="edit-btn"
+                                onClick={() => handleEditCategory(subcat)}
+                                title="Modifier cette sous-catégorie"
+                              >
+                                ✏️ Modifier
+                              </button>
+                              <button 
+                                className="delete-btn"
+                                onClick={() => handleDeleteCategory(subcat)}
+                                title="Supprimer cette sous-catégorie"
+                              >
+                                🗑️ Supprimer
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
           </div>
         ) : (
           <div className="empty-state">
             <div className="empty-icon">🏷️</div>
             <h3>Aucune catégorie trouvée</h3>
-            <p>Aucune catégorie ne correspond à vos critères de recherche.</p>
+            <p>Commencez par créer des catégories principales.</p>
           </div>
         )}
-      </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal d'ajout de catégorie */}
       {showAddCategory && (
@@ -271,6 +403,36 @@ const CategoriesManagement = () => {
                   placeholder="Description de la catégorie..."
                 />
               </div>
+              
+              <div className="form-group">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={categoryForm.isSubcategory}
+                    onChange={(e) => setCategoryForm({...categoryForm, isSubcategory: e.target.checked, parentCategoryId: null})}
+                  />
+                  {' '}C'est une sous-catégorie
+                </label>
+              </div>
+              
+              {categoryForm.isSubcategory && (
+                <div className="form-group">
+                  <label>Catégorie parente *</label>
+                  <select
+                    value={categoryForm.parentCategoryId || ''}
+                    onChange={(e) => setCategoryForm({...categoryForm, parentCategoryId: e.target.value || null})}
+                    required
+                    className="form-input"
+                  >
+                    <option value="">Sélectionner une catégorie parente</option>
+                    {mainCategories?.map((cat) => (
+                      <option key={cat._id} value={cat._id}>
+                        {cat.icon} {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
               
               <div className="form-group">
                 <label>Icône</label>
@@ -395,9 +557,17 @@ const CategoriesManagement = () => {
               <div className="category-preview">
                 <div className="category-icon-large">{categoryToDelete.icon}</div>
                 <h4>{categoryToDelete.name}</h4>
+                {categoryToDelete.parentCategoryId && (
+                  <span className="category-type-badge">Sous-catégorie</span>
+                )}
               </div>
-              <p>Êtes-vous sûr de vouloir supprimer cette catégorie ?</p>
-              <p className="warning">⚠️ Cette action est irréversible. Les produits de cette catégorie devront être recatégorisés.</p>
+              <p>Êtes-vous sûr de vouloir supprimer cette {categoryToDelete.parentCategoryId ? 'sous-catégorie' : 'catégorie'} ?</p>
+              {!categoryToDelete.parentCategoryId && (
+                <p className="warning">⚠️ Cette action est irréversible. Les produits de cette catégorie devront être recatégorisés.</p>
+              )}
+              {categoryToDelete.parentCategoryId && (
+                <p className="info">ℹ️ Cette sous-catégorie sera supprimée de sa catégorie parente.</p>
+              )}
             </div>
             
             <div className="form-actions">

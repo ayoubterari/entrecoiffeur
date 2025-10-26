@@ -28,8 +28,12 @@ export default defineSchema({
     description: v.string(),
     icon: v.string(),
     color: v.string(),
+    parentCategoryId: v.optional(v.id("categories")), // Pour les sous-catégories
+    level: v.optional(v.number()), // 0 = catégorie principale, 1 = sous-catégorie
+    order: v.optional(v.number()), // Pour l'ordre d'affichage
     createdAt: v.number(),
-  }),
+  }).index("by_parent", ["parentCategoryId"])
+    .index("by_level", ["level"]),
   
   // Products table
   products: defineTable({

@@ -8,12 +8,38 @@ export const getCategories = query({
   },
 });
 
+// Get main categories only (level 0)
+export const getMainCategories = query({
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("categories")
+      .filter((q) => q.or(
+        q.eq(q.field("level"), 0),
+        q.eq(q.field("level"), undefined)
+      ))
+      .collect();
+  },
+});
+
+// Get subcategories by parent category ID
+export const getSubcategories = query({
+  args: { parentCategoryId: v.id("categories") },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("categories")
+      .withIndex("by_parent", (q) => q.eq("parentCategoryId", args.parentCategoryId))
+      .collect();
+  },
+});
+
 // Create a new category (admin only)
 export const createCategory = mutation({
   args: {
     name: v.string(),
     icon: v.optional(v.string()),
     description: v.optional(v.string()),
+    parentCategoryId: v.optional(v.id("categories")),
+    level: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     // Check if category with same name already exists
@@ -26,11 +52,22 @@ export const createCategory = mutation({
       throw new ConvexError("A category with this name already exists");
     }
 
+    // If parentCategoryId is provided, verify it exists
+    if (args.parentCategoryId) {
+      const parentCategory = await ctx.db.get(args.parentCategoryId);
+      if (!parentCategory) {
+        throw new ConvexError("Parent category not found");
+      }
+    }
+
     const categoryId = await ctx.db.insert("categories", {
       name: args.name,
       icon: args.icon || "📦",
       description: args.description || "",
       color: "#FF6B9D", // Couleur par défaut
+      parentCategoryId: args.parentCategoryId,
+      level: args.level || (args.parentCategoryId ? 1 : 0),
+      order: 0,
       createdAt: Date.now(),
     });
 
@@ -517,6 +554,8 @@ export const updateCategory = mutation({
     name: v.optional(v.string()),
     icon: v.optional(v.string()),
     description: v.optional(v.string()),
+    parentCategoryId: v.optional(v.id("categories")),
+    level: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const { categoryId, ...updates } = args;
@@ -536,6 +575,18 @@ export const updateCategory = mutation({
       
       if (duplicateCategory) {
         throw new ConvexError("A category with this name already exists");
+      }
+    }
+    
+    // If parentCategoryId is being updated, verify it exists
+    if (updates.parentCategoryId) {
+      const parentCategory = await ctx.db.get(updates.parentCategoryId);
+      if (!parentCategory) {
+        throw new ConvexError("Parent category not found");
+      }
+      // Prevent circular references
+      if (updates.parentCategoryId === categoryId) {
+        throw new ConvexError("A category cannot be its own parent");
       }
     }
     
