@@ -15,6 +15,7 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
   const [expandedCategories, setExpandedCategories] = useState(new Set())
   const [selectedPriceRange, setSelectedPriceRange] = useState('all')
   const [isSliderActive, setIsSliderActive] = useState(false)
+  const [showStores, setShowStores] = useState(false)
 
   // Fetch data from Convex
   const allProducts = useQuery(api.products.getProducts, { limit: 100 })
@@ -24,6 +25,59 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
     api.favorites.getUserFavorites,
     userId ? { userId } : "skip"
   )
+  
+  // Get unique seller IDs from products
+  const sellerIds = React.useMemo(() => {
+    if (!allProducts) return []
+    const uniqueSellerIds = [...new Set(allProducts.map(p => p.sellerId))]
+    return uniqueSellerIds
+  }, [allProducts])
+  
+  // Fetch seller information for each unique seller
+  // We'll fetch all users and filter them client-side since we need user details
+  const allUsers = useQuery(api.auth.getUsersByType, { userType: "professionnel" })
+  const allGrossistes = useQuery(api.auth.getUsersByType, { userType: "grossiste" })
+  
+  // Combine all potential sellers (professionnels and grossistes)
+  const sellersData = React.useMemo(() => {
+    const sellers = []
+    if (Array.isArray(allUsers)) sellers.push(...allUsers)
+    if (Array.isArray(allGrossistes)) sellers.push(...allGrossistes)
+    return sellers
+  }, [allUsers, allGrossistes])
+  
+  // Create stores with seller company names
+  const stores = React.useMemo(() => {
+    if (!allProducts || !sellersData || !Array.isArray(sellersData)) return []
+    
+    const sellerMap = new Map()
+    
+    // Count products per seller
+    allProducts.forEach(product => {
+      if (!sellerMap.has(product.sellerId)) {
+        sellerMap.set(product.sellerId, {
+          _id: product.sellerId,
+          sellerId: product.sellerId,
+          productCount: 1
+        })
+      } else {
+        sellerMap.get(product.sellerId).productCount++
+      }
+    })
+    
+    // Add seller information
+    const storesWithNames = Array.from(sellerMap.values()).map(store => {
+      const sellerInfo = sellersData.find(seller => seller._id === store.sellerId)
+      return {
+        ...store,
+        storeName: sellerInfo?.companyName || 
+                  `${sellerInfo?.firstName || ''} ${sellerInfo?.lastName || ''}`.trim() ||
+                  `Store ${store.sellerId.slice(-6)}`
+      }
+    })
+    
+    return storesWithNames
+  }, [allProducts, sellersData])
 
   // Price ranges presets
   const priceRanges = [
@@ -41,8 +95,9 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
                          product.description?.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory
     const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1]
+    const matchesStore = !showStores || product.sellerId === showStores
     
-    return matchesSearch && matchesCategory && matchesPrice
+    return matchesSearch && matchesCategory && matchesPrice && matchesStore
   }) || []
 
   // Sort products
@@ -210,6 +265,33 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
             </div>
           </div>
 
+          {/* Stores Filter */}
+          <div className={styles.filterGroup}>
+            <h4 className={styles.filterTitle}>Stores</h4>
+            <div className={styles.storesList}>
+              <button
+                className={`${styles.storeBtn} ${!showStores ? styles.active : ''}`}
+                onClick={() => setShowStores(false)}
+              >
+                <span>🏪 Tous les stores</span>
+                <span className={styles.count}>{stores.length}</span>
+              </button>
+              
+              {stores.map(store => {
+                return (
+                  <button
+                    key={store._id}
+                    className={`${styles.storeBtn} ${showStores === store.sellerId ? styles.active : ''}`}
+                    onClick={() => setShowStores(store.sellerId)}
+                  >
+                    <span>🏬 {store.storeName}</span>
+                    <span className={styles.count}>{store.productCount}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
           {/* Price Range with Presets */}
           <div className={styles.filterGroup}>
             <h4 className={styles.filterTitle}>Prix</h4>
@@ -299,6 +381,7 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
               setSearchQuery('')
               setSelectedPriceRange('all')
               setExpandedCategories(new Set())
+              setShowStores(false)
             }}
           >
             Réinitialiser les filtres
@@ -358,6 +441,7 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
                   setSelectedCategory('all')
                   setPriceRange([0, 1000])
                   setSearchQuery('')
+                  setShowStores(false)
                 }}
               >
                 Réinitialiser les filtres

@@ -351,7 +351,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
           <p className={styles.bannerDescription}>
             Découvrez nos produits de qualité à prix attractifs
           </p>
-          <button className={styles.bannerCTA} onClick={() => navigate('/products')}>
+          <button className={styles.bannerCTA} onClick={() => navigate('/explore')}>
             <span>Voir les produits</span>
             <span>→</span>
           </button>
@@ -612,7 +612,6 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
             <ul>
               <li><a href="#apropos">À propos</a></li>
               <li><a href="/blog">Blog</a></li>
-              <li><a href="/community">Community</a></li>
               <li><a href="#contact">Contact</a></li>
               <li><a href="#faq">FAQ</a></li>
             </ul>

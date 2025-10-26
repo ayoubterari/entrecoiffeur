@@ -531,6 +531,65 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
+/* Stores List */
+.storesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.storeBtn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.76rem;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.storeBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.storeBtn:hover::before {
+  left: 100%;
+}
+
+.storeBtn:hover {
+  background: #f8f9fa;
+  color: #667eea;
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.storeBtn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.storeBtn.active::before {
+  display: none;
+}
+
 /* Price Range with Presets */
 .priceRangeList {
   display: flex;
