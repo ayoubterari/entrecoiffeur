@@ -5,7 +5,7 @@ import { api } from './lib/convex'
 import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
 import DashboardV2 from './pages/DashboardV2'
-import Admin from './pages/Admin'
+import AdminV2 from './pages/AdminV2'
 import ProductDetail from './pages/ProductDetail'
 import SellerStore from './pages/SellerStore'
 import BlogDynamic from './pages/BlogDynamic'
@@ -259,11 +259,11 @@ function AppContent() {
             } 
           />
 
-          {/* Dashboard Admin */}
+          {/* Dashboard Admin - Interface moderne basée sur shadcn-admin */}
           <Route 
             path="/admin" 
             element={
-              <Admin 
+              <AdminV2 
                 isAuthenticated={isAuthenticated}
                 userEmail={userEmail}
                 userFirstName={userFirstName || ''}
