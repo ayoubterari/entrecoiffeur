@@ -1,8 +1,8 @@
-/* Support Responses Styles - Design Ultra-Moderne 2025 */
+﻿/* Support Responses Styles - Design Ultra-Moderne 2025 */
 
 .support-responses {
   padding: 2rem;
-  background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 50%, #fd79a8 100%);
+  background: linear-gradient(135deg, #808080 0%, #fab1a0 50%, #404040 100%);
   min-height: 100vh;
 }
 
@@ -16,7 +16,7 @@
   font-size: 2rem;
   font-weight: 700;
   margin: 0 0 0.5rem 0;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -36,9 +36,9 @@
   padding: 3rem;
   text-align: center;
   box-shadow: 
-    0 25px 50px rgba(255, 107, 157, 0.15),
-    0 15px 35px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 107, 157, 0.2);
+    0 25px 50px rgba(218, 165, 32, 0.2),
+    0 15px 35px rgba(218, 165, 32, 0.2);
+  border: 1px solid rgba(218, 165, 32, 0.25);
 }
 
 .empty-icon {
@@ -73,9 +73,9 @@
   border-radius: 20px;
   padding: 1.5rem;
   box-shadow: 
-    0 15px 35px rgba(255, 107, 157, 0.1),
-    0 8px 20px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(255, 107, 157, 0.2);
+    0 15px 35px rgba(218, 165, 32, 0.15),
+    0 8px 20px rgba(218, 165, 32, 0.1);
+  border: 1px solid rgba(218, 165, 32, 0.25);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
@@ -85,8 +85,8 @@
 .ticket-card:hover {
   transform: translateY(-5px);
   box-shadow: 
-    0 20px 45px rgba(255, 107, 157, 0.15),
-    0 12px 25px rgba(0, 0, 0, 0.1);
+    0 20px 45px rgba(218, 165, 32, 0.2),
+    0 12px 25px rgba(218, 165, 32, 0.2);
 }
 
 .ticket-card-header {
@@ -164,7 +164,7 @@
 }
 
 .view-responses-btn {
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -172,13 +172,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 25px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 8px 25px rgba(218, 165, 32, 0.4);
   width: 100%;
 }
 
 .view-responses-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(255, 107, 157, 0.4);
+  box-shadow: 0 12px 35px rgba(218, 165, 32, 0.5);
 }
 
 /* Responses Modal */
@@ -207,14 +207,14 @@
   max-height: 80vh;
   overflow-y: auto;
   box-shadow: 
-    0 25px 50px rgba(255, 107, 157, 0.15),
-    0 15px 35px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 107, 157, 0.2);
+    0 25px 50px rgba(218, 165, 32, 0.2),
+    0 15px 35px rgba(218, 165, 32, 0.2);
+  border: 1px solid rgba(218, 165, 32, 0.25);
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .responses-modal-header {
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   color: white;
   padding: 1.5rem;
   border-radius: 25px 25px 0 0;
@@ -323,13 +323,13 @@
   backdrop-filter: blur(10px);
   border-radius: 15px;
   padding: 1.5rem;
-  border: 1px solid rgba(255, 107, 157, 0.1);
+  border: 1px solid rgba(218, 165, 32, 0.15);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .response-item:hover {
   transform: translateX(5px);
-  box-shadow: 0 10px 25px rgba(255, 107, 157, 0.1);
+  box-shadow: 0 10px 25px rgba(218, 165, 32, 0.15);
 }
 
 .response-header {

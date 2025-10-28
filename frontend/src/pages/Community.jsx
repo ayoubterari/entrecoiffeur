@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../lib/convex'
 
@@ -88,11 +88,11 @@ const Community = ({ isAuthenticated, userEmail, userFirstName, userLastName }) 
   ]
 
   const categories = [
-    { id: 'all', name: 'Tous', icon: '🌟', color: '#FF6B9D' },
+    { id: 'all', name: 'Tous', icon: '🌟', color: '#2d2d2d' },
     { id: 'conseils', name: 'Conseils', icon: '💡', color: '#4ECDC4' },
     { id: 'techniques', name: 'Techniques', icon: '✂️', color: '#45B7D1' },
     { id: 'produits', name: 'Produits', icon: '🧴', color: '#96CEB4' },
-    { id: 'annonces', name: 'Annonces', icon: '📢', color: '#FFEAA7' },
+    { id: 'annonces', name: 'Annonces', icon: '📢', color: '#808080' },
     { id: 'general', name: 'Général', icon: '💬', color: '#DDA0DD' }
   ]
 
@@ -559,7 +559,7 @@ const Community = ({ isAuthenticated, userEmail, userFirstName, userLastName }) 
                                           className="audio-bar"
                                           style={{
                                             height: `${Math.max(2, (audioLevel / 100) * 40 * Math.random())}px`,
-                                            backgroundColor: audioLevel > 50 ? '#FF6B9D' : audioLevel > 20 ? '#4ECDC4' : '#e9ecef'
+                                            backgroundColor: audioLevel > 50 ? '#2d2d2d' : audioLevel > 20 ? '#4ECDC4' : '#e9ecef'
                                           }}
                                         ></div>
                                       ))}

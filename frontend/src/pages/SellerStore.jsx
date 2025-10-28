@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../lib/convex'
@@ -190,9 +190,9 @@ const SellerStore = ({ onAddToCart, onToggleFavorite, isAuthenticated, userId })
             className="back-btn"
             onClick={() => navigate(-1)}
             style={{
-              background: 'linear-gradient(135deg, #ff6b9d, #fd79a8)',
+              background: 'linear-gradient(135deg, #2d2d2d, #404040)',
               color: 'white',
-              border: '2px solid #ff6b9d',
+              border: '2px solid #2d2d2d',
               padding: '0.75rem 1.5rem',
               borderRadius: '50px',
               fontWeight: '600',
@@ -509,7 +509,7 @@ const SellerStore = ({ onAddToCart, onToggleFavorite, isAuthenticated, userId })
           position: 'fixed',
           bottom: '2rem',
           right: '2rem',
-          background: 'linear-gradient(135deg, #ff6b9d, #fd79a8)',
+          background: 'linear-gradient(135deg, #2d2d2d, #404040)',
           color: 'white',
           padding: '1rem 1.5rem',
           borderRadius: '12px',

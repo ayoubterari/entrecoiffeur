@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from './lib/convex'
@@ -381,7 +381,7 @@ function AppContent() {
             position: 'fixed',
             bottom: '2rem',
             right: '2rem',
-            background: 'linear-gradient(135deg, #ff6b9d, #fd79a8)',
+            background: 'linear-gradient(135deg, #2d2d2d, #404040)',
             color: 'white',
             padding: '1rem 1.5rem',
             borderRadius: '12px',

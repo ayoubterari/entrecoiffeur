@@ -1,4 +1,4 @@
-/* ============================================
+﻿/* ============================================
    MOBILE MENU POPUP
    ============================================ */
 
@@ -34,7 +34,7 @@
   height: 100dvh;
   background: #ffffff;
   z-index: 9999;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 4px 0 24px rgba(218, 165, 32, 0.3);
   animation: slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
@@ -55,8 +55,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  background: linear-gradient(135deg, #ff6b9d, #e84393);
+  border-bottom: 1px solid rgba(218, 165, 32, 0.15);
+  background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
   color: white;
 }
 
@@ -137,7 +137,7 @@
   justify-content: center;
   font-size: 1.5rem;
   flex-shrink: 0;
-  background: rgba(255, 107, 157, 0.1);
+  background: rgba(218, 165, 32, 0.15);
   border-radius: 0.75rem;
 }
 
@@ -145,14 +145,14 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ff6b9d, #e84393);
+  background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 1rem;
-  box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 2px 8px rgba(218, 165, 32, 0.4);
 }
 
 .menuText {
@@ -170,7 +170,7 @@
 }
 
 .menuBadge {
-  background: linear-gradient(135deg, #ff6b9d, #e84393);
+  background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
   color: white;
   border-radius: 1rem;
   padding: 0.25rem 0.625rem;
@@ -178,12 +178,12 @@
   font-weight: 700;
   min-width: 1.5rem;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 2px 4px rgba(218, 165, 32, 0.4);
 }
 
 .menuDivider {
   height: 1px;
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(218, 165, 32, 0.15);
   margin: 0.5rem 1.5rem;
 }
 
@@ -226,25 +226,25 @@
   width: calc(100% - 3rem);
   margin: 0.75rem 1.5rem;
   padding: 1rem;
-  background: linear-gradient(135deg, #ff6b9d, #e84393);
+  background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
   border: none;
   border-radius: 0.75rem;
   cursor: pointer;
   transition: all 0.3s ease;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
 }
 
 .authButton:active {
   transform: translateY(2px);
-  box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 2px 8px rgba(218, 165, 32, 0.4);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .authButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(255, 107, 157, 0.4);
+    box-shadow: 0 6px 16px rgba(218, 165, 32, 0.5);
   }
 }
 
@@ -269,12 +269,12 @@
 /* Sign In Button - Variant */
 .signInButton {
   background: transparent;
-  border: 2px solid #ff6b9d;
+  border: 2px solid #2d2d2d;
   box-shadow: none;
 }
 
 .signInButton .authText {
-  color: #ff6b9d;
+  color: #2d2d2d;
 }
 
 .signInButton:active {
@@ -284,11 +284,11 @@
 @media (hover: hover) and (pointer: fine) {
   .signInButton:hover {
     background: rgba(255, 107, 157, 0.05);
-    border-color: #e84393;
+    border-color: #2d2d2d;
   }
   
   .signInButton:hover .authText {
-    color: #e84393;
+    color: #2d2d2d;
   }
 }
 

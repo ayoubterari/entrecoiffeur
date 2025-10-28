@@ -1,4 +1,4 @@
-/* Create Post Modal Styles - Ultra Modern 2025 */
+﻿/* Create Post Modal Styles - Ultra Modern 2025 */
 .create-post-modal-overlay {
   position: fixed;
   top: 0;
@@ -20,7 +20,7 @@
     rgba(255, 255, 255, 0.95) 0%,
     rgba(255, 255, 255, 0.9) 100%);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 107, 157, 0.2);
+  border: 1px solid rgba(218, 165, 32, 0.25);
   border-radius: 25px;
   padding: 2rem;
   width: 100%;
@@ -28,8 +28,8 @@
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 
-    0 20px 60px rgba(255, 107, 157, 0.15),
-    0 8px 32px rgba(0, 0, 0, 0.1);
+    0 20px 60px rgba(218, 165, 32, 0.2),
+    0 8px 32px rgba(218, 165, 32, 0.2);
   animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -39,13 +39,13 @@
   align-items: center;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 107, 157, 0.1);
+  border-bottom: 1px solid rgba(218, 165, 32, 0.15);
 }
 
 .modal-header h2 {
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -53,7 +53,7 @@
 }
 
 .close-btn {
-  background: rgba(255, 107, 157, 0.1);
+  background: rgba(218, 165, 32, 0.15);
   border: none;
   border-radius: 50%;
   width: 40px;
@@ -62,13 +62,13 @@
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
-  color: #ff6b9d;
+  color: #2d2d2d;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .close-btn:hover {
-  background: rgba(255, 107, 157, 0.2);
+  background: rgba(218, 165, 32, 0.25);
   transform: scale(1.1);
 }
 
@@ -99,7 +99,7 @@
 
 .type-btn {
   background: rgba(255, 255, 255, 0.8);
-  border: 2px solid rgba(255, 107, 157, 0.2);
+  border: 2px solid rgba(218, 165, 32, 0.25);
   border-radius: 50px;
   padding: 0.75rem 1.25rem;
   font-size: 0.9rem;
@@ -111,17 +111,17 @@
 }
 
 .type-btn:hover {
-  border-color: rgba(255, 107, 157, 0.4);
+  border-color: rgba(218, 165, 32, 0.5);
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.2);
+  box-shadow: 0 4px 15px rgba(218, 165, 32, 0.25);
 }
 
 .type-btn.active {
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
-  border-color: #ff6b9d;
+  background: linear-gradient(135deg, #2d2d2d, #404040);
+  border-color: #2d2d2d;
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 6px 20px rgba(218, 165, 32, 0.4);
 }
 
 /* Content Input */
@@ -140,7 +140,7 @@
 .content-input-section textarea {
   width: 100%;
   padding: 1rem;
-  border: 2px solid rgba(255, 107, 157, 0.2);
+  border: 2px solid rgba(218, 165, 32, 0.25);
   border-radius: 15px;
   font-size: 0.95rem;
   font-family: inherit;
@@ -153,8 +153,8 @@
 
 .content-input-section textarea:focus {
   outline: none;
-  border-color: #ff6b9d;
-  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+  border-color: #2d2d2d;
+  box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.15);
   transform: scale(1.01);
 }
 
@@ -187,14 +187,14 @@
 }
 
 .upload-btn {
-  background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(253, 121, 168, 0.1));
-  border: 2px dashed rgba(255, 107, 157, 0.3);
+  background: linear-gradient(135deg, rgba(218, 165, 32, 0.15), rgba(253, 121, 168, 0.1));
+  border: 2px dashed rgba(218, 165, 32, 0.4);
   border-radius: 15px;
   padding: 1.5rem;
   width: 100%;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #ff6b9d;
+  color: #2d2d2d;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -204,8 +204,8 @@
 }
 
 .upload-btn:hover {
-  background: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(253, 121, 168, 0.15));
-  border-color: rgba(255, 107, 157, 0.5);
+  background: linear-gradient(135deg, rgba(218, 165, 32, 0.2), rgba(253, 121, 168, 0.15));
+  border-color: rgba(218, 165, 32, 0.6);
   transform: translateY(-2px);
 }
 
@@ -229,7 +229,7 @@
   border-radius: 12px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.8);
-  border: 2px solid rgba(255, 107, 157, 0.2);
+  border: 2px solid rgba(218, 165, 32, 0.25);
 }
 
 .image-preview-item img {
@@ -257,7 +257,7 @@
 }
 
 .remove-image-btn:hover {
-  background: #e84393;
+  background: #2d2d2d;
   transform: scale(1.1);
 }
 
@@ -282,12 +282,12 @@
   justify-content: flex-end;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 107, 157, 0.1);
+  border-top: 1px solid rgba(218, 165, 32, 0.15);
 }
 
 .cancel-btn {
   background: rgba(255, 255, 255, 0.8);
-  border: 2px solid rgba(255, 107, 157, 0.2);
+  border: 2px solid rgba(218, 165, 32, 0.25);
   border-radius: 50px;
   padding: 0.75rem 1.5rem;
   font-size: 0.95rem;
@@ -299,7 +299,7 @@
 }
 
 .cancel-btn:hover {
-  border-color: rgba(255, 107, 157, 0.4);
+  border-color: rgba(218, 165, 32, 0.5);
   transform: translateY(-2px);
 }
 
@@ -310,7 +310,7 @@
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   border: none;
   border-radius: 50px;
   padding: 0.75rem 2rem;
@@ -319,7 +319,7 @@
   color: white;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 4px 15px rgba(218, 165, 32, 0.4);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -327,7 +327,7 @@
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+  box-shadow: 0 6px 20px rgba(218, 165, 32, 0.5);
 }
 
 .submit-btn:disabled {

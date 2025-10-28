@@ -1,4 +1,4 @@
-/* Product Detail Page Styles */
+﻿/* Product Detail Page Styles */
 
 /* Seller Section Styles */
 .seller-section {
@@ -8,9 +8,9 @@
     rgba(255, 255, 255, 0.95) 0%, 
     rgba(255, 255, 255, 0.9) 100%);
   backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 107, 157, 0.1);
+  border: 1px solid rgba(218, 165, 32, 0.15);
   border-radius: 12px;
-  box-shadow: 0 6px 14px rgba(255, 107, 157, 0.1);
+  box-shadow: 0 6px 14px rgba(218, 165, 32, 0.15);
 }
 
 .seller-section h4 {
@@ -34,13 +34,13 @@
   border-radius: 10px;
   padding: 0.8rem;
   background: rgba(255, 107, 157, 0.02);
-  border: 1px solid rgba(255, 107, 157, 0.1);
+  border: 1px solid rgba(218, 165, 32, 0.15);
 }
 
 .clickable-seller:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 107, 157, 0.15);
-  border-color: rgba(255, 107, 157, 0.2);
+  box-shadow: 0 8px 20px rgba(218, 165, 32, 0.2);
+  border-color: rgba(218, 165, 32, 0.25);
   background: rgba(255, 107, 157, 0.05);
 }
 
@@ -152,7 +152,7 @@
 }
 
 .buy-now-btn {
-  background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 50%, #c2185b 100%);
+  background: linear-gradient(135deg, #2d2d2d 0%, #2d2d2d 50%, #2d2d2d 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -186,7 +186,7 @@
 }
 
 .buy-now-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #e91e63 0%, #c2185b 50%, #ad1457 100%);
+  background: linear-gradient(135deg, #2d2d2d 0%, #2d2d2d 50%, #ad1457 100%);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(233, 30, 99, 0.35);
 }
@@ -205,7 +205,7 @@
   color: #9e9e9e;
   cursor: not-allowed;
   transform: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(218, 165, 32, 0.2);
 }
 
 .buy-now-btn:disabled::before {
@@ -342,9 +342,9 @@
     rgba(255, 255, 255, 0.95) 0%, 
     rgba(255, 255, 255, 0.9) 100%);
   backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 107, 157, 0.1);
+  border: 1px solid rgba(218, 165, 32, 0.15);
   border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(255, 107, 157, 0.1);
+  box-shadow: 0 8px 20px rgba(218, 165, 32, 0.15);
 }
 
 .reviews-header {
@@ -381,7 +381,7 @@
 .big-score {
   font-size: 3rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -444,14 +444,14 @@
 .progress-bar {
   flex: 1;
   height: 8px;
-  background: rgba(255, 107, 157, 0.1);
+  background: rgba(218, 165, 32, 0.15);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   border-radius: 4px;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -479,7 +479,7 @@
   padding: 0.8rem;
   background: rgba(255, 107, 157, 0.05);
   border-radius: 10px;
-  border: 1px solid rgba(255, 107, 157, 0.1);
+  border: 1px solid rgba(218, 165, 32, 0.15);
 }
 
 .criteria-header {
@@ -536,7 +536,7 @@
     rgba(255, 255, 255, 0.8) 0%, 
     rgba(255, 255, 255, 0.6) 100%);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 107, 157, 0.1);
+  border: 1px solid rgba(218, 165, 32, 0.15);
   border-radius: 10px;
   padding: 0.5rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -544,8 +544,8 @@
 
 .review-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(255, 107, 157, 0.15);
-  border-color: rgba(255, 107, 157, 0.2);
+  box-shadow: 0 10px 25px rgba(218, 165, 32, 0.2);
+  border-color: rgba(218, 165, 32, 0.25);
 }
 
 .review-header {
@@ -565,14 +565,14 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 0.7rem;
-  box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 2px 8px rgba(218, 165, 32, 0.4);
 }
 
 .reviewer-details h4 {
@@ -608,7 +608,7 @@
   padding: 0.3rem;
   background: rgba(255, 107, 157, 0.03);
   border-radius: 6px;
-  border-left: 2px solid #ff6b9d;
+  border-left: 2px solid #2d2d2d;
 }
 
 .review-comment p {

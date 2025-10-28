@@ -1,4 +1,4 @@
-/* Container */
+﻿/* Container */
 .exploreContainer {
   min-height: 100vh;
   background: #f8f9fa;
@@ -11,7 +11,7 @@
   justify-content: space-between;
   padding: 0.8rem 1.6rem;
   background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 4px rgba(218, 165, 32, 0.15);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -104,7 +104,7 @@
 
 .searchInput:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #2d2d2d;
   background: white;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
@@ -148,8 +148,8 @@
 }
 
 .filterToggleBtn:hover {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: #2d2d2d;
+  color: #2d2d2d;
 }
 
 /* Main Content */
@@ -168,14 +168,14 @@
   border-radius: 12.8px;
   padding: 1.2rem;
   height: fit-content;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(218, 165, 32, 0.15);
   border: 1px solid rgba(102, 126, 234, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
 }
 
 .sidebar:hover {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 30px rgba(218, 165, 32, 0.25);
   border-color: rgba(102, 126, 234, 0.2);
 }
 
@@ -196,7 +196,7 @@
   left: 0;
   width: 40px;
   height: 2px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
   border-radius: 1px;
   transition: width 0.3s ease;
 }
@@ -278,7 +278,7 @@
   transform: translateY(-50%);
   width: 3px;
   height: 12px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
   border-radius: 2px;
   transition: all 0.3s ease;
 }
@@ -329,13 +329,13 @@
 
 .categoryBtn:hover {
   background: #f8f9fa;
-  color: #667eea;
+  color: #2d2d2d;
   transform: translateX(4px);
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
 }
 
 .categoryBtn.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
   color: white;
   font-weight: 600;
   transform: translateX(4px);
@@ -366,7 +366,7 @@
 }
 
 .categoryBtn.hasSubcategories:hover::after {
-  border-top-color: #667eea;
+  border-top-color: #2d2d2d;
 }
 
 .categoryBtn.hasSubcategories.active::after {
@@ -399,7 +399,7 @@
 
 .categoryBtn:hover .count {
   background: #e3f2fd;
-  color: #667eea;
+  color: #2d2d2d;
   transform: scale(1.05);
 }
 
@@ -447,7 +447,7 @@
   top: 0;
   width: 2px;
   height: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
   animation: growLine 0.5s ease-out 0.2s forwards;
 }
 
@@ -504,13 +504,13 @@
 
 .subcategoryBtn:hover {
   background: #f8f9fa;
-  color: #667eea;
+  color: #2d2d2d;
   transform: translateX(4px);
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
 }
 
 .subcategoryBtn.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
   color: white;
   font-weight: 600;
   transform: translateX(4px);
@@ -573,13 +573,13 @@
 
 .storeBtn:hover {
   background: #f8f9fa;
-  color: #667eea;
+  color: #2d2d2d;
   transform: translateX(4px);
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
 }
 
 .storeBtn.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
   color: white;
   font-weight: 600;
   transform: translateX(4px);
@@ -627,7 +627,7 @@
 }
 
 .priceRangeBtn:hover {
-  border-color: #667eea;
+  border-color: #2d2d2d;
   background: #f8f9fa;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
@@ -638,8 +638,8 @@
 }
 
 .priceRangeBtn.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-color: #667eea;
+  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
+  border-color: #2d2d2d;
   color: white;
   font-weight: 600;
   transform: translateY(-2px);
@@ -706,7 +706,7 @@
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
   border: 1px solid #e9ecef;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(218, 165, 32, 0.1);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -725,8 +725,8 @@
 
 .priceValue:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-color: #667eea;
+  box-shadow: 0 4px 8px rgba(218, 165, 32, 0.2);
+  border-color: #2d2d2d;
 }
 
 .priceValue:hover::before {
@@ -757,7 +757,7 @@
   appearance: none;
   width: 18px;
   height: 18px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
   border-radius: 50%;
   cursor: pointer;
   pointer-events: all;
@@ -781,7 +781,7 @@
 .priceSlider::-moz-range-thumb {
   width: 18px;
   height: 18px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
   border-radius: 50%;
   cursor: pointer;
   pointer-events: all;
@@ -818,13 +818,13 @@
   background: linear-gradient(90deg, #e9ecef 0%, #f1f3f5 50%, #e9ecef 100%);
   border-radius: 3px;
   transform: translateY(-50%);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 1px 3px rgba(218, 165, 32, 0.2);
 }
 
 .sliderRange {
   position: absolute;
   height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
   border-radius: 3px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
@@ -907,7 +907,7 @@
 .priceRangeBtn:focus,
 .resetBtn:focus,
 .priceSlider:focus {
-  outline: 2px solid #667eea;
+  outline: 2px solid #2d2d2d;
   outline-offset: 2px;
 }
 
@@ -949,8 +949,8 @@
 
 .resetBtn:hover {
   background: linear-gradient(135deg, #e9ecef 0%, #f1f3f5 100%);
-  border-color: #667eea;
-  color: #667eea;
+  border-color: #2d2d2d;
+  color: #2d2d2d;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
 }
@@ -1025,7 +1025,7 @@
 
 .sortSelect:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #2d2d2d;
 }
 
 /* Products Grid */
@@ -1065,7 +1065,7 @@
 
 .resetFiltersBtn {
   padding: 0.7rem 1.6rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
   border: none;
   border-radius: 8px;
   font-size: 0.76rem;

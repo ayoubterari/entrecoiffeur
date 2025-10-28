@@ -1,4 +1,4 @@
-/* Support Modal Styles - Design Ultra-Moderne 2025 */
+﻿/* Support Modal Styles - Design Ultra-Moderne 2025 */
 
 .support-modal-overlay {
   position: fixed !important;
@@ -21,8 +21,8 @@
   backdrop-filter: blur(20px) !important;
   border-radius: 25px !important;
   box-shadow: 
-    0 25px 50px rgba(255, 107, 157, 0.15),
-    0 15px 35px rgba(0, 0, 0, 0.1),
+    0 25px 50px rgba(218, 165, 32, 0.2),
+    0 15px 35px rgba(218, 165, 32, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
   border: 1px solid rgba(255, 255, 255, 0.3) !important;
   width: 100% !important;
@@ -35,7 +35,7 @@
 }
 
 .support-modal-header {
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8) !important;
+  background: linear-gradient(135deg, #2d2d2d, #404040) !important;
   color: white !important;
   padding: 1.5rem 2rem !important;
   display: flex !important;
@@ -77,7 +77,7 @@
   border-radius: 10px !important;
   font-size: 1.5rem !important;
   font-weight: 700 !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  text-shadow: 0 2px 4px rgba(218, 165, 32, 0.2) !important;
 }
 
 .support-modal-close {
@@ -140,7 +140,7 @@
 }
 
 .ticket-number {
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8) !important;
+  background: linear-gradient(135deg, #2d2d2d, #404040) !important;
   color: white !important;
   padding: 1rem 2rem !important;
   border-radius: 50px !important;
@@ -148,7 +148,7 @@
   font-size: 1.2rem !important;
   margin: 1.5rem 0 !important;
   display: inline-block !important;
-  box-shadow: 0 8px 25px rgba(255, 107, 157, 0.3) !important;
+  box-shadow: 0 8px 25px rgba(218, 165, 32, 0.4) !important;
   animation: pulse 2s infinite !important;
 }
 
@@ -160,10 +160,10 @@
 }
 
 .support-form-intro {
-  background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(253, 121, 168, 0.1)) !important;
+  background: linear-gradient(135deg, rgba(218, 165, 32, 0.15), rgba(253, 121, 168, 0.1)) !important;
   padding: 1.5rem !important;
   border-radius: 15px !important;
-  border: 1px solid rgba(255, 107, 157, 0.2) !important;
+  border: 1px solid rgba(218, 165, 32, 0.25) !important;
   margin-bottom: 1rem !important;
 }
 
@@ -217,7 +217,7 @@
 .support-form-group select,
 .support-form-group textarea {
   padding: 1rem 1.5rem !important;
-  border: 2px solid rgba(255, 107, 157, 0.2) !important;
+  border: 2px solid rgba(218, 165, 32, 0.25) !important;
   border-radius: 15px !important;
   font-size: 1rem !important;
   background: rgba(255, 255, 255, 0.8) !important;
@@ -230,9 +230,9 @@
 .support-form-group select:focus,
 .support-form-group textarea:focus {
   outline: none !important;
-  border-color: #ff6b9d !important;
+  border-color: #2d2d2d !important;
   background: rgba(255, 255, 255, 0.95) !important;
-  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.15) !important;
   transform: scale(1.02) !important;
 }
 
@@ -291,14 +291,14 @@
 }
 
 .support-btn-primary {
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8) !important;
+  background: linear-gradient(135deg, #2d2d2d, #404040) !important;
   color: white !important;
-  box-shadow: 0 8px 25px rgba(255, 107, 157, 0.3) !important;
+  box-shadow: 0 8px 25px rgba(218, 165, 32, 0.4) !important;
 }
 
 .support-btn-primary:hover:not(:disabled) {
   transform: translateY(-2px) !important;
-  box-shadow: 0 12px 35px rgba(255, 107, 157, 0.4) !important;
+  box-shadow: 0 12px 35px rgba(218, 165, 32, 0.5) !important;
 }
 
 .support-btn:disabled {

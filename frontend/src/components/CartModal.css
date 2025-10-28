@@ -1,4 +1,4 @@
-/* Cart Modal Styles */
+﻿/* Cart Modal Styles */
 .cart-modal-overlay {
   position: fixed;
   top: 0;
@@ -17,7 +17,7 @@
 .cart-modal {
   background: white;
   border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 60px rgba(218, 165, 32, 0.35);
   max-width: 600px;
   width: 100%;
   max-height: 90vh;
@@ -177,8 +177,8 @@
 }
 
 .qty-btn:hover:not(:disabled) {
-  background: #ff6b9d;
-  border-color: #ff6b9d;
+  background: #2d2d2d;
+  border-color: #2d2d2d;
   color: white;
 }
 
@@ -273,15 +273,15 @@
 }
 
 .continue-shopping-btn:hover {
-  border-color: #ff6b9d;
-  color: #ff6b9d;
+  border-color: #2d2d2d;
+  color: #2d2d2d;
 }
 
 .checkout-btn {
   flex: 2;
   padding: 12px 16px;
   border: none;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   color: white;
   border-radius: 8px;
   cursor: pointer;
@@ -292,7 +292,7 @@
 .checkout-btn:hover {
   background: linear-gradient(135deg, #ff5a8a, #fc6c96);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 8px 24px rgba(218, 165, 32, 0.4);
 }
 
 .checkout-btn:disabled {

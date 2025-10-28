@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../lib/convex'
 import ImageUpload from './ImageUpload'
@@ -679,7 +679,7 @@ const BlogManagement = ({ userEmail }) => {
         .form-group textarea:focus,
         .form-group select:focus {
           outline: none;
-          border-color: #ff6b9d;
+          border-color: #2d2d2d;
         }
 
         .checkbox-group {
@@ -718,7 +718,7 @@ const BlogManagement = ({ userEmail }) => {
         }
 
         .btn-primary {
-          background: linear-gradient(135deg, #ff6b9d, #667eea);
+          background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
           color: white;
         }
 
@@ -829,7 +829,7 @@ const BlogManagement = ({ userEmail }) => {
         }
 
         .featured-badge {
-          background: linear-gradient(135deg, #ff6b9d, #667eea);
+          background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
           color: white;
           padding: 4px 8px;
           border-radius: 12px;
@@ -915,7 +915,7 @@ const BlogManagement = ({ userEmail }) => {
 
         .tag {
           background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(102, 126, 234, 0.1));
-          color: #667eea;
+          color: #2d2d2d;
           padding: 2px 8px;
           border-radius: 10px;
           font-size: 0.75rem;
@@ -992,7 +992,7 @@ const BlogManagement = ({ userEmail }) => {
 
         .image-url-input input:focus {
           outline: none;
-          border-color: #ff6b9d;
+          border-color: #2d2d2d;
         }
 
         .url-examples {

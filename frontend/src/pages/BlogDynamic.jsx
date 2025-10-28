@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../lib/convex'
 
@@ -128,11 +128,11 @@ const BlogDynamic = () => {
                         }}
                       />
                     ) : (
-                      <div className="blog-image-placeholder" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '200px', background: 'linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(102, 126, 234, 0.1))', color: '#667eea'}}>
+                      <div className="blog-image-placeholder" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '200px', background: 'linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(102, 126, 234, 0.1))', color: '#2d2d2d'}}>
                         <span style={{fontSize: '4rem'}}>📝</span>
                       </div>
                     )}
-                    <div className="blog-image-fallback" style={{display: 'none', alignItems: 'center', justifyContent: 'center', height: '200px', background: 'linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(102, 126, 234, 0.1))', color: '#667eea'}}>
+                    <div className="blog-image-fallback" style={{display: 'none', alignItems: 'center', justifyContent: 'center', height: '200px', background: 'linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(102, 126, 234, 0.1))', color: '#2d2d2d'}}>
                       <span style={{fontSize: '4rem'}}>📝</span>
                     </div>
                   </div>
@@ -232,7 +232,7 @@ const BlogDynamic = () => {
         }
 
         .back-btn {
-          background: linear-gradient(135deg, #ff6b9d, #667eea);
+          background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
           color: white;
           border: none;
           padding: 12px 24px;
@@ -255,7 +255,7 @@ const BlogDynamic = () => {
         .blog-hero h1 {
           font-size: 3rem;
           margin: 0 0 15px 0;
-          background: linear-gradient(135deg, #ff6b9d, #667eea);
+          background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -308,7 +308,7 @@ const BlogDynamic = () => {
         }
 
         .filter-btn.active {
-          background: linear-gradient(135deg, #ff6b9d, #667eea);
+          background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
           color: white;
           border-color: rgba(255, 255, 255, 0.3);
         }
@@ -354,7 +354,7 @@ const BlogDynamic = () => {
         }
 
         .btn-primary {
-          background: linear-gradient(135deg, #ff6b9d, #667eea);
+          background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
           color: white;
           border: none;
           padding: 12px 24px;
@@ -394,7 +394,7 @@ const BlogDynamic = () => {
           left: 0;
           right: 0;
           height: 4px;
-          background: linear-gradient(135deg, #ff6b9d, #667eea);
+          background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
           transform: scaleX(0);
           transition: transform 0.3s ease;
         }
@@ -443,7 +443,7 @@ const BlogDynamic = () => {
         }
 
         .featured-badge {
-          background: linear-gradient(135deg, #ff6b9d, #667eea);
+          background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
           color: white;
         }
 
@@ -490,7 +490,7 @@ const BlogDynamic = () => {
 
         .tag {
           background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(102, 126, 234, 0.1));
-          color: #667eea;
+          color: #2d2d2d;
           padding: 4px 10px;
           border-radius: 12px;
           font-size: 0.8rem;
@@ -502,7 +502,7 @@ const BlogDynamic = () => {
         }
 
         .read-more-btn {
-          background: linear-gradient(135deg, #ff6b9d, #667eea);
+          background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
           color: white;
           border: none;
           padding: 12px 24px;

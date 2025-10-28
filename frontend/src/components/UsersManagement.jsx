@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../lib/convex'
 
@@ -132,7 +132,7 @@ const UsersManagement = () => {
       case 'particulier': return '#4CAF50'
       case 'professionnel': return '#2196F3'
       case 'grossiste': return '#FF9800'
-      case 'superadmin': return '#E91E63'
+      case 'superadmin': return '#2d2d2d'
       default: return '#757575'
     }
   }

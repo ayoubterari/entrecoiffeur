@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
@@ -79,7 +79,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
 
   // Prepare categories with "all" option
   const categories = [
-    { id: 'all', name: 'Tous', icon: '🛍️', color: '#ff6b9d' },
+    { id: 'all', name: 'Tous', icon: '🛍️', color: '#2d2d2d' },
     ...(categoriesData?.map(cat => ({
       id: cat._id,
       name: cat.name,
@@ -95,7 +95,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
       description: 'Jusqu\'à -50% sur une sélection de produits',
       buttonText: 'Découvrir',
       image: '❄️',
-      color: 'linear-gradient(135deg, #ff6b9d, #fd79a8)'
+      color: 'linear-gradient(135deg, #2d2d2d, #404040)'
     },
     {
       type: 'banner',
@@ -103,7 +103,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
       description: 'Les dernières tendances coiffure',
       buttonText: 'Voir tout',
       image: '✨',
-      color: 'linear-gradient(135deg, #e84393, #ffeaa7)'
+      color: 'linear-gradient(135deg, #2d2d2d, #808080)'
     },
     {
       type: 'banner',
@@ -111,7 +111,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
       description: 'Dès 50€ d\'achat partout en France',
       buttonText: 'Commander',
       image: '🚚',
-      color: 'linear-gradient(135deg, #fd79a8, #ff6b9d)'
+      color: 'linear-gradient(135deg, #404040, #2d2d2d)'
     }
   ]
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
@@ -266,7 +266,7 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
               disabled={!isAuthenticated || product.stock === 0}
               style={{
                 width: '100%',
-                background: 'linear-gradient(135deg, #ff6b9d 0%, #e91e63 50%, #c2185b 100%)',
+                background: 'linear-gradient(135deg, #2d2d2d 0%, #2d2d2d 50%, #2d2d2d 100%)',
                 color: 'white',
                 border: 'none',
                 borderRadius: '12px',

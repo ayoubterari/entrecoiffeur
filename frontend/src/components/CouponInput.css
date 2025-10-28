@@ -1,10 +1,10 @@
-/* Coupon Input Styles */
+﻿/* Coupon Input Styles */
 .coupon-input-container {
   background: white;
   border-radius: 16px;
   padding: 1.2rem;
   margin: 0.8rem 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(218, 165, 32, 0.2);
   border: 1px solid #e9ecef;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -19,7 +19,7 @@
   color: #2d3436;
   font-size: 1rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -58,8 +58,8 @@
 
 .coupon-input:focus {
   outline: none;
-  border-color: #ff6b9d;
-  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+  border-color: #2d2d2d;
+  box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.15);
   transform: translateY(-1px);
 }
 
@@ -71,14 +71,14 @@
 
 .apply-coupon-btn {
   padding: 0.7rem 1.2rem;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   color: white;
   border: none;
   border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 3px 12px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 3px 12px rgba(218, 165, 32, 0.4);
   white-space: nowrap;
   min-width: 80px;
   display: flex;
@@ -88,14 +88,14 @@
 
 .apply-coupon-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+  box-shadow: 0 8px 25px rgba(218, 165, 32, 0.5);
 }
 
 .apply-coupon-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
-  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.2);
+  box-shadow: 0 4px 15px rgba(218, 165, 32, 0.25);
 }
 
 .loading-spinner {
@@ -291,7 +291,7 @@
 
 .coupon-input-container:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px rgba(218, 165, 32, 0.3);
 }
 
 /* Floating animation for suggestions */

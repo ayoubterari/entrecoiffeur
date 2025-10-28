@@ -1,7 +1,7 @@
-/* Coupons Management Styles */
+﻿/* Coupons Management Styles */
 .coupons-management {
   padding: 2rem;
-  background: linear-gradient(135deg, #ffeaa7 0%, #fd79a8 100%);
+  background: linear-gradient(135deg, #808080 0%, #404040 100%);
   min-height: 100vh;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -16,7 +16,7 @@
   backdrop-filter: blur(10px);
   padding: 1.5rem 2rem;
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(218, 165, 32, 0.2);
 }
 
 .header-title h2 {
@@ -24,7 +24,7 @@
   color: #2d3436;
   font-size: 2rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -40,7 +40,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   color: white;
   border: none;
   padding: 1rem 1.5rem;
@@ -48,12 +48,12 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 4px 15px rgba(218, 165, 32, 0.4);
 }
 
 .create-coupon-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+  box-shadow: 0 8px 25px rgba(218, 165, 32, 0.5);
 }
 
 /* Alerts */
@@ -96,7 +96,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(218, 165, 32, 0.2);
   transition: transform 0.3s ease;
 }
 
@@ -133,7 +133,7 @@
   backdrop-filter: blur(10px);
   padding: 1.5rem;
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(218, 165, 32, 0.2);
 }
 
 .search-box {
@@ -154,8 +154,8 @@
 
 .search-box input:focus {
   outline: none;
-  border-color: #ff6b9d;
-  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+  border-color: #2d2d2d;
+  box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.15);
 }
 
 .search-icon {
@@ -184,12 +184,12 @@
 }
 
 .filter-buttons button:hover {
-  border-color: #ff6b9d;
-  color: #ff6b9d;
+  border-color: #2d2d2d;
+  color: #2d2d2d;
 }
 
 .filter-buttons button.active {
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   color: white;
   border-color: transparent;
 }
@@ -200,7 +200,7 @@
   backdrop-filter: blur(10px);
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(218, 165, 32, 0.2);
 }
 
 .coupons-table {
@@ -209,7 +209,7 @@
 }
 
 .coupons-table th {
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   color: white;
   padding: 1rem;
   text-align: left;
@@ -231,7 +231,7 @@
 
 .coupon-code strong {
   font-family: 'Monaco', 'Menlo', monospace;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -379,7 +379,7 @@
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 60px rgba(218, 165, 32, 0.45);
 }
 
 .modal-header {
@@ -388,7 +388,7 @@
   align-items: center;
   padding: 1.5rem 2rem;
   border-bottom: 1px solid #f1f3f4;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   color: white;
   border-radius: 20px 20px 0 0;
 }
@@ -456,8 +456,8 @@
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #ff6b9d;
-  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+  border-color: #2d2d2d;
+  box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.15);
 }
 
 .form-group textarea {
@@ -492,19 +492,19 @@
 
 .submit-btn {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   color: white;
   border: none;
   border-radius: 25px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 4px 15px rgba(218, 165, 32, 0.4);
 }
 
 .submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+  box-shadow: 0 8px 25px rgba(218, 165, 32, 0.5);
 }
 
 .submit-btn:disabled {

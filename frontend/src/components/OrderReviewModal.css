@@ -1,4 +1,4 @@
-/* Order Review Modal Styles */
+﻿/* Order Review Modal Styles */
 .review-modal-overlay {
   position: fixed;
   top: 0;
@@ -21,8 +21,8 @@
     rgba(255, 255, 255, 0.9) 100%);
   backdrop-filter: blur(20px);
   border-radius: 25px;
-  border: 2px solid rgba(255, 107, 157, 0.2);
-  box-shadow: 0 25px 50px rgba(255, 107, 157, 0.15);
+  border: 2px solid rgba(218, 165, 32, 0.25);
+  box-shadow: 0 25px 50px rgba(218, 165, 32, 0.2);
   max-width: 600px;
   width: 100%;
   max-height: 90vh;
@@ -35,7 +35,7 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  background: rgba(255, 107, 157, 0.1);
+  background: rgba(218, 165, 32, 0.15);
   border: none;
   border-radius: 50%;
   width: 40px;
@@ -44,27 +44,27 @@
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  color: #ff6b9d;
+  color: #2d2d2d;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 10;
 }
 
 .review-modal-close:hover {
-  background: rgba(255, 107, 157, 0.2);
+  background: rgba(218, 165, 32, 0.25);
   transform: scale(1.1);
 }
 
 .review-modal-header {
   padding: 2rem 2rem 1rem;
   text-align: center;
-  border-bottom: 2px solid rgba(255, 107, 157, 0.1);
+  border-bottom: 2px solid rgba(218, 165, 32, 0.15);
 }
 
 .review-modal-header h2 {
   font-size: 1.8rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -82,7 +82,7 @@
   background: rgba(255, 107, 157, 0.05);
   padding: 1rem;
   border-radius: 15px;
-  border: 1px solid rgba(255, 107, 157, 0.1);
+  border: 1px solid rgba(218, 165, 32, 0.15);
 }
 
 .product-image {
@@ -90,7 +90,7 @@
   height: 60px;
   border-radius: 10px;
   object-fit: cover;
-  border: 2px solid rgba(255, 107, 157, 0.2);
+  border: 2px solid rgba(218, 165, 32, 0.25);
 }
 
 .product-details h3 {
@@ -191,7 +191,7 @@
   margin-top: 0.75rem;
   font-size: 1rem;
   font-weight: 500;
-  color: #ff6b9d;
+  color: #2d2d2d;
 }
 
 /* Detailed Ratings */
@@ -200,7 +200,7 @@
   padding: 1.5rem;
   background: rgba(255, 107, 157, 0.03);
   border-radius: 15px;
-  border: 1px solid rgba(255, 107, 157, 0.1);
+  border: 1px solid rgba(218, 165, 32, 0.15);
 }
 
 .detailed-ratings h4 {
@@ -252,7 +252,7 @@
 .comment-textarea {
   width: 100%;
   padding: 1rem;
-  border: 2px solid rgba(255, 107, 157, 0.2);
+  border: 2px solid rgba(218, 165, 32, 0.25);
   border-radius: 12px;
   font-size: 1rem;
   font-family: inherit;
@@ -263,8 +263,8 @@
 
 .comment-textarea:focus {
   outline: none;
-  border-color: #ff6b9d;
-  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+  border-color: #2d2d2d;
+  box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.15);
 }
 
 .character-count {
@@ -292,7 +292,7 @@
 .recommendation-btn {
   flex: 1;
   padding: 1rem;
-  border: 2px solid rgba(255, 107, 157, 0.2);
+  border: 2px solid rgba(218, 165, 32, 0.25);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.8);
   font-size: 1rem;
@@ -303,7 +303,7 @@
 }
 
 .recommendation-btn:hover {
-  border-color: #ff6b9d;
+  border-color: #2d2d2d;
   transform: translateY(-2px);
 }
 
@@ -349,10 +349,10 @@
 
 .cancel-btn {
   padding: 0.75rem 1.5rem;
-  border: 2px solid rgba(255, 107, 157, 0.3);
+  border: 2px solid rgba(218, 165, 32, 0.4);
   border-radius: 25px;
   background: rgba(255, 255, 255, 0.8);
-  color: #ff6b9d;
+  color: #2d2d2d;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -360,7 +360,7 @@
 }
 
 .cancel-btn:hover:not(:disabled) {
-  background: rgba(255, 107, 157, 0.1);
+  background: rgba(218, 165, 32, 0.15);
   transform: translateY(-2px);
 }
 
@@ -368,13 +368,13 @@
   padding: 0.75rem 2rem;
   border: none;
   border-radius: 25px;
-  background: linear-gradient(135deg, #ff6b9d, #fd79a8);
+  background: linear-gradient(135deg, #2d2d2d, #404040);
   color: white;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 25px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 8px 25px rgba(218, 165, 32, 0.4);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -382,7 +382,7 @@
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(255, 107, 157, 0.4);
+  box-shadow: 0 12px 35px rgba(218, 165, 32, 0.5);
 }
 
 .submit-btn:disabled {

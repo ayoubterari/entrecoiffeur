@@ -1,4 +1,4 @@
-/* Smart Search Component Styles - LeBonCoin Style */
+﻿/* Smart Search Component Styles - LeBonCoin Style */
 .smart-search {
   position: relative;
   width: 100%;
@@ -31,8 +31,8 @@
 
 .search-input-container:focus-within {
   background: #ffffff;
-  border-color: #ff6b9d;
-  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+  border-color: #2d2d2d;
+  box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.15);
 }
 
 .search-icon {
@@ -40,7 +40,7 @@
   right: 8px;
   width: 44px;
   height: 44px;
-  background: linear-gradient(135deg, #ff6b9d 0%, #ff8fb3 100%);
+  background: linear-gradient(135deg, #2d2d2d 0%, #555555 100%);
   border: none;
   border-radius: 6px;
   display: flex;
@@ -73,7 +73,7 @@
   border: none;
   background: transparent;
   font-size: 15px;
-  color: #1a1a1a;
+  color: #404040;
   outline: none;
   font-weight: 400;
   height: 100%;
@@ -102,13 +102,13 @@
 }
 
 .clear-button:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: #1a1a1a;
+  background: rgba(218, 165, 32, 0.1);
+  color: #404040;
 }
 
 .search-button {
   padding: 0;
-  background: #ff6b9d;
+  background: #2d2d2d;
   border: none;
   color: white;
   cursor: pointer;
@@ -125,7 +125,7 @@
 }
 
 .search-button:hover {
-  background: #e84393;
+  background: #2d2d2d;
   transform: scale(1.05);
 }
 
@@ -142,7 +142,7 @@
   background: #ffffff;
   border: 1px solid #e6e6e6;
   border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(218, 165, 32, 0.2);
   z-index: 1000;
   max-height: 480px;
   overflow-y: auto;
@@ -272,7 +272,7 @@
 .product-name {
   font-size: 14px;
   font-weight: 400;
-  color: #1a1a1a;
+  color: #404040;
   line-height: 1.4;
   white-space: nowrap;
   overflow: hidden;
@@ -281,7 +281,7 @@
 
 .product-price {
   font-size: 14px;
-  color: #1a1a1a;
+  color: #404040;
   font-weight: 600;
 }
 
@@ -372,7 +372,7 @@
 /* Search Highlighting */
 .search-highlight {
   background: transparent;
-  color: #1a1a1a;
+  color: #404040;
   font-weight: 600;
 }
 
@@ -432,7 +432,7 @@
 
 .no-results-suggestions li:before {
   content: '•';
-  color: #ff6b9d;
+  color: #2d2d2d;
   position: absolute;
   left: 8px;
   font-weight: bold;
@@ -538,13 +538,13 @@
 }
 
 .search-results::-webkit-scrollbar-thumb {
-  background: rgba(255, 107, 157, 0.2);
+  background: rgba(218, 165, 32, 0.25);
   border-radius: 4px;
   border: 2px solid #fafafa;
 }
 
 .search-results::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 107, 157, 0.4);
+  background: rgba(218, 165, 32, 0.5);
 }
 
 /* Loading Animation */
