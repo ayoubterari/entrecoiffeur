@@ -515,6 +515,9 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
           Retour au marketplace
         </button>
         <h1 className="dashboard-title">Mon Dashboard</h1>
+        <button className="back-btn" onClick={() => navigate('/dashboard-v2')} style={{ marginLeft: 'auto' }}>
+          Essayer Dashboard V2 🚀
+        </button>
       </div>
 
       <div className="dashboard-content">

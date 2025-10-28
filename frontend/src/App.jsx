@@ -4,6 +4,7 @@ import { useQuery, useMutation } from 'convex/react'
 import { api } from './lib/convex'
 import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
+import DashboardV2 from './pages/DashboardV2'
 import Admin from './pages/Admin'
 import ProductDetail from './pages/ProductDetail'
 import SellerStore from './pages/SellerStore'
@@ -220,9 +221,28 @@ function AppContent() {
             } 
           />
           
-          {/* Dashboard utilisateur */}
+          {/* Dashboard utilisateur - Version 2 (principale) */}
           <Route 
             path="/dashboard" 
+            element={
+              isAuthenticated ? (
+                <DashboardV2 
+                  userEmail={userEmail}
+                  userFirstName={userFirstName || ''}
+                  userLastName={userLastName || ''}
+                  userType={localStorage.getItem('userType') || ''}
+                  companyName={localStorage.getItem('companyName') || ''}
+                  userId={userId}
+                />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            } 
+          />
+
+          {/* Ancien Dashboard - Accessible pour référence */}
+          <Route 
+            path="/dashboard-old" 
             element={
               isAuthenticated ? (
                 <Dashboard 
