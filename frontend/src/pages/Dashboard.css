@@ -4,7 +4,7 @@
 .group-coupon-section {
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(218, 165, 32, 0.15);
+  border-top: 1px solid rgba(192, 180, 165, 0.15);
 }
 
 .group-coupon-section h3 {
@@ -21,12 +21,12 @@
   background: linear-gradient(135deg, 
     rgba(255, 107, 157, 0.05) 0%, 
     rgba(253, 121, 168, 0.02) 100%);
-  border: 1px solid rgba(218, 165, 32, 0.25);
+  border: 1px solid rgba(192, 180, 165, 0.25);
   border-radius: 10px;
   padding: 0.75rem;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(218, 165, 32, 0.15);
+  box-shadow: 0 4px 12px rgba(192, 180, 165, 0.15);
 }
 
 .group-coupon-card::before {
@@ -72,13 +72,13 @@
 }
 
 .group-badge {
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
   color: white;
   padding: 0.25rem 0.5rem;
   border-radius: 12px;
   font-size: 0.65rem;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(218, 165, 32, 0.4);
+  box-shadow: 0 2px 8px rgba(192, 180, 165, 0.4);
 }
 
 .coupon-details {
@@ -106,7 +106,7 @@
 }
 
 .coupon-code {
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
   color: white;
   padding: 0.4rem 0.75rem;
   border-radius: 6px;
@@ -116,12 +116,12 @@
   letter-spacing: 1px;
   flex: 1;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(218, 165, 32, 0.4);
+  box-shadow: 0 2px 8px rgba(192, 180, 165, 0.4);
 }
 
 .copy-coupon-btn {
-  background: rgba(218, 165, 32, 0.15);
-  border: 1px solid rgba(218, 165, 32, 0.4);
+  background: rgba(192, 180, 165, 0.15);
+  border: 1px solid rgba(192, 180, 165, 0.4);
   border-radius: 5px;
   width: 28px;
   height: 28px;
@@ -135,7 +135,7 @@
 }
 
 .copy-coupon-btn:hover {
-  background: rgba(218, 165, 32, 0.25);
+  background: rgba(192, 180, 165, 0.25);
   transform: scale(1.05);
 }
 
@@ -160,16 +160,16 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  background: rgba(218, 165, 32, 0.15);
+  background: rgba(192, 180, 165, 0.15);
   padding: 0.4rem 0.75rem;
   border-radius: 8px;
-  border: 1px solid rgba(218, 165, 32, 0.25);
+  border: 1px solid rgba(192, 180, 165, 0.25);
 }
 
 .discount-value {
   font-size: 1.1rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -216,7 +216,7 @@
 }
 
 .use-coupon-btn {
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
   color: white;
   border: none;
   border-radius: 12px;
@@ -228,12 +228,12 @@
   align-items: center;
   gap: 0.25rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+  box-shadow: 0 4px 12px rgba(192, 180, 165, 0.4);
 }
 
 .use-coupon-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(218, 165, 32, 0.5);
+  box-shadow: 0 6px 18px rgba(192, 180, 165, 0.5);
 }
 
 @keyframes shimmer {
@@ -286,7 +286,7 @@
 .coupons-header h2 {
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -303,13 +303,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
   color: white;
   padding: 0.4rem 0.75rem;
   border-radius: 12px;
   font-weight: 600;
   font-size: 0.75rem;
-  box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+  box-shadow: 0 4px 12px rgba(192, 180, 165, 0.4);
   margin: 0 auto;
 }
 
@@ -322,12 +322,12 @@
     rgba(255, 255, 255, 0.95) 0%, 
     rgba(255, 255, 255, 0.9) 100%);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(218, 165, 32, 0.25);
+  border: 1px solid rgba(192, 180, 165, 0.25);
   border-radius: 12px;
   padding: 1rem;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 18px rgba(218, 165, 32, 0.2);
+  box-shadow: 0 8px 18px rgba(192, 180, 165, 0.2);
   max-width: 500px;
   margin: 0 auto;
 }
@@ -360,13 +360,13 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  background: rgba(218, 165, 32, 0.15);
+  background: rgba(192, 180, 165, 0.15);
   padding: 0.25rem 0.5rem;
   border-radius: 8px;
   font-weight: 600;
   font-size: 0.7rem;
   color: #2d2d2d;
-  border: 1px solid rgba(218, 165, 32, 0.25);
+  border: 1px solid rgba(192, 180, 165, 0.25);
 }
 
 .badge-icon {
@@ -408,7 +408,7 @@
 }
 
 .code-text {
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -416,14 +416,14 @@
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 1.5px;
-  box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+  box-shadow: 0 4px 12px rgba(192, 180, 165, 0.4);
   min-width: 100px;
   text-align: center;
 }
 
 .copy-code-btn {
-  background: rgba(218, 165, 32, 0.15);
-  border: 1px solid rgba(218, 165, 32, 0.4);
+  background: rgba(192, 180, 165, 0.15);
+  border: 1px solid rgba(192, 180, 165, 0.4);
   border-radius: 6px;
   padding: 0.4rem 0.75rem;
   cursor: pointer;
@@ -437,7 +437,7 @@
 }
 
 .copy-code-btn:hover {
-  background: rgba(218, 165, 32, 0.25);
+  background: rgba(192, 180, 165, 0.25);
   transform: translateY(-1px);
 }
 
@@ -455,7 +455,7 @@
   display: block;
   font-size: 1.8rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -501,7 +501,7 @@
   background: rgba(255, 107, 157, 0.05);
   padding: 0.5rem;
   border-radius: 6px;
-  border: 1px solid rgba(218, 165, 32, 0.15);
+  border: 1px solid rgba(192, 180, 165, 0.15);
 }
 
 .detail-icon {
@@ -536,7 +536,7 @@
 }
 
 .use-now-btn {
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
   color: white;
   border: none;
   border-radius: 12px;
@@ -548,7 +548,7 @@
   align-items: center;
   gap: 0.4rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+  box-shadow: 0 4px 12px rgba(192, 180, 165, 0.4);
   flex: 1;
   justify-content: center;
   max-width: 140px;
@@ -556,13 +556,13 @@
 
 .use-now-btn:hover {
   transform: translateY(-1.5px);
-  box-shadow: 0 8px 18px rgba(218, 165, 32, 0.5);
+  box-shadow: 0 8px 18px rgba(192, 180, 165, 0.5);
 }
 
 .share-coupon-btn {
-  background: rgba(218, 165, 32, 0.15);
+  background: rgba(192, 180, 165, 0.15);
   color: #2d2d2d;
-  border: 1px solid rgba(218, 165, 32, 0.4);
+  border: 1px solid rgba(192, 180, 165, 0.4);
   border-radius: 12px;
   padding: 0.5rem 1rem;
   font-size: 0.8rem;
@@ -578,7 +578,7 @@
 }
 
 .share-coupon-btn:hover {
-  background: rgba(218, 165, 32, 0.25);
+  background: rgba(192, 180, 165, 0.25);
   transform: translateY(-1px);
 }
 
@@ -590,7 +590,7 @@
 .coupon-loading .loading-spinner {
   width: 30px;
   height: 30px;
-  border: 2px solid rgba(218, 165, 32, 0.25);
+  border: 2px solid rgba(192, 180, 165, 0.25);
   border-top: 2px solid #2d2d2d;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -626,7 +626,7 @@
     rgba(255, 255, 255, 0.9) 0%, 
     rgba(255, 255, 255, 0.8) 100%);
   backdrop-filter: blur(5px);
-  border: 1px solid rgba(218, 165, 32, 0.15);
+  border: 1px solid rgba(192, 180, 165, 0.15);
   border-radius: 10px;
   padding: 1rem;
   text-align: center;
@@ -637,8 +637,8 @@
 
 .benefit-card:hover {
   transform: translateY(-2.5px);
-  box-shadow: 0 8px 18px rgba(218, 165, 32, 0.2);
-  border-color: rgba(218, 165, 32, 0.4);
+  box-shadow: 0 8px 18px rgba(192, 180, 165, 0.2);
+  border-color: rgba(192, 180, 165, 0.4);
 }
 
 .benefit-card::before {
@@ -648,7 +648,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
 }
 
 .benefit-icon {
@@ -732,7 +732,7 @@
   background: linear-gradient(135deg, 
     rgba(255, 107, 157, 0.03) 0%, 
     rgba(253, 121, 168, 0.01) 100%);
-  border: 1px solid rgba(218, 165, 32, 0.15);
+  border: 1px solid rgba(192, 180, 165, 0.15);
   border-radius: 10px;
   position: relative;
   overflow: hidden;
@@ -745,7 +745,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
 }
 
 .pending-reviews-section h3 {
@@ -775,7 +775,7 @@
     rgba(255, 255, 255, 0.9) 0%, 
     rgba(255, 255, 255, 0.8) 100%);
   backdrop-filter: blur(5px);
-  border: 1px solid rgba(218, 165, 32, 0.2);
+  border: 1px solid rgba(192, 180, 165, 0.2);
   border-radius: 8px;
   padding: 0.75rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -785,8 +785,8 @@
 
 .pending-review-card:hover {
   transform: translateY(-1.5px);
-  box-shadow: 0 8px 18px rgba(218, 165, 32, 0.2);
-  border-color: rgba(218, 165, 32, 0.4);
+  box-shadow: 0 8px 18px rgba(192, 180, 165, 0.2);
+  border-color: rgba(192, 180, 165, 0.4);
 }
 
 .pending-review-card::before {
@@ -856,7 +856,7 @@
   height: 35px;
   border-radius: 5px;
   object-fit: cover;
-  border: 1px solid rgba(218, 165, 32, 0.25);
+  border: 1px solid rgba(192, 180, 165, 0.25);
 }
 
 .product-details h4 {
@@ -877,7 +877,7 @@
 }
 
 .review-btn {
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
   color: white;
   border: none;
   border-radius: 12px;
@@ -886,7 +886,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(218, 165, 32, 0.4);
+  box-shadow: 0 2px 8px rgba(192, 180, 165, 0.4);
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -894,7 +894,7 @@
 
 .review-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(218, 165, 32, 0.5);
+  box-shadow: 0 4px 12px rgba(192, 180, 165, 0.5);
 }
 
 .review-btn:active {
@@ -972,7 +972,7 @@
   position: absolute;
   top: -3px;
   right: -3px;
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
   color: white;
   border-radius: 50%;
   width: 14px;
@@ -1014,13 +1014,13 @@
 }
 
 .unread-count-badge {
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
   color: white;
   padding: 0.25rem 0.5rem;
   border-radius: 10px;
   font-size: 0.7rem;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(218, 165, 32, 0.4);
+  box-shadow: 0 2px 8px rgba(192, 180, 165, 0.4);
 }
 
 /* Conversations List */
@@ -1028,8 +1028,8 @@
   background: white;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 5px 20px rgba(218, 165, 32, 0.15);
-  border: 1px solid rgba(218, 165, 32, 0.1);
+  box-shadow: 0 5px 20px rgba(192, 180, 165, 0.15);
+  border: 1px solid rgba(192, 180, 165, 0.1);
 }
 
 /* Empty State */
@@ -1069,7 +1069,7 @@
   display: flex;
   align-items: center;
   padding: 0.75rem;
-  border-bottom: 1px solid rgba(218, 165, 32, 0.1);
+  border-bottom: 1px solid rgba(192, 180, 165, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
@@ -1095,7 +1095,7 @@
   top: 0;
   bottom: 0;
   width: 2px;
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
 }
 
 /* Conversation Avatar */
@@ -1108,14 +1108,14 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-weight: 700;
   font-size: 0.85rem;
-  box-shadow: 0 2px 8px rgba(218, 165, 32, 0.4);
+  box-shadow: 0 2px 8px rgba(192, 180, 165, 0.4);
 }
 
 .unread-dot {
@@ -1190,7 +1190,7 @@
 .user-role {
   font-size: 0.65rem;
   color: #636e72;
-  background: rgba(218, 165, 32, 0.1);
+  background: rgba(192, 180, 165, 0.1);
   padding: 0.15rem 0.3rem;
   border-radius: 5px;
   white-space: nowrap;
@@ -1202,8 +1202,8 @@
 }
 
 .reply-btn {
-  background: rgba(218, 165, 32, 0.15);
-  border: 1px solid rgba(218, 165, 32, 0.25);
+  background: rgba(192, 180, 165, 0.15);
+  border: 1px solid rgba(192, 180, 165, 0.25);
   border-radius: 50%;
   width: 26px;
   height: 26px;
@@ -1216,8 +1216,8 @@
 }
 
 .reply-btn:hover {
-  background: rgba(218, 165, 32, 0.25);
-  border-color: rgba(218, 165, 32, 0.5);
+  background: rgba(192, 180, 165, 0.25);
+  border-color: rgba(192, 180, 165, 0.5);
   transform: scale(1.1);
 }
 

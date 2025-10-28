@@ -3,6 +3,7 @@ import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
 import Sidebar from '../components/dashboardv2/Sidebar'
 import Header from '../components/dashboardv2/Header'
+import ProfileModule from '../components/dashboardv2/ProfileModule'
 import PurchasesModule from '../components/dashboardv2/PurchasesModule'
 import ProductsModule from '../components/dashboardv2/ProductsModule'
 import OrdersModule from '../components/dashboardv2/OrdersModule'
@@ -42,87 +43,20 @@ const DashboardV2 = ({ userEmail, userFirstName, userLastName, userId, userType,
       <div className="flex flex-1 flex-col overflow-hidden md:ml-64">
         {/* Header - Fixed at top */}
         <div className="fixed right-0 top-0 z-30 w-full md:w-[calc(100%-16rem)] bg-background border-b">
-          <Header userFirstName={userFirstName} />
+          <Header userFirstName={userFirstName} userId={userId} />
         </div>
         
         {/* Main content with top padding for fixed header */}
         <main className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 mt-16">
           {activeTab === 'profile' && (
-            <div className="space-y-4 sm:space-y-6">
-              <div>
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Profil</h2>
-                <p className="text-sm sm:text-base text-muted-foreground">
-                  Gérez vos informations personnelles
-                </p>
-              </div>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Informations du Profil</CardTitle>
-                  <CardDescription>
-                    Vos informations personnelles (lecture seule pour le moment)
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Prénom</label>
-                      <input
-                        type="text"
-                        value={userFirstName || ''}
-                        readOnly
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Nom</label>
-                      <input
-                        type="text"
-                        value={userLastName || ''}
-                        readOnly
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Email</label>
-                    <input
-                      type="email"
-                      value={userEmail || ''}
-                      readOnly
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Type de compte</label>
-                    <input
-                      type="text"
-                      value={
-                        userType === 'particulier' ? '👤 Particulier' :
-                        userType === 'professionnel' ? '💼 Professionnel' :
-                        userType === 'grossiste' ? '🏢 Grossiste' : 'Non défini'
-                      }
-                      readOnly
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                  </div>
-
-                  {companyName && (
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Entreprise</label>
-                      <input
-                        type="text"
-                        value={companyName}
-                        readOnly
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                      />
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+            <ProfileModule 
+              userId={userId}
+              userEmail={userEmail}
+              userFirstName={userFirstName}
+              userLastName={userLastName}
+              userType={userType}
+              companyName={companyName}
+            />
           )}
 
           {activeTab === 'purchases' && (

@@ -1083,10 +1083,18 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                           required
                         >
                           <option value="">Sélectionner une catégorie</option>
-                          {categories?.map((cat) => (
-                            <option key={cat._id} value={cat._id}>
-                              {cat.icon} {cat.name}
-                            </option>
+                          {categories?.filter(cat => !cat.parentCategoryId).map((cat) => (
+                            <React.Fragment key={cat._id}>
+                              <option value={cat._id}>
+                                {cat.icon} {cat.name}
+                              </option>
+                              {/* Sous-catégories */}
+                              {categories?.filter(subCat => subCat.parentCategoryId === cat._id).map((subCat) => (
+                                <option key={subCat._id} value={subCat._id}>
+                                  &nbsp;&nbsp;&nbsp;↳ {subCat.icon} {subCat.name}
+                                </option>
+                              ))}
+                            </React.Fragment>
                           ))}
                         </select>
                       </div>
@@ -1217,10 +1225,18 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                               required
                             >
                               <option value="">Sélectionner une catégorie</option>
-                              {categories?.map((cat) => (
-                                <option key={cat._id} value={cat._id}>
-                                  {cat.icon} {cat.name}
-                                </option>
+                              {categories?.filter(cat => !cat.parentCategoryId).map((cat) => (
+                                <React.Fragment key={cat._id}>
+                                  <option value={cat._id}>
+                                    {cat.icon} {cat.name}
+                                  </option>
+                                  {/* Sous-catégories */}
+                                  {categories?.filter(subCat => subCat.parentCategoryId === cat._id).map((subCat) => (
+                                    <option key={subCat._id} value={subCat._id}>
+                                      &nbsp;&nbsp;&nbsp;↳ {subCat.icon} {subCat.name}
+                                    </option>
+                                  ))}
+                                </React.Fragment>
                               ))}
                             </select>
                           </div>

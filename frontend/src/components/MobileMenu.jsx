@@ -1,5 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQuery } from 'convex/react'
+import { api } from '../lib/convex'
 import styles from './MobileMenu.module.css'
 
 const MobileMenu = ({ 
@@ -12,9 +14,17 @@ const MobileMenu = ({
   favoritesCount, 
   cartCount,
   userFirstName,
+  userId,
   onShowLogin
 }) => {
   const navigate = useNavigate()
+  
+  // Get user data for avatar
+  const userData = useQuery(api.auth.getUserById, userId ? { userId } : "skip")
+  const avatarUrl = useQuery(
+    api.files.getFileUrl,
+    userData?.avatar ? { storageId: userData.avatar } : "skip"
+  )
 
   if (!isOpen) return null
 
@@ -66,9 +76,17 @@ const MobileMenu = ({
               {/* Profil */}
               <button className={styles.menuItem} onClick={handleProfileClick}>
                 <div className={styles.menuIcon}>
-                  <div className={styles.userAvatar}>
-                    {userFirstName ? userFirstName.charAt(0).toUpperCase() : 'U'}
-                  </div>
+                  {avatarUrl ? (
+                    <img 
+                      src={avatarUrl} 
+                      alt="Photo de profil"
+                      className={styles.userAvatarImage}
+                    />
+                  ) : (
+                    <div className={styles.userAvatar}>
+                      {userFirstName ? userFirstName.charAt(0).toUpperCase() : 'U'}
+                    </div>
+                  )}
                 </div>
                 <span className={styles.menuText}>Profil</span>
                 <span className={styles.menuArrow}>›</span>

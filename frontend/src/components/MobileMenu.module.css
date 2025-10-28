@@ -1,4 +1,4 @@
-﻿/* ============================================
+/* ============================================
    MOBILE MENU POPUP
    ============================================ */
 
@@ -34,7 +34,7 @@
   height: 100dvh;
   background: #ffffff;
   z-index: 9999;
-  box-shadow: 4px 0 24px rgba(218, 165, 32, 0.3);
+  box-shadow: 4px 0 24px rgba(192, 180, 165, 0.3);
   animation: slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
@@ -55,7 +55,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid rgba(218, 165, 32, 0.15);
+  border-bottom: 1px solid rgba(192, 180, 165, 0.15);
   background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
   color: white;
 }
@@ -137,7 +137,7 @@
   justify-content: center;
   font-size: 1.5rem;
   flex-shrink: 0;
-  background: rgba(218, 165, 32, 0.15);
+  background: rgba(192, 180, 165, 0.15);
   border-radius: 0.75rem;
 }
 
@@ -152,7 +152,15 @@
   justify-content: center;
   font-weight: 700;
   font-size: 1rem;
-  box-shadow: 0 2px 8px rgba(218, 165, 32, 0.4);
+  box-shadow: 0 2px 8px rgba(192, 180, 165, 0.4);
+}
+
+.userAvatarImage {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(192, 180, 165, 0.4);
 }
 
 .menuText {
@@ -178,12 +186,12 @@
   font-weight: 700;
   min-width: 1.5rem;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(218, 165, 32, 0.4);
+  box-shadow: 0 2px 4px rgba(192, 180, 165, 0.4);
 }
 
 .menuDivider {
   height: 1px;
-  background: rgba(218, 165, 32, 0.15);
+  background: rgba(192, 180, 165, 0.15);
   margin: 0.5rem 1.5rem;
 }
 
@@ -233,18 +241,18 @@
   transition: all 0.3s ease;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+  box-shadow: 0 4px 12px rgba(192, 180, 165, 0.4);
 }
 
 .authButton:active {
   transform: translateY(2px);
-  box-shadow: 0 2px 8px rgba(218, 165, 32, 0.4);
+  box-shadow: 0 2px 8px rgba(192, 180, 165, 0.4);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .authButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(218, 165, 32, 0.5);
+    box-shadow: 0 6px 16px rgba(192, 180, 165, 0.5);
   }
 }
 

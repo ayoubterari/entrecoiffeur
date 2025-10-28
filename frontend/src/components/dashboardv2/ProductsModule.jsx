@@ -7,7 +7,6 @@ import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Textarea } from '../ui/textarea'
-import { Select } from '../ui/select'
 import { Checkbox } from '../ui/checkbox'
 import { Badge } from '../ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
@@ -34,6 +33,7 @@ const ProductsModule = ({ userId, userType }) => {
     price: '',
     originalPrice: '',
     categoryId: '',
+    parentCategoryId: '', // Catégorie principale
     stock: '',
     tags: '',
     featured: false,
@@ -103,6 +103,7 @@ const ProductsModule = ({ userId, userType }) => {
       price: '',
       originalPrice: '',
       categoryId: '',
+      parentCategoryId: '',
       stock: '',
       tags: '',
       featured: false,
@@ -124,12 +125,15 @@ const ProductsModule = ({ userId, userType }) => {
     try {
       const imageStorageIds = productImages.map(img => img.storageId)
       
+      // Utiliser la sous-catégorie si sélectionnée, sinon la catégorie principale
+      const finalCategoryId = productForm.categoryId || productForm.parentCategoryId
+      
       await createProduct({
         name: productForm.name,
         description: productForm.description,
         price: parseFloat(productForm.price),
         originalPrice: productForm.originalPrice ? parseFloat(productForm.originalPrice) : undefined,
-        categoryId: productForm.categoryId,
+        categoryId: finalCategoryId,
         sellerId: userId,
         stock: parseInt(productForm.stock),
         tags: productForm.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
@@ -149,12 +153,18 @@ const ProductsModule = ({ userId, userType }) => {
   // Handle edit product
   const handleEditClick = (product) => {
     setEditingProduct(product)
+    
+    // Trouver la catégorie du produit pour déterminer si c'est une sous-catégorie
+    const productCategory = categories?.find(cat => cat._id === product.categoryId)
+    const isSubcategory = productCategory?.parentCategoryId
+    
     setProductForm({
       name: product.name,
       description: product.description,
       price: product.price.toString(),
       originalPrice: product.originalPrice?.toString() || '',
-      categoryId: product.categoryId,
+      categoryId: isSubcategory ? product.categoryId : '',
+      parentCategoryId: isSubcategory ? productCategory.parentCategoryId : product.categoryId,
       stock: product.stock.toString(),
       tags: product.tags?.join(', ') || '',
       featured: product.featured || false,
@@ -181,13 +191,16 @@ const ProductsModule = ({ userId, userType }) => {
     try {
       const imageStorageIds = productImages.map(img => img.storageId)
       
+      // Utiliser la sous-catégorie si sélectionnée, sinon la catégorie principale
+      const finalCategoryId = productForm.categoryId || productForm.parentCategoryId
+      
       await updateProduct({
         productId: editingProduct._id,
         name: productForm.name,
         description: productForm.description,
         price: parseFloat(productForm.price),
         originalPrice: productForm.originalPrice ? parseFloat(productForm.originalPrice) : undefined,
-        categoryId: productForm.categoryId,
+        categoryId: finalCategoryId,
         stock: parseInt(productForm.stock),
         tags: productForm.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
         images: imageStorageIds,
@@ -462,21 +475,48 @@ const ProductsModule = ({ userId, userType }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="category">Catégorie *</Label>
-                <Select
-                  id="category"
-                  value={productForm.categoryId}
-                  onChange={(e) => setProductForm({...productForm, categoryId: e.target.value})}
+                <Label htmlFor="parentCategory">Catégorie principale *</Label>
+                <select
+                  id="parentCategory"
+                  className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  value={productForm.parentCategoryId}
+                  onChange={(e) => {
+                    setProductForm({
+                      ...productForm, 
+                      parentCategoryId: e.target.value,
+                      categoryId: '' // Reset sous-catégorie
+                    })
+                  }}
                   required
                 >
                   <option value="">Sélectionner une catégorie</option>
-                  {categories?.map((cat) => (
+                  {categories?.filter(cat => !cat.parentCategoryId).map((cat) => (
                     <option key={cat._id} value={cat._id}>
                       {cat.icon} {cat.name}
                     </option>
                   ))}
-                </Select>
+                </select>
               </div>
+              
+              {/* Sous-catégorie (optionnelle, affichée seulement si catégorie principale sélectionnée) */}
+              {productForm.parentCategoryId && (
+                <div className="space-y-2">
+                  <Label htmlFor="subcategory">Sous-catégorie (optionnelle)</Label>
+                  <select
+                    id="subcategory"
+                    className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    value={productForm.categoryId}
+                    onChange={(e) => setProductForm({...productForm, categoryId: e.target.value})}
+                  >
+                    <option value="">Aucune sous-catégorie</option>
+                    {categories?.filter(subCat => subCat.parentCategoryId === productForm.parentCategoryId).map((subCat) => (
+                      <option key={subCat._id} value={subCat._id}>
+                        {subCat.icon} {subCat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -596,21 +636,48 @@ const ProductsModule = ({ userId, userType }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-category">Catégorie *</Label>
-                <Select
-                  id="edit-category"
-                  value={productForm.categoryId}
-                  onChange={(e) => setProductForm({...productForm, categoryId: e.target.value})}
+                <Label htmlFor="edit-parentCategory">Catégorie principale *</Label>
+                <select
+                  id="edit-parentCategory"
+                  className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  value={productForm.parentCategoryId}
+                  onChange={(e) => {
+                    setProductForm({
+                      ...productForm, 
+                      parentCategoryId: e.target.value,
+                      categoryId: '' // Reset sous-catégorie
+                    })
+                  }}
                   required
                 >
                   <option value="">Sélectionner une catégorie</option>
-                  {categories?.map((cat) => (
+                  {categories?.filter(cat => !cat.parentCategoryId).map((cat) => (
                     <option key={cat._id} value={cat._id}>
                       {cat.icon} {cat.name}
                     </option>
                   ))}
-                </Select>
+                </select>
               </div>
+              
+              {/* Sous-catégorie (optionnelle) */}
+              {productForm.parentCategoryId && (
+                <div className="space-y-2">
+                  <Label htmlFor="edit-subcategory">Sous-catégorie (optionnelle)</Label>
+                  <select
+                    id="edit-subcategory"
+                    className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    value={productForm.categoryId}
+                    onChange={(e) => setProductForm({...productForm, categoryId: e.target.value})}
+                  >
+                    <option value="">Aucune sous-catégorie</option>
+                    {categories?.filter(subCat => subCat.parentCategoryId === productForm.parentCategoryId).map((subCat) => (
+                      <option key={subCat._id} value={subCat._id}>
+                        {subCat.icon} {subCat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
 
             <div className="space-y-2">

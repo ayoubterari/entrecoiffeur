@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../lib/convex'
@@ -26,6 +26,12 @@ const SellerStore = ({ onAddToCart, onToggleFavorite, isAuthenticated, userId })
   const seller = useQuery(
     api.auth.getUserById, 
     sellerId && sellerId !== 'undefined' ? { userId: sellerId } : "skip"
+  )
+  
+  // Get seller avatar URL
+  const sellerAvatarUrl = useQuery(
+    api.files.getFileUrl,
+    seller?.avatar ? { storageId: seller.avatar } : "skip"
   )
   
   // Récupérer tous les produits du vendeur
@@ -215,23 +221,34 @@ const SellerStore = ({ onAddToCart, onToggleFavorite, isAuthenticated, userId })
           <div className="profile-section">
             <div className="profile-header">
               <div className="seller-avatar">
-                <div className="avatar-logo">
-                  <div className="logo-background">
-                    <div className="beauty-pattern"></div>
-                    <div className="sparkle sparkle-1">✨</div>
-                    <div className="sparkle sparkle-2">💫</div>
-                    <div className="sparkle sparkle-3">⭐</div>
+                {sellerAvatarUrl ? (
+                  <div className="avatar-logo">
+                    <img 
+                      src={sellerAvatarUrl} 
+                      alt={`${seller.firstName} ${seller.lastName}`}
+                      className="seller-avatar-image"
+                    />
+                    <div className="logo-crown">👑</div>
                   </div>
-                  <div className="logo-letter">
-                    {seller.firstName?.charAt(0)?.toUpperCase() || 'V'}
+                ) : (
+                  <div className="avatar-logo">
+                    <div className="logo-background">
+                      <div className="beauty-pattern"></div>
+                      <div className="sparkle sparkle-1">✨</div>
+                      <div className="sparkle sparkle-2">💫</div>
+                      <div className="sparkle sparkle-3">⭐</div>
+                    </div>
+                    <div className="logo-letter">
+                      {seller.firstName?.charAt(0)?.toUpperCase() || 'V'}
+                    </div>
+                    <div className="logo-crown">👑</div>
+                    <div className="beauty-icons">
+                      <span className="beauty-icon icon-1">💄</span>
+                      <span className="beauty-icon icon-2">✂️</span>
+                      <span className="beauty-icon icon-3">💅</span>
+                    </div>
                   </div>
-                  <div className="logo-crown">👑</div>
-                  <div className="beauty-icons">
-                    <span className="beauty-icon icon-1">💄</span>
-                    <span className="beauty-icon icon-2">✂️</span>
-                    <span className="beauty-icon icon-3">💅</span>
-                  </div>
-                </div>
+                )}
                 <div className="online-indicator"></div>
               </div>
               

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
@@ -22,10 +22,12 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   const [featuredCarouselIndex, setFeaturedCarouselIndex] = useState(0)
   const [flashSaleCarouselIndex, setFlashSaleCarouselIndex] = useState(0)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [storesCarouselIndex, setStoresCarouselIndex] = useState(0)
 
   // Get real data from Convex
   const categoriesData = useQuery(api.products.getCategories)
   const allProducts = useQuery(api.products.getProducts, { limit: 20 })
+  const storesData = useQuery(api.auth.getStores, { limit: 20 })
   
   // Get search results when searching
   const searchData = useQuery(
@@ -95,7 +97,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
       description: 'Jusqu\'à -50% sur une sélection de produits',
       buttonText: 'Découvrir',
       image: '❄️',
-      color: 'linear-gradient(135deg, #2d2d2d, #404040)'
+      color: 'linear-gradient(135deg, #4E4A43 0%, #A2988B 50%, #C0B4A5 100%)'
     },
     {
       type: 'banner',
@@ -103,7 +105,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
       description: 'Les dernières tendances coiffure',
       buttonText: 'Voir tout',
       image: '✨',
-      color: 'linear-gradient(135deg, #2d2d2d, #808080)'
+      color: 'linear-gradient(135deg, #A2988B 0%, #C0B4A5 50%, #DACCBB 100%)'
     },
     {
       type: 'banner',
@@ -111,7 +113,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
       description: 'Dès 50€ d\'achat partout en France',
       buttonText: 'Commander',
       image: '🚚',
-      color: 'linear-gradient(135deg, #404040, #2d2d2d)'
+      color: 'linear-gradient(135deg, #C0B4A5 0%, #DACCBB 50%, #A2988B 100%)'
     }
   ]
 
@@ -576,6 +578,71 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         </div>
       </section>
 
+      {/* Stores Carousel Section */}
+      <section className={styles.storesSection}>
+        <div className={styles.storesSectionHeader}>
+          <h2>Découvrez nos boutiques</h2>
+          <p>Visitez les boutiques de nos vendeurs professionnels</p>
+        </div>
+        
+        <div className={styles.storesCarouselContainer}>
+          <button 
+            className={`${styles.storesCarouselBtn} ${styles.storesCarouselBtnPrev}`}
+            onClick={() => setStoresCarouselIndex(Math.max(0, storesCarouselIndex - 5))}
+            disabled={storesCarouselIndex === 0}
+          >
+            ‹
+          </button>
+          
+          <div className={styles.storesCarousel}>
+            <div 
+              className={styles.storesTrack}
+              style={{ transform: `translateX(-${storesCarouselIndex * 20}%)` }}
+            >
+              {storesData && storesData.map((store) => (
+                <div 
+                  key={store._id} 
+                  className={styles.storeCard}
+                  onClick={() => navigate(`/seller/${store._id}`)}
+                >
+                  {store.avatarUrl ? (
+                    <img 
+                      src={store.avatarUrl} 
+                      alt={store.companyName || `${store.firstName} ${store.lastName}`}
+                      className={styles.storeAvatarImage}
+                    />
+                  ) : (
+                    <div className={styles.storeAvatar}>
+                      {store.companyName?.charAt(0) || store.firstName?.charAt(0) || '?'}
+                    </div>
+                  )}
+                  <h3 className={styles.storeName}>
+                    {store.companyName || `${store.firstName} ${store.lastName}`}
+                  </h3>
+                  <p className={styles.storeType}>
+                    {store.userType === 'professionnel' ? '💼 Professionnel' : '🏢 Grossiste'}
+                  </p>
+                  <p className={styles.storeProducts}>
+                    {store.productCount} produit{store.productCount > 1 ? 's' : ''}
+                  </p>
+                  <button className={styles.visitStoreBtn}>
+                    Visiter la boutique
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <button 
+            className={`${styles.storesCarouselBtn} ${styles.storesCarouselBtnNext}`}
+            onClick={() => setStoresCarouselIndex(Math.min((storesData?.length || 0) - 5, storesCarouselIndex + 5))}
+            disabled={!storesData || storesCarouselIndex >= (storesData.length - 5)}
+          >
+            ›
+          </button>
+        </div>
+      </section>
+
       {/* Support Section */}
       <section className={styles.supportSection}>
         <div className={styles.container}>
@@ -657,6 +724,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         favoritesCount={favoritesCount}
         cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)}
         userFirstName={userFirstName}
+        userId={userId}
         onShowLogin={onShowLogin}
       />
     </div>

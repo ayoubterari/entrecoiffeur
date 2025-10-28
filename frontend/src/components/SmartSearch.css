@@ -32,7 +32,7 @@
 .search-input-container:focus-within {
   background: #ffffff;
   border-color: #2d2d2d;
-  box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.15);
+  box-shadow: 0 0 0 3px rgba(192, 180, 165, 0.15);
 }
 
 .search-icon {
@@ -102,7 +102,7 @@
 }
 
 .clear-button:hover {
-  background: rgba(218, 165, 32, 0.1);
+  background: rgba(192, 180, 165, 0.1);
   color: #404040;
 }
 
@@ -142,7 +142,7 @@
   background: #ffffff;
   border: 1px solid #e6e6e6;
   border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(218, 165, 32, 0.2);
+  box-shadow: 0 4px 16px rgba(192, 180, 165, 0.2);
   z-index: 1000;
   max-height: 480px;
   overflow-y: auto;
@@ -538,13 +538,13 @@
 }
 
 .search-results::-webkit-scrollbar-thumb {
-  background: rgba(218, 165, 32, 0.25);
+  background: rgba(192, 180, 165, 0.25);
   border-radius: 4px;
   border: 2px solid #fafafa;
 }
 
 .search-results::-webkit-scrollbar-thumb:hover {
-  background: rgba(218, 165, 32, 0.5);
+  background: rgba(192, 180, 165, 0.5);
 }
 
 /* Loading Animation */

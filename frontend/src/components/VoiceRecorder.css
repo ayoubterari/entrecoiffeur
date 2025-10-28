@@ -11,7 +11,7 @@
 }
 
 .record-btn {
-  background: linear-gradient(135deg, #2d2d2d, #404040);
+  background: linear-gradient(135deg, #4E4A43, #4E4A43);
   color: white;
   border: none;
   padding: 1rem 1.5rem;
@@ -23,13 +23,13 @@
   align-items: center;
   gap: 0.75rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 25px rgba(218, 165, 32, 0.4);
+  box-shadow: 0 8px 25px rgba(192, 180, 165, 0.4);
   justify-content: center;
 }
 
 .record-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(218, 165, 32, 0.5);
+  box-shadow: 0 12px 35px rgba(192, 180, 165, 0.5);
 }
 
 .record-btn:disabled {

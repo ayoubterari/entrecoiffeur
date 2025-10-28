@@ -189,6 +189,38 @@ export const getAllUsers = query({
   },
 });
 
+// Update own profile (user can update their own info except userType)
+export const updateOwnProfile = mutation({
+  args: {
+    userId: v.id("users"),
+    firstName: v.optional(v.string()),
+    lastName: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    address: v.optional(v.string()),
+    companyName: v.optional(v.string()),
+    siret: v.optional(v.string()),
+    tvaNumber: v.optional(v.string()),
+    avatar: v.optional(v.id("_storage")),
+  },
+  handler: async (ctx, args) => {
+    const { userId, ...updates } = args;
+    
+    // Check if user exists
+    const user = await ctx.db.get(userId);
+    if (!user) {
+      throw new ConvexError("User not found");
+    }
+    
+    // Remove undefined values
+    const cleanUpdates = Object.fromEntries(
+      Object.entries(updates).filter(([_, value]) => value !== undefined && value !== '')
+    );
+
+    await ctx.db.patch(userId, cleanUpdates);
+    return { success: true, message: "Profile updated successfully" };
+  },
+});
+
 // Update user (admin only)
 export const updateUser = mutation({
   args: {
@@ -274,5 +306,54 @@ export const markGroupWelcomeSeen = mutation({
     });
 
     return { success: true };
+  },
+});
+
+// Get all stores (professional and wholesale sellers)
+export const getStores = query({
+  args: {
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit || 20;
+    
+    const stores = await ctx.db
+      .query("users")
+      .filter((q) => 
+        q.or(
+          q.eq(q.field("userType"), "professionnel"),
+          q.eq(q.field("userType"), "grossiste")
+        )
+      )
+      .take(limit);
+    
+    // Get product count for each store
+    const storesWithStats = await Promise.all(
+      stores.map(async (store) => {
+        const productCount = await ctx.db
+          .query("products")
+          .filter((q) => q.eq(q.field("sellerId"), store._id))
+          .collect()
+          .then(products => products.length);
+        
+        // Get avatar URL if exists
+        let avatarUrl = null;
+        if (store.avatar) {
+          avatarUrl = await ctx.storage.getUrl(store.avatar);
+        }
+        
+        return {
+          _id: store._id,
+          companyName: store.companyName || `${store.firstName} ${store.lastName}`,
+          userType: store.userType,
+          firstName: store.firstName,
+          lastName: store.lastName,
+          productCount,
+          avatarUrl,
+        };
+      })
+    );
+    
+    return storesWithStats;
   },
 });

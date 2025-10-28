@@ -24,7 +24,7 @@
   border: 1px solid #e9ecef;
   border-radius: 16px;
   padding: 16px;
-  box-shadow: 0 12px 32px rgba(218, 165, 32, 0.3);
+  box-shadow: 0 12px 32px rgba(192, 180, 165, 0.3);
   backdrop-filter: blur(10px);
   display: flex;
   align-items: flex-start;

@@ -1,9 +1,17 @@
 import React from 'react'
+import { useQuery } from 'convex/react'
+import { api } from '../../lib/convex'
 import { Bell, Search } from 'lucide-react'
 import { Button } from '../ui/button'
-import { Avatar, AvatarFallback } from '../ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
-const Header = ({ userFirstName }) => {
+const Header = ({ userFirstName, userId }) => {
+  // Get user data for avatar
+  const userData = useQuery(api.auth.getUserById, userId ? { userId } : "skip")
+  const avatarUrl = useQuery(
+    api.files.getFileUrl,
+    userData?.avatar ? { storageId: userData.avatar } : "skip"
+  )
   return (
     <header className="flex h-16 items-center justify-between border-b bg-card px-6">
       <div className="flex items-center gap-4">
@@ -29,6 +37,7 @@ const Header = ({ userFirstName }) => {
 
         {/* User Avatar */}
         <Avatar className="h-8 w-8">
+          {avatarUrl && <AvatarImage src={avatarUrl} alt="Photo de profil" />}
           <AvatarFallback className="bg-primary text-primary-foreground text-xs">
             {userFirstName ? userFirstName.charAt(0).toUpperCase() : 'U'}
           </AvatarFallback>
