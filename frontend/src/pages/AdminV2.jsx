@@ -14,10 +14,12 @@ import NetVendeurModule from '../components/adminv2/NetVendeurModule'
 import PaymentModule from '../components/adminv2/PaymentModule'
 import BlogModule from '../components/adminv2/BlogModule'
 import CouponsModule from '../components/adminv2/CouponsModule'
+import '../styles/adminv2.css'
 
 const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, userType, userId, onLogout }) => {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('dashboard')
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
 
   // Queries pour les données réelles
   const allUsers = useQuery(api.auth.getAllUsers)
@@ -108,21 +110,27 @@ const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, user
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      {/* Sidebar */}
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      {/* Sidebar - Drawer sur mobile, fixe sur desktop */}
+      <Sidebar 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab}
+        isMobileOpen={isMobileSidebarOpen}
+        onMobileClose={() => setIsMobileSidebarOpen(false)}
+      />
 
-      {/* Main Content */}
-      <div className="flex flex-1 flex-col overflow-hidden ml-64">
+      {/* Main Content - Full width sur mobile, offset sur desktop */}
+      <div className="flex flex-1 flex-col overflow-hidden md:ml-64">
         {/* Header */}
         <Header 
           userFirstName={userFirstName}
           userLastName={userLastName}
           userEmail={userEmail}
           onLogout={onLogout}
+          onMenuClick={() => setIsMobileSidebarOpen(true)}
         />
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6">
           {activeTab === 'dashboard' && (
             <DashboardContent stats={stats} />
           )}

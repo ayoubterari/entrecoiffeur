@@ -72,7 +72,7 @@ body::before {
   z-index: -1;
 }
 
-/* Désactiver le background animé en mobile pour éviter les conflits */
+/* Dï¿½sactiver le background animï¿½ en mobile pour ï¿½viter les conflits */
 @media (max-width: 768px) {
   body::before {
     display: none;
@@ -2033,7 +2033,7 @@ body::before {
     font-size: 0.75rem;
   }
 
-  /* Header actions très petits écrans */
+  /* Header actions trï¿½s petits ï¿½crans */
   .header-actions {
     gap: 0.25rem;
   }
@@ -2050,7 +2050,7 @@ body::before {
     padding: 0.4rem;
   }
 
-  /* Carousel très petit */
+  /* Carousel trï¿½s petit */
   .carousel {
     margin: 0 0.5rem;
   }
@@ -2072,7 +2072,7 @@ body::before {
     font-size: 2rem;
   }
 
-  /* Catégories très petites */
+  /* Catï¿½gories trï¿½s petites */
   .categories-grid {
     grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
     gap: 0.5rem;
@@ -2593,7 +2593,7 @@ body.dashboard-body #root {
   font-weight: 600;
 }
 
-.order-status.livré {
+.order-status.livrï¿½ {
   background: rgba(75, 181, 67, 0.1);
   color: #4bb543;
 }
@@ -3237,7 +3237,7 @@ body.dashboard-body #root {
   transform: scale(1.1);
 }
 
-/* Icônes simplifiées avec émojis */
+/* Icï¿½nes simplifiï¿½es avec ï¿½mojis */
 
 .edit-icon {
   color: #2196f3;
@@ -3257,7 +3257,7 @@ body.dashboard-body #root {
   border-color: #ff4444;
 }
 
-/* Supprimer les tooltips CSS pour éviter les conflits avec les icônes */
+/* Supprimer les tooltips CSS pour ï¿½viter les conflits avec les icï¿½nes */
 
 /* Pulse animation for new products */
 @keyframes actionPulse {
@@ -4085,16 +4085,16 @@ body.dashboard-body #root {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #4E4A43, #4E4A43);
+  background: linear-gradient(135deg, #C0B4A5, #A89985);
   color: white;
   border: none;
-  box-shadow: 0 3px 11px rgba(218, 204, 187, );
+  box-shadow: 0 3px 11px rgba(192, 180, 165, 0.3);
 }
 
 .buy-now-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #ff5a8c, #fc689d);
+  background: linear-gradient(135deg, #D4C9BC, #C0B4A5);
   transform: translateY(-1.4px);
-  box-shadow: 0 4px 14px rgba(218, 204, 187, );
+  box-shadow: 0 4px 14px rgba(192, 180, 165, 0.4);
 }
 
 .buy-now-btn:disabled {
@@ -4616,12 +4616,12 @@ body.dashboard-body #root {
 
   .buy-now-btn:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(218, 204, 187, );
+    box-shadow: 0 6px 25px rgba(192, 180, 165, 0.4);
   }
 
   .buy-now-btn:active:not(:disabled) {
     transform: translateY(0);
-    box-shadow: 0 2px 15px rgba(218, 204, 187, );
+    box-shadow: 0 2px 15px rgba(192, 180, 165, 0.3);
   }
 
   /* Shipping Info Mobile */
@@ -4903,15 +4903,15 @@ body.dashboard-body #root {
 /* Button pulse animation for emphasis */
 @keyframes buttonPulse {
   0% {
-    box-shadow: 0 6px 20px rgba(218, 204, 187, );
+    box-shadow: 0 6px 20px rgba(192, 180, 165, 0.3);
   }
 
   50% {
-    box-shadow: 0 8px 25px rgba(255, 107, 157, 0.6);
+    box-shadow: 0 8px 25px rgba(192, 180, 165, 0.5);
   }
 
   100% {
-    box-shadow: 0 6px 20px rgba(218, 204, 187, );
+    box-shadow: 0 6px 20px rgba(192, 180, 165, 0.3);
   }
 }
 
@@ -6951,7 +6951,7 @@ body.dashboard-body #root {
 
 @media (max-width: 480px) {
 
-  /* Très petit mobile */
+  /* Trï¿½s petit mobile */
   .dashboard-tabs {
     padding: 0.25rem;
   }
@@ -6976,7 +6976,7 @@ body.dashboard-body #root {
     padding: 0.6rem;
   }
 
-  /* Statistiques très compactes */
+  /* Statistiques trï¿½s compactes */
   .stat-card {
     min-height: 70px;
     padding: 0.75rem;
@@ -6998,7 +6998,7 @@ body.dashboard-body #root {
 /* Styles pour les cartes mobiles (remplacent les tableaux) */
 @media (max-width: 768px) {
 
-  /* Créer des cartes pour remplacer les lignes de tableau */
+  /* Crï¿½er des cartes pour remplacer les lignes de tableau */
   .mobile-card-view {
     display: block;
   }
@@ -9659,7 +9659,7 @@ body.dashboard-body #root {
 }
 
 .seller-section h4::before {
-  content: "??";
+  content: "ğŸ‘¤";
   font-size: 1.2rem;
 }
 
@@ -10134,7 +10134,7 @@ body.dashboard-body #root {
 }
 
 .products-header h2::before {
-  content: "???";
+  content: "ğŸ›ï¸";
   font-size: 1.5rem;
 }
 
@@ -11613,7 +11613,7 @@ body.blog-body #root {
   border-radius: 12px;
 }
 
-/* Styles pour la barre de défilement */
+/* Styles pour la barre de dï¿½filement */
 .table-wrapper::-webkit-scrollbar {
   width: 12px;
   height: 12px;
@@ -11701,7 +11701,7 @@ body.blog-body #root {
   background-color: #f8fafc;
 }
 
-/* Cellules spécifiques */
+/* Cellules spï¿½cifiques */
 .image-cell {
   width: 80px;
   text-align: center;
@@ -11910,7 +11910,7 @@ body.blog-body #root {
   }
 }
 
-/* Styles spécifiques pour les tableaux utilisateurs */
+/* Styles spï¿½cifiques pour les tableaux utilisateurs */
 .avatar-cell {
   width: 60px;
   text-align: center;
@@ -12077,7 +12077,7 @@ body.blog-body #root {
   color: #ef4444;
 }
 
-/* Styles pour les cellules spécifiques aux commandes */
+/* Styles pour les cellules spï¿½cifiques aux commandes */
 .seller-cell {
   min-width: 150px;
 }
@@ -12152,7 +12152,7 @@ body.blog-body #root {
   border-color: #ef4444;
 }
 
-/* Amélioration responsive pour les nouveaux tableaux */
+/* Amï¿½lioration responsive pour les nouveaux tableaux */
 @media (max-width: 1024px) {
 
   .products-table th:nth-child(3),
@@ -13734,7 +13734,7 @@ body.community-body #root {
   color: var(--text-primary);
 }
 
-/* Modal des détails de commission */
+/* Modal des dï¿½tails de commission */
 .commission-details-modal {
   max-width: 800px;
   max-height: 90vh;
@@ -13914,7 +13914,7 @@ body.community-body #root {
   font-size: 1.1rem;
 }
 
-/* Résumé des versements */
+/* Rï¿½sumï¿½ des versements */
 .transfer-summary {
   position: relative;
   z-index: 1;
@@ -14188,7 +14188,7 @@ body.community-body #root {
   color: var(--text-primary);
 }
 
-/* Modal des détails de versement */
+/* Modal des dï¿½tails de versement */
 .transfer-details-modal {
   max-width: 900px;
   max-height: 90vh;
@@ -15814,14 +15814,14 @@ body.community-body #root {
     outline-offset: 2px;
   }
 }/*
- Correction spécifique pour éliminer la barre blanche en mobile */
+ Correction spï¿½cifique pour ï¿½liminer la barre blanche en mobile */
 @media (max-width: 768px) {
-  /* Suppression du background animé qui pourrait causer des problèmes */
+  /* Suppression du background animï¿½ qui pourrait causer des problï¿½mes */
   body::before {
     display: none !important;
   }
   
-  /* Reset complet pour éviter les barres blanches */
+  /* Reset complet pour ï¿½viter les barres blanches */
   html, body {
     margin: 0 !important;
     padding: 0 !important;
@@ -15840,14 +15840,14 @@ body.community-body #root {
     justify-content: stretch !important;
   }
   
-  /* Suppression de tous les pseudo-éléments potentiellement problématiques */
+  /* Suppression de tous les pseudo-ï¿½lï¿½ments potentiellement problï¿½matiques */
   *::before,
   *::after {
     content: none !important;
     display: none !important;
   }
   
-  /* Exception pour les éléments qui en ont vraiment besoin */
+  /* Exception pour les ï¿½lï¿½ments qui en ont vraiment besoin */
   .product-badges::before,
   .product-badges::after {
     display: block !important;

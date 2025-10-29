@@ -1,5 +1,5 @@
 import React from 'react'
-import { Bell, Search, LogOut } from 'lucide-react'
+import { Bell, Search, LogOut, Menu } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Avatar, AvatarFallback } from '../ui/avatar'
 import {
@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 
-const Header = ({ userFirstName, userLastName, userEmail, onLogout }) => {
+const Header = ({ userFirstName, userLastName, userEmail, onLogout, onMenuClick }) => {
   const initials = `${userFirstName?.charAt(0) || 'A'}${userLastName?.charAt(0) || 'A'}`
 
   const handleLogout = () => {
@@ -31,10 +31,20 @@ const Header = ({ userFirstName, userLastName, userEmail, onLogout }) => {
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-6">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
       <div className="flex flex-1 items-center gap-4">
+        {/* Menu hamburger pour mobile */}
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="md:hidden"
+          onClick={onMenuClick}
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+        
         {/* Search Bar */}
-        <div className="relative flex-1 max-w-md">
+        <div className="relative flex-1 max-w-md hidden sm:block">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"

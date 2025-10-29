@@ -1,4 +1,4 @@
-﻿/* Styles Tailwind uniquement pour Dashboard V2 */
+/* Styles Tailwind uniquement pour Dashboard V2 */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -58,4 +58,53 @@
 .dashboard-v2-container {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
+}
+
+/* Styles responsive pour mobile et tablette */
+@media (max-width: 768px) {
+  /* Empêcher le scroll horizontal sur mobile */
+  .dashboard-v2-container {
+    overflow-x: hidden;
+  }
+  
+  /* Ajuster le padding du contenu principal sur mobile */
+  .dashboard-v2-container main {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  /* Optimiser les cards pour mobile */
+  .dashboard-v2-container .card {
+    margin-bottom: 1rem;
+  }
+  
+  /* Touch targets minimum 44px pour iOS */
+  .dashboard-v2-container button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Tablette (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Ajuster l'espacement pour tablette */
+  .dashboard-v2-container main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Animations fluides pour le drawer mobile */
+@media (prefers-reduced-motion: no-preference) {
+  .dashboard-v2-container aside {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Support pour les safe areas iOS */
+@supports (padding: max(0px)) {
+  .dashboard-v2-container {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
 }

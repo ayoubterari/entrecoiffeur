@@ -1,4 +1,4 @@
-/* Affiliate Tab Styles - Modern Redesign */
+﻿/* Affiliate Tab Styles - Modern Redesign */
 
 .affiliate-tab {
   padding: 0;
@@ -47,7 +47,7 @@
 }
 
 .affiliate-header::before {
-  content: '';
+  content: '💰';
   position: absolute;
   top: 0;
   left: 0;
@@ -86,7 +86,7 @@
 }
 
 .header-title h2::before {
-  content: '??';
+  content: '💰';
   font-size: 1.5rem;
 }
 
@@ -120,7 +120,7 @@
 }
 
 .balance-card::before {
-  content: '';
+  content: '💰';
   position: absolute;
   top: -50%;
   right: -50%;
@@ -187,7 +187,7 @@
 }
 
 .nav-btn::before {
-  content: '';
+  content: '💰';
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -296,7 +296,7 @@
 }
 
 .stat-card::before {
-  content: '';
+  content: '💰';
   position: absolute;
   top: 0;
   left: 0;
@@ -370,7 +370,7 @@
 }
 
 .earnings-summary h3::before {
-  content: '??';
+  content: '💰';
   font-size: 1.5rem;
 }
 
@@ -396,7 +396,7 @@
 }
 
 .earning-card::after {
-  content: '';
+  content: '💰';
   position: absolute;
   top: 0;
   left: 0;
@@ -537,7 +537,7 @@
 }
 
 .how-it-works h3::before {
-  content: '??';
+  content: '💰';
   font-size: 1.5rem;
 }
 
@@ -560,7 +560,7 @@
 }
 
 .tip-card::before {
-  content: '';
+  content: '💰';
   position: absolute;
   top: 0;
   left: 0;

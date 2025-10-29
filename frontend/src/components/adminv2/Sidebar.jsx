@@ -12,11 +12,12 @@ import {
   Headphones, 
   BarChart3, 
   Settings,
-  Home
+  Home,
+  X
 } from 'lucide-react'
 import { cn } from '../../lib/utils'
 
-const Sidebar = ({ activeTab, setActiveTab }) => {
+const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onMobileClose }) => {
   const handleLogoutAndGoHome = (e) => {
     e.preventDefault()
     
@@ -30,6 +31,13 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
     
     // Rediriger vers l'accueil
     window.location.href = '/'
+  }
+
+  const handleTabClick = (tabId) => {
+    setActiveTab(tabId)
+    if (onMobileClose) {
+      onMobileClose()
+    }
   }
 
   const menuItems = [
@@ -49,12 +57,33 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
   ]
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r bg-background">
-      <div className="flex h-full flex-col gap-2">
-        {/* Logo */}
-        <div className="flex h-16 items-center border-b px-6">
-          <h2 className="text-xl font-bold">EntreCoiffeur</h2>
-        </div>
+    <>
+      {/* Overlay pour mobile */}
+      {isMobileOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={onMobileClose}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <aside className={cn(
+        "fixed left-0 top-0 z-50 h-screen w-64 border-r bg-white transition-transform duration-300 ease-in-out",
+        "md:translate-x-0",
+        isMobileOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
+        <div className="flex h-full flex-col gap-2">
+          {/* Logo */}
+          <div className="flex h-16 items-center justify-between border-b px-6">
+            <h2 className="text-xl font-bold">EntreCoiffeur</h2>
+            {/* Bouton fermer pour mobile */}
+            <button
+              onClick={onMobileClose}
+              className="md:hidden p-2 hover:bg-accent rounded-md transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-3 py-4">
@@ -66,7 +95,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => handleTabClick(item.id)}
                   className={cn(
                     "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                     isActive
@@ -95,6 +124,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
         </div>
       </div>
     </aside>
+    </>
   )
 }
 

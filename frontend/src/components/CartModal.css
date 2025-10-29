@@ -281,7 +281,7 @@
   flex: 2;
   padding: 12px 16px;
   border: none;
-  background: linear-gradient(135deg, #4E4A43, #4E4A43);
+  background: linear-gradient(135deg, #C0B4A5, #A89985);
   color: white;
   border-radius: 8px;
   cursor: pointer;
@@ -290,7 +290,7 @@
 }
 
 .checkout-btn:hover {
-  background: linear-gradient(135deg, #ff5a8a, #fc6c96);
+  background: linear-gradient(135deg, #D4C9BC, #C0B4A5);
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(192, 180, 165, 0.4);
 }
