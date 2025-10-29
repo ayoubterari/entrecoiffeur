@@ -14,6 +14,7 @@ import NetVendeurModule from '../components/adminv2/NetVendeurModule'
 import PaymentModule from '../components/adminv2/PaymentModule'
 import BlogModule from '../components/adminv2/BlogModule'
 import CouponsModule from '../components/adminv2/CouponsModule'
+import SupportModule from '../components/adminv2/SupportModule'
 import '../styles/adminv2.css'
 
 const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, userType, userId, onLogout }) => {
@@ -172,19 +173,7 @@ const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, user
           )}
 
           {activeTab === 'support' && (
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-3xl font-bold tracking-tight">Support</h2>
-                <p className="text-muted-foreground">
-                  Gestion des tickets de support
-                </p>
-              </div>
-              <div className="rounded-lg border bg-card p-8 text-center">
-                <p className="text-muted-foreground">
-                  Module en cours de développement...
-                </p>
-              </div>
-            </div>
+            <SupportModule userId={userId} />
           )}
 
           {activeTab === 'stats' && (

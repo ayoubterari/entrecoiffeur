@@ -214,61 +214,61 @@
 
 
 
-/* Responsive Design pour la section vendeur */
+/* Responsive Design pour la section vendeur - RÉDUIT DE 15% */
 @media (max-width: 768px) {
   .seller-section {
-    margin: 1rem 0;
-    padding: 0.8rem;
+    margin: 0.85rem 0; /* Réduit de 15% */
+    padding: 0.68rem; /* Réduit de 15% */
   }
 
   .seller-section h4 {
-    font-size: 0.8rem;
+    font-size: 0.68rem; /* Réduit de 15% */
   }
 
   .clickable-seller {
-    padding: 0.6rem;
+    padding: 0.51rem; /* Réduit de 15% */
   }
 
   .seller-info {
-    gap: 0.8rem;
+    gap: 0.68rem; /* Réduit de 15% */
   }
 
   .seller-main-line {
-    gap: 0.6rem;
+    gap: 0.51rem; /* Réduit de 15% */
   }
 
   .store-name {
-    font-size: 0.9rem;
+    font-size: 0.765rem; /* Réduit de 15% */
   }
 
   .seller-badge {
-    font-size: 0.6rem;
-    padding: 0.15rem 0.5rem;
+    font-size: 0.51rem; /* Réduit de 15% */
+    padding: 0.128rem 0.425rem; /* Réduit de 15% */
   }
 
   .seller-company {
-    font-size: 0.7rem;
+    font-size: 0.595rem; /* Réduit de 15% */
   }
 
   .quantity-controls {
-    padding: 0.4rem;
-    gap: 0.8rem;
+    padding: 0.34rem; /* Réduit de 15% */
+    gap: 0.68rem; /* Réduit de 15% */
   }
 
   .quantity-btn {
-    width: 30px;
-    height: 30px;
-    font-size: 1rem;
+    width: 25.5px; /* Réduit de 15% */
+    height: 25.5px; /* Réduit de 15% */
+    font-size: 0.85rem; /* Réduit de 15% */
   }
 
   .quantity-display {
-    font-size: 1rem;
+    font-size: 0.85rem; /* Réduit de 15% */
   }
 
   .buy-now-btn {
-    padding: 10px 24px;
-    font-size: 0.95rem;
-    border-radius: 10px;
+    padding: 8.5px 20.4px; /* Réduit de 15% */
+    font-size: 0.808rem; /* Réduit de 15% */
+    border-radius: 8.5px; /* Réduit de 15% */
   }
 
 
@@ -276,59 +276,59 @@
 
 @media (max-width: 480px) {
   .seller-section {
-    padding: 0.6rem;
+    padding: 0.51rem; /* Réduit de 15% */
   }
 
   .seller-section h4 {
-    font-size: 0.7rem;
+    font-size: 0.595rem; /* Réduit de 15% */
   }
 
   .clickable-seller {
-    padding: 0.5rem;
+    padding: 0.425rem; /* Réduit de 15% */
   }
 
   .seller-info {
-    gap: 0.6rem;
+    gap: 0.51rem; /* Réduit de 15% */
   }
 
   .seller-main-line {
-    gap: 0.5rem;
+    gap: 0.425rem; /* Réduit de 15% */
     flex-direction: column;
     align-items: flex-start;
   }
 
   .store-name {
-    font-size: 0.8rem;
+    font-size: 0.68rem; /* Réduit de 15% */
   }
 
   .seller-badge {
-    font-size: 0.55rem;
-    padding: 0.1rem 0.4rem;
+    font-size: 0.468rem; /* Réduit de 15% */
+    padding: 0.085rem 0.34rem; /* Réduit de 15% */
   }
 
   .seller-company {
-    font-size: 0.65rem;
+    font-size: 0.553rem; /* Réduit de 15% */
   }
 
   .quantity-controls {
-    padding: 0.35rem;
-    gap: 0.6rem;
+    padding: 0.298rem; /* Réduit de 15% */
+    gap: 0.51rem; /* Réduit de 15% */
   }
 
   .quantity-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 0.9rem;
+    width: 23.8px; /* Réduit de 15% */
+    height: 23.8px; /* Réduit de 15% */
+    font-size: 0.765rem; /* Réduit de 15% */
   }
 
   .quantity-display {
-    font-size: 0.9rem;
+    font-size: 0.765rem; /* Réduit de 15% */
   }
 
   .buy-now-btn {
-    padding: 8px 20px;
-    font-size: 0.9rem;
-    border-radius: 8px;
+    padding: 6.8px 17px; /* Réduit de 15% */
+    font-size: 0.765rem; /* Réduit de 15% */
+    border-radius: 6.8px; /* Réduit de 15% */
   }
 
 
@@ -742,26 +742,26 @@
   margin-top: 0.1rem;
 }
 
-/* Responsive Design */
+/* Responsive Design - RÉDUIT DE 15% */
 @media (max-width: 768px) {
   .reviews-section {
-    margin: 1.5rem 0;
-    padding: 1rem;
-    border-radius: 12px;
+    margin: 1.275rem 0; /* Réduit de 15% */
+    padding: 0.85rem; /* Réduit de 15% */
+    border-radius: 10.2px; /* Réduit de 15% */
   }
 
   .reviews-header h3 {
-    font-size: 1.2rem;
+    font-size: 1.02rem; /* Réduit de 15% */
   }
 
   .reviews-summary {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.275rem; /* Réduit de 15% */
     text-align: center;
   }
 
   .big-score {
-    font-size: 2.5rem;
+    font-size: 2.125rem; /* Réduit de 15% */
   }
 
   .criteria-ratings {
@@ -773,17 +773,17 @@
 
   .criteria-item {
     flex: 1;
-    min-width: 150px;
+    min-width: 127.5px; /* Réduit de 15% */
   }
 
   .review-card {
-    padding: 0.7rem;
+    padding: 0.595rem; /* Réduit de 15% */
   }
 
   .review-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.7rem;
+    gap: 0.595rem; /* Réduit de 15% */
   }
 
   .reviewer-info {
@@ -792,59 +792,59 @@
 
   .review-detailed-ratings {
     flex-direction: column;
-    gap: 0.53rem;
+    gap: 0.451rem; /* Réduit de 15% */
   }
 
   .reviewer-avatar {
-    width: 21px;
-    height: 21px;
-    font-size: 0.49rem;
+    width: 17.85px; /* Réduit de 15% */
+    height: 17.85px; /* Réduit de 15% */
+    font-size: 0.417rem; /* Réduit de 15% */
   }
 
   .reviewer-details h4 {
-    font-size: 0.49rem;
+    font-size: 0.417rem; /* Réduit de 15% */
   }
 
   .review-date {
-    font-size: 0.42rem;
+    font-size: 0.357rem; /* Réduit de 15% */
   }
 
   .review-rating .star {
-    font-size: 0.49rem;
+    font-size: 0.417rem; /* Réduit de 15% */
   }
 
   .review-comment p {
-    font-size: 0.46rem;
+    font-size: 0.391rem; /* Réduit de 15% */
   }
 
   .rating-label {
-    font-size: 0.42rem;
+    font-size: 0.357rem; /* Réduit de 15% */
   }
 
   .mini-star {
-    font-size: 0.35rem;
+    font-size: 0.298rem; /* Réduit de 15% */
   }
 
   .recommendation {
-    font-size: 0.42rem;
-    padding: 0.14rem 0.28rem;
+    font-size: 0.357rem; /* Réduit de 15% */
+    padding: 0.119rem 0.238rem; /* Réduit de 15% */
   }
 }
 
 @media (max-width: 480px) {
   .reviews-section {
-    padding: 0.8rem;
-    margin: 1rem 0;
+    padding: 0.68rem; /* Réduit de 15% */
+    margin: 0.85rem 0; /* Réduit de 15% */
   }
 
   .reviewer-avatar {
-    width: 18px;
-    height: 18px;
-    font-size: 0.4rem;
+    width: 15.3px; /* Réduit de 15% */
+    height: 15.3px; /* Réduit de 15% */
+    font-size: 0.34rem; /* Réduit de 15% */
   }
 
   .reviews-summary {
-    gap: 1rem;
+    gap: 0.85rem; /* Réduit de 15% */
   }
 
   .stars-breakdown {
@@ -856,39 +856,39 @@
   }
 
   .criteria-item {
-    padding: 0.6rem;
+    padding: 0.51rem; /* Réduit de 15% */
   }
 
   .reviews-header h3 {
-    font-size: 1rem;
+    font-size: 0.85rem; /* Réduit de 15% */
   }
 
   .big-score {
-    font-size: 2rem;
+    font-size: 1.7rem; /* Réduit de 15% */
   }
 
   .review-card {
-    padding: 0.5rem;
+    padding: 0.425rem; /* Réduit de 15% */
   }
 
   .reviewer-details h4 {
-    font-size: 0.4rem;
+    font-size: 0.34rem; /* Réduit de 15% */
   }
 
   .review-date {
-    font-size: 0.35rem;
+    font-size: 0.298rem; /* Réduit de 15% */
   }
 
   .review-comment p {
-    font-size: 0.38rem;
+    font-size: 0.323rem; /* Réduit de 15% */
   }
 
   .rating-label {
-    font-size: 0.35rem;
+    font-size: 0.298rem; /* Réduit de 15% */
   }
 
   .recommendation {
-    font-size: 0.35rem;
-    padding: 0.1rem 0.2rem;
+    font-size: 0.298rem; /* Réduit de 15% */
+    padding: 0.085rem 0.17rem; /* Réduit de 15% */
   }
 }

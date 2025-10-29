@@ -14,7 +14,8 @@ import {
   Wrench,
   Ticket,
   Home,
-  X
+  X,
+  AlertTriangle
 } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { Button } from '../ui/button'
@@ -46,13 +47,15 @@ const Sidebar = ({
     if (userType === 'professionnel' || userType === 'grossiste') {
       baseItems.push(
         { id: 'products', name: 'Mes Produits', icon: Package },
-        { id: 'orders', name: 'Mes ventes', icon: ClipboardList }
+        { id: 'orders', name: 'Mes ventes', icon: ClipboardList },
+        { id: 'complaints', name: 'Réclamations', icon: AlertTriangle }
       )
     }
     
-    // Ajouter Messages
+    // Ajouter Messages et Support
     baseItems.push(
-      { id: 'messages', name: 'Messages', icon: MessageSquare, badge: unreadCount }
+      { id: 'messages', name: 'Messages', icon: MessageSquare, badge: unreadCount },
+      { id: 'support', name: 'Support', icon: Headphones }
     )
     
     return baseItems

@@ -78,8 +78,8 @@ const SupportModal = ({ isOpen, onClose, userId, userEmail, userFirstName, userL
     if (audioBlob) {
       setVoiceRecording(audioBlob)
       // TODO: Upload to Convex storage
-      // Pour l'instant, on simule un ID
-      setVoiceRecordingId('temp_voice_id')
+      // Pour l'instant, on ne définit pas d'ID (fonctionnalité à implémenter)
+      setVoiceRecordingId(null)
     } else {
       setVoiceRecording(null)
       setVoiceRecordingId(null)

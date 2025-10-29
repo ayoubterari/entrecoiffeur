@@ -1,7 +1,7 @@
 ﻿/* Correction simple et efficace pour la barre blanche mobile */
 
 @media (max-width: 768px) {
-  /* Reset complet pour la page produit */
+  /* Reset complet pour la page produit - RÉDUIT DE 15% */
   .product-detail-page {
     position: relative !important;
     width: 100% !important;
@@ -11,6 +11,9 @@
     padding: 0 !important;
     background: #ffffff !important;
     overflow-x: hidden !important;
+    transform: scale(0.85) !important;
+    transform-origin: top left !important;
+    width: 117.65% !important; /* Compense le scale pour garder la largeur complète */
   }
   
   /* Suppression de tous les pseudo-éléments qui pourraient créer des barres */
@@ -24,55 +27,55 @@
     content: none !important;
   }
   
-  /* Header sans barre blanche */
+  /* Header sans barre blanche - RÉDUIT */
   .product-detail-header {
     position: relative !important;
     width: 100% !important;
     margin: 0 !important;
-    padding: 0.5rem 1rem !important;
+    padding: 0.425rem 0.85rem !important; /* Réduit de 15% */
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     z-index: 10 !important;
   }
   
-  /* Bouton retour sans problème de positionnement */
+  /* Bouton retour sans problème de positionnement - RÉDUIT */
   .back-button {
     position: relative !important;
     display: inline-block !important;
     margin: 0 !important;
-    padding: 0.5rem 1rem !important;
+    padding: 0.425rem 0.85rem !important; /* Réduit de 15% */
     background: rgba(248, 249, 250, 0.95) !important;
     border: 1px solid #dee2e6 !important;
-    border-radius: 8px !important;
+    border-radius: 6.8px !important; /* Réduit de 15% */
     color: #495057 !important;
-    font-size: 0.875rem !important;
+    font-size: 0.744rem !important; /* Réduit de 15% */
     z-index: 11 !important;
   }
   
-  /* Container principal sans débordement */
+  /* Container principal sans débordement - RÉDUIT */
   .product-detail-container {
     position: relative !important;
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    padding: 0 1rem !important;
+    padding: 0 0.85rem !important; /* Réduit de 15% */
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     z-index: 2 !important;
     display: block !important;
     grid-template-columns: none !important;
-    gap: 1rem !important;
+    gap: 0.85rem !important; /* Réduit de 15% */
   }
   
-  /* Sections sans superposition */
+  /* Sections sans superposition - RÉDUIT */
   .product-images-section,
   .product-info-section {
     position: relative !important;
     width: 100% !important;
     max-width: 100% !important;
-    margin: 0 0 1rem 0 !important;
+    margin: 0 0 0.85rem 0 !important; /* Réduit de 15% */
     padding: 0 !important;
     background: transparent !important;
     border: none !important;
@@ -80,17 +83,17 @@
     z-index: 3 !important;
   }
   
-  /* Image container propre */
+  /* Image container propre - RÉDUIT */
   .image-container {
     position: relative !important;
     width: 100% !important;
-    height: 400px !important;
-    margin: 0 0 1rem 0 !important;
+    height: 340px !important; /* Réduit de 15% (400px -> 340px) */
+    margin: 0 0 0.85rem 0 !important; /* Réduit de 15% */
     padding: 0 !important;
     background: #ffffff !important;
     border: 1px solid #e9ecef !important;
-    border-radius: 12px !important;
-    box-shadow: 0 2px 4px rgba(192, 180, 165, 0.2) !important;
+    border-radius: 10.2px !important; /* Réduit de 15% */
+    box-shadow: 0 1.7px 3.4px rgba(192, 180, 165, 0.2) !important; /* Réduit de 15% */
     z-index: 4 !important;
     overflow: hidden !important;
     display: flex !important;
@@ -108,29 +111,29 @@
     max-height: none !important;
   }
 
-  /* Placeholder pour les images manquantes */
+  /* Placeholder pour les images manquantes - RÉDUIT */
   .placeholder-image {
-    font-size: 4rem !important;
+    font-size: 3.4rem !important; /* Réduit de 15% */
     color: #dee2e6 !important;
     opacity: 0.7 !important;
   }
 
-  /* Miniatures responsive */
+  /* Miniatures responsive - RÉDUIT */
   .image-thumbnails {
     display: flex !important;
-    gap: 0.5rem !important;
-    margin-top: 1rem !important;
+    gap: 0.425rem !important; /* Réduit de 15% */
+    margin-top: 0.85rem !important; /* Réduit de 15% */
     overflow-x: auto !important;
-    padding: 0.5rem 0 !important;
+    padding: 0.425rem 0 !important; /* Réduit de 15% */
     justify-content: center !important;
   }
 
   .thumbnail {
     flex-shrink: 0 !important;
-    width: 60px !important;
-    height: 60px !important;
+    width: 51px !important; /* Réduit de 15% (60px -> 51px) */
+    height: 51px !important; /* Réduit de 15% */
     border: 2px solid #dee2e6 !important;
-    border-radius: 8px !important;
+    border-radius: 6.8px !important; /* Réduit de 15% */
     overflow: hidden !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
@@ -170,35 +173,213 @@
   }
 }
 
-/* Correction pour très petits écrans */
+/* Correction pour très petits écrans - RÉDUIT DE 15% */
 @media (max-width: 480px) {
+  .product-detail-page {
+    transform: scale(0.85) !important;
+    transform-origin: top left !important;
+    width: 117.65% !important; /* Compense le scale */
+  }
+
   .product-detail-container {
-    padding: 0 0.5rem !important;
+    padding: 0 0.425rem !important; /* Réduit de 15% */
   }
   
   .product-detail-header {
-    padding: 0.25rem 0.5rem !important;
+    padding: 0.213rem 0.425rem !important; /* Réduit de 15% */
   }
   
   .back-button {
-    font-size: 0.8rem !important;
-    padding: 0.4rem 0.8rem !important;
+    font-size: 0.68rem !important; /* Réduit de 15% */
+    padding: 0.34rem 0.68rem !important; /* Réduit de 15% */
   }
 
-  /* Image container pour très petits écrans */
+  /* Image container pour très petits écrans - RÉDUIT */
   .image-container {
-    height: 350px !important;
-    margin: 0 0 0.5rem 0 !important;
+    height: 297.5px !important; /* Réduit de 15% (350px -> 297.5px) */
+    margin: 0 0 0.425rem 0 !important; /* Réduit de 15% */
   }
 
-  /* Miniatures plus petites */
+  /* Miniatures plus petites - RÉDUIT */
   .thumbnail {
-    width: 50px !important;
-    height: 50px !important;
+    width: 42.5px !important; /* Réduit de 15% (50px -> 42.5px) */
+    height: 42.5px !important; /* Réduit de 15% */
   }
 
-  /* Placeholder plus petit */
+  /* Placeholder plus petit - RÉDUIT */
   .placeholder-image {
-    font-size: 3rem !important;
+    font-size: 2.55rem !important; /* Réduit de 15% (3rem -> 2.55rem) */
+  }
+}
+/* Réd
+uction de 15% pour tous les éléments de contenu sur mobile */
+@media (max-width: 768px) {
+  /* Titre du produit */
+  .product-title {
+    font-size: 1.53rem !important; /* Réduit de 15% (1.8rem -> 1.53rem) */
+    line-height: 1.19 !important; /* Réduit de 15% */
+    margin: 0.68rem 0 !important; /* Réduit de 15% */
+  }
+
+  /* Section prix */
+  .price-section {
+    margin: 0.85rem 0 !important; /* Réduit de 15% */
+  }
+
+  .current-price {
+    font-size: 1.7rem !important; /* Réduit de 15% (2rem -> 1.7rem) */
+    margin: 0.425rem 0 !important; /* Réduit de 15% */
+  }
+
+  .original-price {
+    font-size: 1.02rem !important; /* Réduit de 15% */
+  }
+
+  .savings {
+    font-size: 0.765rem !important; /* Réduit de 15% */
+    padding: 0.255rem 0.51rem !important; /* Réduit de 15% */
+  }
+
+  /* Section description */
+  .product-description {
+    margin: 1.275rem 0 !important; /* Réduit de 15% */
+    padding: 0.85rem !important; /* Réduit de 15% */
+  }
+
+  .product-description h3 {
+    font-size: 1.02rem !important; /* Réduit de 15% */
+    margin: 0 0 0.68rem 0 !important; /* Réduit de 15% */
+  }
+
+  .description-text {
+    font-size: 0.765rem !important; /* Réduit de 15% */
+    line-height: 1.36 !important; /* Réduit de 15% */
+  }
+
+  .toggle-description {
+    font-size: 0.68rem !important; /* Réduit de 15% */
+    padding: 0.34rem 0.68rem !important; /* Réduit de 15% */
+    margin-top: 0.68rem !important; /* Réduit de 15% */
+  }
+
+  /* Tags */
+  .product-tags {
+    margin: 1.02rem 0 !important; /* Réduit de 15% */
+  }
+
+  .product-tags h4 {
+    font-size: 0.85rem !important; /* Réduit de 15% */
+    margin: 0 0 0.51rem 0 !important; /* Réduit de 15% */
+  }
+
+  .tag {
+    font-size: 0.68rem !important; /* Réduit de 15% */
+    padding: 0.255rem 0.51rem !important; /* Réduit de 15% */
+    margin: 0.17rem !important; /* Réduit de 15% */
+    border-radius: 5.1px !important; /* Réduit de 15% */
+  }
+
+  /* Section achat */
+  .purchase-section {
+    margin: 1.275rem 0 !important; /* Réduit de 15% */
+    padding: 0.85rem !important; /* Réduit de 15% */
+  }
+
+  .stock-info {
+    margin: 0.68rem 0 !important; /* Réduit de 15% */
+  }
+
+  .stock-status {
+    font-size: 0.765rem !important; /* Réduit de 15% */
+    padding: 0.34rem 0.68rem !important; /* Réduit de 15% */
+  }
+
+  .quantity-selector label {
+    font-size: 0.85rem !important; /* Réduit de 15% */
+    margin-bottom: 0.425rem !important; /* Réduit de 15% */
+  }
+
+  /* Prix total */
+  .total-price {
+    margin: 0.85rem 0 !important; /* Réduit de 15% */
+  }
+
+  .price-breakdown {
+    padding: 0.68rem !important; /* Réduit de 15% */
+    border-radius: 6.8px !important; /* Réduit de 15% */
+  }
+
+  .line-item {
+    font-size: 0.765rem !important; /* Réduit de 15% */
+    margin: 0.255rem 0 !important; /* Réduit de 15% */
+  }
+
+  .total-amount {
+    font-size: 1.02rem !important; /* Réduit de 15% */
+  }
+
+  /* Informations de livraison */
+  .shipping-info {
+    margin: 1.02rem 0 !important; /* Réduit de 15% */
+  }
+
+  .shipping-item {
+    font-size: 0.68rem !important; /* Réduit de 15% */
+    padding: 0.34rem 0 !important; /* Réduit de 15% */
+  }
+
+  .shipping-item .icon {
+    font-size: 0.85rem !important; /* Réduit de 15% */
+  }
+
+  /* Badges produit */
+  .product-badges {
+    gap: 0.34rem !important; /* Réduit de 15% */
+  }
+
+  .badge {
+    font-size: 0.68rem !important; /* Réduit de 15% */
+    padding: 0.255rem 0.51rem !important; /* Réduit de 15% */
+    border-radius: 5.1px !important; /* Réduit de 15% */
+  }
+
+  /* Section rating */
+  .rating-section .stars {
+    gap: 0.17rem !important; /* Réduit de 15% */
+  }
+
+  .rating-section .star {
+    font-size: 0.85rem !important; /* Réduit de 15% */
+  }
+
+  .rating-text {
+    font-size: 0.68rem !important; /* Réduit de 15% */
+  }
+
+  .recommendation-rate {
+    font-size: 0.595rem !important; /* Réduit de 15% */
+  }
+}
+
+@media (max-width: 480px) {
+  /* Ajustements supplémentaires pour très petits écrans */
+  .product-title {
+    font-size: 1.36rem !important; /* Encore plus réduit */
+  }
+
+  .current-price {
+    font-size: 1.53rem !important; /* Encore plus réduit */
+  }
+
+  .product-description {
+    padding: 0.68rem !important;
+  }
+
+  .purchase-section {
+    padding: 0.68rem !important;
+  }
+
+  .price-breakdown {
+    padding: 0.51rem !important;
   }
 }

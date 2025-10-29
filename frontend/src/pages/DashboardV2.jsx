@@ -8,6 +8,8 @@ import PurchasesModule from '../components/dashboardv2/PurchasesModule'
 import ProductsModule from '../components/dashboardv2/ProductsModule'
 import OrdersModule from '../components/dashboardv2/OrdersModule'
 import MessagesModule from '../components/dashboardv2/MessagesModule'
+import SupportModule from '../components/dashboardv2/SupportModule'
+import ComplaintsModule from '../components/dashboardv2/ComplaintsModule'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import '../styles/dashboardv2.css'
 
@@ -78,6 +80,14 @@ const DashboardV2 = ({ userEmail, userFirstName, userLastName, userId, userType,
 
           {activeTab === 'messages' && (
             <MessagesModule userId={userId} />
+          )}
+
+          {activeTab === 'support' && (
+            <SupportModule userId={userId} userEmail={userEmail} />
+          )}
+
+          {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'complaints' && (
+            <ComplaintsModule userId={userId} userEmail={userEmail} />
           )}
         </main>
       </div>
