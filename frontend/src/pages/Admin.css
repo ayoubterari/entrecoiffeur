@@ -1,4 +1,4 @@
-﻿/* Admin Page Styles */
+/* Admin Page Styles */
 
 /* Admin Container */
 .admin-page {
@@ -160,7 +160,7 @@
 .nav-item.active {
   background: linear-gradient(135deg, #4E4A43, #4E4A43);
   color: white;
-  border-color: #2d2d2d;
+  border-color: #C0B4A5;
   box-shadow: 0 6px 20px rgba(192, 180, 165, 0.4);
 }
 
@@ -302,7 +302,7 @@
 
 /* Support Quick Action Styling */
 .quick-action-item.support {
-  border-left: 4px solid #2d2d2d;
+  border-left: 4px solid #C0B4A5;
 }
 
 .quick-action-item.support:hover {
@@ -320,11 +320,11 @@
 }
 
 /* Support Stat Card Enhancement */
-.stat-preview-card:has(.stat-icon:contains("🎧")) {
-  border-left: 4px solid #2d2d2d;
+.stat-preview-card:has(.stat-icon:contains("??")) {
+  border-left: 4px solid #C0B4A5;
 }
 
-.stat-preview-card:has(.stat-icon:contains("🎧")):hover {
+.stat-preview-card:has(.stat-icon:contains("??")):hover {
   background: linear-gradient(135deg, rgba(255, 107, 157, 0.05), rgba(253, 121, 168, 0.05));
 }
 
@@ -495,7 +495,7 @@
 
 .quick-arrow {
   margin-left: auto;
-  color: #2d2d2d;
+  color: #C0B4A5;
   font-weight: 600;
 }
 
@@ -550,7 +550,7 @@
 
 .activity-action {
   font-size: 0.75rem;
-  color: #2d2d2d;
+  color: #C0B4A5;
   cursor: pointer;
   font-weight: 600;
 }
@@ -608,7 +608,7 @@
 }
 
 .all-categories-btn:hover {
-  border-color: #2d2d2d;
+  border-color: #C0B4A5;
   box-shadow: 0 4px 16px rgba(192, 180, 165, 0.2);
   transform: translateY(-2px);
 }
@@ -620,7 +620,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #2d2d2d, #764ba2);
+  background: linear-gradient(135deg, #C0B4A5, #764ba2);
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
   flex-shrink: 0;
@@ -651,7 +651,7 @@
 }
 
 .all-categories-btn:hover .btn-arrow {
-  color: #2d2d2d;
+  color: #C0B4A5;
   transform: translateX(5px);
 }
 
@@ -697,7 +697,7 @@
 }
 
 .main-category:hover {
-  border-color: #2d2d2d;
+  border-color: #C0B4A5;
   box-shadow: 0 4px 16px rgba(192, 180, 165, 0.2);
 }
 
@@ -747,7 +747,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #2d2d2d, #764ba2);
+  background: linear-gradient(135deg, #C0B4A5, #764ba2);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
   flex-shrink: 0;
@@ -872,7 +872,7 @@
 
 .subcategory:hover {
   background: white;
-  border-color: #2d2d2d;
+  border-color: #C0B4A5;
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
 }
 
@@ -904,7 +904,7 @@
   display: inline-block;
   margin-top: 0.5rem;
   padding: 0.25rem 0.75rem;
-  background: linear-gradient(135deg, #2d2d2d, #764ba2);
+  background: linear-gradient(135deg, #C0B4A5, #764ba2);
   color: white;
   border-radius: 20px;
   font-size: 0.75rem;

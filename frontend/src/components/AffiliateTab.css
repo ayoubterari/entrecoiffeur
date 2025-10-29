@@ -1,4 +1,4 @@
-﻿/* Affiliate Tab Styles - Modern Redesign */
+/* Affiliate Tab Styles - Modern Redesign */
 
 .affiliate-tab {
   padding: 0;
@@ -26,7 +26,7 @@
   width: 40px;
   height: 40px;
   border: 4px solid rgba(192, 180, 165, 0.25);
-  border-top: 4px solid #2d2d2d;
+  border-top: 4px solid #C0B4A5;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -53,7 +53,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #2d2d2d, #ffa6c1, #2d2d2d);
+  background: linear-gradient(90deg, #C0B4A5, #ffa6c1, #C0B4A5);
   background-size: 200% 100%;
   animation: gradientShift 3s ease infinite;
 }
@@ -86,7 +86,7 @@
 }
 
 .header-title h2::before {
-  content: '💎';
+  content: '??';
   font-size: 1.5rem;
 }
 
@@ -109,7 +109,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 1.25rem 2rem;
-  background: linear-gradient(135deg, #2d2d2d 0%, #555555 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #555555 100%);
   border-radius: 20px;
   color: white;
   box-shadow: 0 8px 24px rgba(192, 180, 165, 0.3);
@@ -194,14 +194,14 @@
   transform: translateX(-50%);
   width: 0;
   height: 3px;
-  background: linear-gradient(90deg, #2d2d2d, #555555);
+  background: linear-gradient(90deg, #C0B4A5, #555555);
   border-radius: 3px 3px 0 0;
   transition: width 0.3s ease;
 }
 
 .nav-btn:hover {
   background: rgba(255, 107, 157, 0.06);
-  color: #2d2d2d;
+  color: #C0B4A5;
 }
 
 .nav-btn:hover::before {
@@ -209,7 +209,7 @@
 }
 
 .nav-btn.active {
-  background: linear-gradient(135deg, #2d2d2d 0%, #555555 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #555555 100%);
   color: white;
   box-shadow: 0 4px 12px rgba(192, 180, 165, 0.3);
 }
@@ -302,7 +302,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #2d2d2d, #ffa6c1);
+  background: linear-gradient(90deg, #C0B4A5, #ffa6c1);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -370,7 +370,7 @@
 }
 
 .earnings-summary h3::before {
-  content: '💰';
+  content: '??';
   font-size: 1.5rem;
 }
 
@@ -439,7 +439,7 @@
 }
 
 .earning-card.total::after {
-  background: linear-gradient(90deg, #2d2d2d, #555555);
+  background: linear-gradient(90deg, #C0B4A5, #555555);
 }
 
 .earning-icon {
@@ -537,7 +537,7 @@
 }
 
 .how-it-works h3::before {
-  content: '💡';
+  content: '??';
   font-size: 1.5rem;
 }
 
@@ -566,7 +566,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #2d2d2d, #ffa6c1);
+  background: linear-gradient(90deg, #C0B4A5, #ffa6c1);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -1010,7 +1010,7 @@
   gap: 0.5rem;
   font-size: 1.1rem;
   font-weight: 700;
-  color: #2d2d2d;
+  color: #C0B4A5;
 }
 
 .earning-icon {

@@ -1,13 +1,13 @@
-﻿/* ============================================
+/* ============================================
    ENTRECOIFFEUR - HOME PAGE
    Modern Mobile-First Responsive Design 2025
    ============================================ */
 
 :root {
-  /* Palette Noir Doux & Or - Élégante et Moderne */
-  --primary: #2d2d2d;
-  --primary-dark: #1a1a1a;
-  --primary-light: #404040;
+  /* Palette Beige Élégant & Or - Élégante et Moderne */
+  --primary: #C0B4A5;
+  --primary-dark: #A89985;
+  --primary-light: #D4C9BC;
   --secondary: #ffffff;
   --accent: #555555;
   --dark: #2d2d2d;
@@ -156,10 +156,7 @@ body {
 .marketplaceTitle {
   font-size: clamp(0.75rem, 3vw + 0.375rem, 1.3125rem);
   font-weight: 800;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #1a1a1a;
   margin: 0;
   line-height: 1.2;
   letter-spacing: -0.02em;
@@ -173,7 +170,7 @@ body {
 
 .marketplaceSubtitle {
   font-size: clamp(0.46875rem, 1.5vw, 0.5625rem);
-  color: var(--gray);
+  color: #2d2d2d;
   margin: 0.09375rem 0 0 0;
   opacity: 0.85;
   font-weight: 500;
@@ -886,23 +883,23 @@ body {
 }
 
 .userTypeBanner.particulier:hover {
-  box-shadow: 0 12px 40px rgba(192, 180, 165, 0.3);
+  box-shadow: 0 12px 40px rgba(192, 180, 165, 0.4);
 }
 
 .userTypeBanner.grossiste::before {
-  background: linear-gradient(90deg, var(--secondary), #5ac8fa);
+  background: linear-gradient(90deg, #8B7E74, #A89985);
 }
 
 .userTypeBanner.grossiste:hover {
-  box-shadow: 0 12px 40px rgba(76, 217, 100, 0.25);
+  box-shadow: 0 12px 40px rgba(192, 180, 165, 0.4);
 }
 
 .userTypeBanner.professionnel::before {
-  background: linear-gradient(90deg, var(--accent), #764ba2);
+  background: linear-gradient(90deg, #8B7E74, #A89985);
 }
 
 .userTypeBanner.professionnel:hover {
-  box-shadow: 0 12px 40px rgba(102, 126, 234, 0.25);
+  box-shadow: 0 12px 40px rgba(192, 180, 165, 0.4);
 }
 
 .bannerIcon {

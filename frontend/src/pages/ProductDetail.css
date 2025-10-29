@@ -1,4 +1,4 @@
-﻿/* Product Detail Page Styles */
+/* Product Detail Page Styles */
 
 /* Seller Section Styles */
 .seller-section {
@@ -24,7 +24,7 @@
 }
 
 .seller-section h4::before {
-  content: "👤";
+  content: "??";
   font-size: 1rem;
 }
 
@@ -152,7 +152,7 @@
 }
 
 .buy-now-btn {
-  background: linear-gradient(135deg, #2d2d2d 0%, #2d2d2d 50%, #2d2d2d 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #C0B4A5 50%, #C0B4A5 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -186,7 +186,7 @@
 }
 
 .buy-now-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #2d2d2d 0%, #2d2d2d 50%, #ad1457 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #C0B4A5 50%, #ad1457 100%);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(233, 30, 99, 0.35);
 }
@@ -608,7 +608,7 @@
   padding: 0.3rem;
   background: rgba(255, 107, 157, 0.03);
   border-radius: 6px;
-  border-left: 2px solid #2d2d2d;
+  border-left: 2px solid #C0B4A5;
 }
 
 .review-comment p {

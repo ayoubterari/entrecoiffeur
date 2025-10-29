@@ -1,4 +1,4 @@
-﻿/* Cart Modal Styles */
+/* Cart Modal Styles */
 .cart-modal-overlay {
   position: fixed;
   top: 0;
@@ -177,8 +177,8 @@
 }
 
 .qty-btn:hover:not(:disabled) {
-  background: #2d2d2d;
-  border-color: #2d2d2d;
+  background: #C0B4A5;
+  border-color: #C0B4A5;
   color: white;
 }
 
@@ -273,8 +273,8 @@
 }
 
 .continue-shopping-btn:hover {
-  border-color: #2d2d2d;
-  color: #2d2d2d;
+  border-color: #C0B4A5;
+  color: #C0B4A5;
 }
 
 .checkout-btn {

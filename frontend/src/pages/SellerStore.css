@@ -38,7 +38,7 @@
 .back-btn {
   background: linear-gradient(135deg, #4E4A43, #4E4A43) !important;
   backdrop-filter: blur(10px);
-  border: 2px solid #2d2d2d !important;
+  border: 2px solid #C0B4A5 !important;
   color: white !important;
   padding: 0.6rem 1.2rem;
   border-radius: 50px;
@@ -58,7 +58,7 @@
 }
 
 .back-btn:hover {
-  background: linear-gradient(135deg, #404040, #2d2d2d) !important;
+  background: linear-gradient(135deg, #404040, #C0B4A5) !important;
   color: white !important;
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(192, 180, 165, 0.5) !important;
@@ -108,7 +108,7 @@
   left: -8px;
   right: -8px;
   bottom: -8px;
-  background: linear-gradient(45deg, #4E4A43, #4E4A43, #808080, #2d2d2d);
+  background: linear-gradient(45deg, #4E4A43, #4E4A43, #808080, #C0B4A5);
   border-radius: 50%;
   z-index: -1;
   animation: rotate 4s linear infinite;
@@ -435,7 +435,7 @@
 
 .message-btn {
   background: rgba(192, 180, 165, 0.15);
-  color: #2d2d2d;
+  color: #C0B4A5;
   border: 2px solid rgba(192, 180, 165, 0.25);
 }
 
@@ -552,7 +552,7 @@
 }
 
 .nav-tab.active {
-  color: #2d2d2d;
+  color: #C0B4A5;
 }
 
 .nav-tab.active::after {
@@ -568,7 +568,7 @@
 }
 
 .nav-tab:hover {
-  color: #2d2d2d;
+  color: #C0B4A5;
   background: rgba(255, 107, 157, 0.05);
 }
 
@@ -634,7 +634,7 @@
 .products-header h2 {
   font-size: 2.5rem;
   font-weight: 900;
-  background: linear-gradient(135deg, #2d2d2d, #404040, #808080);
+  background: linear-gradient(135deg, #C0B4A5, #404040, #808080);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -779,7 +779,7 @@
 
 .product-category {
   font-size: 9px;
-  color: #2d2d2d;
+  color: #C0B4A5;
   text-transform: uppercase;
   letter-spacing: 0.75px;
   font-weight: 700;
@@ -949,7 +949,7 @@
   border-radius: 9px;
   font-size: 8.25px;
   font-weight: 600;
-  color: #2d2d2d;
+  color: #C0B4A5;
   cursor: pointer;
   transition: all 0.3s ease;
 }

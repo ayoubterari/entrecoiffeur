@@ -1,4 +1,4 @@
-﻿/* Smart Search Component Styles - LeBonCoin Style */
+/* Smart Search Component Styles - LeBonCoin Style */
 .smart-search {
   position: relative;
   width: 100%;
@@ -31,7 +31,7 @@
 
 .search-input-container:focus-within {
   background: #ffffff;
-  border-color: #2d2d2d;
+  border-color: #C0B4A5;
   box-shadow: 0 0 0 3px rgba(192, 180, 165, 0.15);
 }
 
@@ -40,7 +40,7 @@
   right: 8px;
   width: 44px;
   height: 44px;
-  background: linear-gradient(135deg, #2d2d2d 0%, #555555 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #555555 100%);
   border: none;
   border-radius: 6px;
   display: flex;
@@ -108,7 +108,7 @@
 
 .search-button {
   padding: 0;
-  background: #2d2d2d;
+  background: #C0B4A5;
   border: none;
   color: white;
   cursor: pointer;
@@ -125,7 +125,7 @@
 }
 
 .search-button:hover {
-  background: #2d2d2d;
+  background: #C0B4A5;
   transform: scale(1.05);
 }
 
@@ -431,8 +431,8 @@
 }
 
 .no-results-suggestions li:before {
-  content: '•';
-  color: #2d2d2d;
+  content: '�';
+  color: #C0B4A5;
   position: absolute;
   left: 8px;
   font-weight: bold;

@@ -1,4 +1,4 @@
-ï»¿/* Container */
+/* Container */
 .exploreContainer {
   min-height: 100vh;
   background: #f8f9fa;
@@ -104,7 +104,7 @@
 
 .searchInput:focus {
   outline: none;
-  border-color: #2d2d2d;
+  border-color: #C0B4A5;
   background: white;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
@@ -148,8 +148,8 @@
 }
 
 .filterToggleBtn:hover {
-  border-color: #2d2d2d;
-  color: #2d2d2d;
+  border-color: #C0B4A5;
+  color: #C0B4A5;
 }
 
 /* Main Content */
@@ -196,7 +196,7 @@
   left: 0;
   width: 40px;
   height: 2px;
-  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #764ba2 100%);
   border-radius: 1px;
   transition: width 0.3s ease;
 }
@@ -217,7 +217,7 @@
 }
 
 .sidebarHeader h3::before {
-  content: 'ðŸŽ¯';
+  content: '??';
   font-size: 0.9rem;
   animation: pulse 2s infinite;
 }
@@ -278,7 +278,7 @@
   transform: translateY(-50%);
   width: 3px;
   height: 12px;
-  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #764ba2 100%);
   border-radius: 2px;
   transition: all 0.3s ease;
 }
@@ -329,13 +329,13 @@
 
 .categoryBtn:hover {
   background: #f8f9fa;
-  color: #2d2d2d;
+  color: #C0B4A5;
   transform: translateX(4px);
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
 }
 
 .categoryBtn.active {
-  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #764ba2 100%);
   color: white;
   font-weight: 600;
   transform: translateX(4px);
@@ -346,7 +346,7 @@
   display: none;
 }
 
-/* Style pour les catÃ©gories avec sous-catÃ©gories */
+/* Style pour les catégories avec sous-catégories */
 .categoryBtn.hasSubcategories {
   position: relative;
 }
@@ -366,7 +366,7 @@
 }
 
 .categoryBtn.hasSubcategories:hover::after {
-  border-top-color: #2d2d2d;
+  border-top-color: #C0B4A5;
 }
 
 .categoryBtn.hasSubcategories.active::after {
@@ -399,7 +399,7 @@
 
 .categoryBtn:hover .count {
   background: #e3f2fd;
-  color: #2d2d2d;
+  color: #C0B4A5;
   transform: scale(1.05);
 }
 
@@ -447,7 +447,7 @@
   top: 0;
   width: 2px;
   height: 0;
-  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #764ba2 100%);
   animation: growLine 0.5s ease-out 0.2s forwards;
 }
 
@@ -504,13 +504,13 @@
 
 .subcategoryBtn:hover {
   background: #f8f9fa;
-  color: #2d2d2d;
+  color: #C0B4A5;
   transform: translateX(4px);
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
 }
 
 .subcategoryBtn.active {
-  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #764ba2 100%);
   color: white;
   font-weight: 600;
   transform: translateX(4px);
@@ -573,13 +573,13 @@
 
 .storeBtn:hover {
   background: #f8f9fa;
-  color: #2d2d2d;
+  color: #C0B4A5;
   transform: translateX(4px);
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
 }
 
 .storeBtn.active {
-  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #764ba2 100%);
   color: white;
   font-weight: 600;
   transform: translateX(4px);
@@ -627,7 +627,7 @@
 }
 
 .priceRangeBtn:hover {
-  border-color: #2d2d2d;
+  border-color: #C0B4A5;
   background: #f8f9fa;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
@@ -638,8 +638,8 @@
 }
 
 .priceRangeBtn.active {
-  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
-  border-color: #2d2d2d;
+  background: linear-gradient(135deg, #C0B4A5 0%, #764ba2 100%);
+  border-color: #C0B4A5;
   color: white;
   font-weight: 600;
   transform: translateY(-2px);
@@ -726,7 +726,7 @@
 .priceValue:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(192, 180, 165, 0.2);
-  border-color: #2d2d2d;
+  border-color: #C0B4A5;
 }
 
 .priceValue:hover::before {
@@ -757,7 +757,7 @@
   appearance: none;
   width: 18px;
   height: 18px;
-  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #764ba2 100%);
   border-radius: 50%;
   cursor: pointer;
   pointer-events: all;
@@ -781,7 +781,7 @@
 .priceSlider::-moz-range-thumb {
   width: 18px;
   height: 18px;
-  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #764ba2 100%);
   border-radius: 50%;
   cursor: pointer;
   pointer-events: all;
@@ -824,7 +824,7 @@
 .sliderRange {
   position: absolute;
   height: 100%;
-  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #764ba2 100%);
   border-radius: 3px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
@@ -875,7 +875,7 @@
   opacity: 1;
 }
 
-/* Animation de pulsation pour les Ã©lÃ©ments actifs */
+/* Animation de pulsation pour les éléments actifs */
 @keyframes pulse-glow {
   0%, 100% {
     box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
@@ -893,7 +893,7 @@
   animation: pulse-glow 2s infinite;
 }
 
-/* AmÃ©lioration de l'accessibilitÃ© */
+/* Amélioration de l'accessibilité */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -902,12 +902,12 @@
   }
 }
 
-/* Ã‰tats de focus pour l'accessibilitÃ© */
+/* Etats de focus pour l'accessibilité */
 .categoryBtn:focus,
 .priceRangeBtn:focus,
 .resetBtn:focus,
 .priceSlider:focus {
-  outline: 2px solid #2d2d2d;
+  outline: 2px solid #C0B4A5;
   outline-offset: 2px;
 }
 
@@ -932,7 +932,7 @@
 }
 
 .resetBtn::before {
-  content: 'ðŸ”„';
+  content: '??';
   transition: transform 0.3s ease;
 }
 
@@ -949,8 +949,8 @@
 
 .resetBtn:hover {
   background: linear-gradient(135deg, #e9ecef 0%, #f1f3f5 100%);
-  border-color: #2d2d2d;
-  color: #2d2d2d;
+  border-color: #C0B4A5;
+  color: #C0B4A5;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
 }
@@ -1025,7 +1025,7 @@
 
 .sortSelect:focus {
   outline: none;
-  border-color: #2d2d2d;
+  border-color: #C0B4A5;
 }
 
 /* Products Grid */
@@ -1065,7 +1065,7 @@
 
 .resetFiltersBtn {
   padding: 0.7rem 1.6rem;
-  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #C0B4A5 0%, #764ba2 100%);
   border: none;
   border-radius: 8px;
   font-size: 0.76rem;

@@ -56,7 +56,7 @@
   justify-content: space-between;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid rgba(192, 180, 165, 0.15);
-  background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
+  background: linear-gradient(135deg, #C0B4A5, #C0B4A5);
   color: white;
 }
 
@@ -145,7 +145,7 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-  background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
+  background: linear-gradient(135deg, #C0B4A5, #C0B4A5);
   color: white;
   display: flex;
   align-items: center;
@@ -178,7 +178,7 @@
 }
 
 .menuBadge {
-  background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
+  background: linear-gradient(135deg, #C0B4A5, #C0B4A5);
   color: white;
   border-radius: 1rem;
   padding: 0.25rem 0.625rem;
@@ -234,7 +234,7 @@
   width: calc(100% - 3rem);
   margin: 0.75rem 1.5rem;
   padding: 1rem;
-  background: linear-gradient(135deg, #2d2d2d, #2d2d2d);
+  background: linear-gradient(135deg, #C0B4A5, #C0B4A5);
   border: none;
   border-radius: 0.75rem;
   cursor: pointer;
@@ -277,12 +277,12 @@
 /* Sign In Button - Variant */
 .signInButton {
   background: transparent;
-  border: 2px solid #2d2d2d;
+  border: 2px solid #C0B4A5;
   box-shadow: none;
 }
 
 .signInButton .authText {
-  color: #2d2d2d;
+  color: #C0B4A5;
 }
 
 .signInButton:active {
@@ -292,11 +292,11 @@
 @media (hover: hover) and (pointer: fine) {
   .signInButton:hover {
     background: rgba(255, 107, 157, 0.05);
-    border-color: #2d2d2d;
+    border-color: #C0B4A5;
   }
   
   .signInButton:hover .authText {
-    color: #2d2d2d;
+    color: #C0B4A5;
   }
 }
 
