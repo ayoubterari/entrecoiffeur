@@ -504,4 +504,57 @@ export default defineSchema({
     .index("by_user_unread", ["userId", "isRead"])
     .index("by_type", ["type"])
     .index("by_created_date", ["createdAt"]),
+
+  // Admin Users - Utilisateurs avec accès admin et permissions spécifiques
+  adminUsers: defineTable({
+    userId: v.id("users"), // Référence vers l'utilisateur principal
+    email: v.string(),
+    firstName: v.string(),
+    lastName: v.string(),
+    role: v.union(
+      v.literal("superadmin"), // Accès complet à tout
+      v.literal("admin"), // Accès selon permissions
+      v.literal("moderator") // Accès limité
+    ),
+    permissions: v.object({
+      dashboard: v.boolean(), // Accès au dashboard principal
+      users: v.boolean(), // Gestion des utilisateurs
+      products: v.boolean(), // Gestion des produits
+      categories: v.boolean(), // Gestion des catégories
+      orders: v.boolean(), // Gestion des commandes
+      commissions: v.boolean(), // Gestion des commissions
+      netvendeur: v.boolean(), // Gestion du net vendeur
+      paiement: v.boolean(), // Gestion des paiements
+      blog: v.boolean(), // Gestion du blog
+      coupons: v.boolean(), // Gestion des coupons
+      support: v.boolean(), // Gestion du support
+      stats: v.boolean(), // Accès aux statistiques
+      settings: v.boolean(), // Accès aux paramètres
+    }),
+    isActive: v.boolean(), // Compte actif ou désactivé
+    createdBy: v.id("users"), // Qui a créé cet admin
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"])
+    .index("by_email", ["email"])
+    .index("by_role", ["role"])
+    .index("by_active", ["isActive"]),
+
+  // Account Type Change Requests - Demandes de changement de type de compte
+  accountChangeRequests: defineTable({
+    userId: v.id("users"), // Utilisateur qui fait la demande
+    email: v.string(), // Email de l'utilisateur
+    firstName: v.string(), // Prénom de l'utilisateur
+    lastName: v.string(), // Nom de l'utilisateur
+    currentType: v.union(v.literal("particulier"), v.literal("professionnel"), v.literal("grossiste")), // Type actuel
+    requestedType: v.union(v.literal("particulier"), v.literal("professionnel"), v.literal("grossiste")), // Type demandé
+    reason: v.string(), // Raison de la demande
+    status: v.union(v.literal("pending"), v.literal("approved"), v.literal("rejected")), // Statut de la demande
+    reviewedBy: v.optional(v.id("users")), // Admin qui a traité la demande
+    reviewComment: v.optional(v.string()), // Commentaire de l'admin
+    reviewedAt: v.optional(v.number()), // Date de traitement
+    createdAt: v.number(), // Date de création
+    updatedAt: v.number(), // Date de mise à jour
+  }).index("by_user", ["userId"])
+    .index("by_status", ["status"]),
 });

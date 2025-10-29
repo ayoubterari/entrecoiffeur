@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
@@ -40,6 +40,12 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   
   // Get current user data to check group membership
   const currentUser = useQuery(api.auth.getCurrentUser, userId ? { userId } : "skip")
+  
+  // Vérifier si l'utilisateur a des permissions admin
+  const userPermissions = useQuery(
+    api.functions.queries.adminUsers.getUserPermissions,
+    userId ? { userId } : "skip"
+  )
 
   // Redirection automatique pour les superadmins
   useEffect(() => {
@@ -272,6 +278,39 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
           <div className={styles.headerActions}>
             {isAuthenticated ? (
               <>
+                {/* Bouton Dashboard Admin si l'utilisateur a des permissions */}
+                {userPermissions && (
+                  <button 
+                    onClick={() => navigate('/admin')}
+                    style={{
+                      background: 'linear-gradient(135deg, #6B5D56 0%, #8B7D76 100%)',
+                      color: 'white',
+                      padding: '8px 16px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontWeight: '600',
+                      fontSize: '14px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      transition: 'all 0.2s',
+                      marginRight: '10px',
+                      boxShadow: '0 2px 4px rgba(107, 93, 86, 0.2)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = 'scale(1.05)'
+                      e.target.style.background = 'linear-gradient(135deg, #7B6D66 0%, #9B8D86 100%)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = 'scale(1)'
+                      e.target.style.background = 'linear-gradient(135deg, #6B5D56 0%, #8B7D76 100%)'
+                    }}
+                  >
+                    <span>⚙️</span>
+                    <span>Dashboard Admin</span>
+                  </button>
+                )}
                 <button className={styles.userProfileBtn} onClick={() => navigate('/dashboard')}>
                   <div className={styles.userAvatarSmall}>
                     {userFirstName ? userFirstName.charAt(0).toUpperCase() : 'U'}

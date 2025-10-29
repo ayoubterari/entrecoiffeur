@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useMutation, useQuery } from 'convex/react'
 import { api } from '../lib/convex'
-import VoiceRecorder from './VoiceRecorder'
 import './SupportModal.css'
 
 const SupportModal = ({ isOpen, onClose, userId, userEmail, userFirstName, userLastName }) => {
@@ -19,8 +18,6 @@ const SupportModal = ({ isOpen, onClose, userId, userEmail, userFirstName, userL
   const [submitSuccess, setSubmitSuccess] = useState(false)
   const [submitError, setSubmitError] = useState('')
   const [ticketNumber, setTicketNumber] = useState('')
-  const [voiceRecording, setVoiceRecording] = useState(null)
-  const [voiceRecordingId, setVoiceRecordingId] = useState(null)
   const [ticketResult, setTicketResult] = useState(null)
 
   const createTicket = useMutation(api.functions.mutations.support.createSupportTicket)
@@ -47,8 +44,6 @@ const SupportModal = ({ isOpen, onClose, userId, userEmail, userFirstName, userL
       setSubmitError('')
       setTicketNumber('')
       setIsSubmitting(false)
-      setVoiceRecording(null)
-      setVoiceRecordingId(null)
       setTicketResult(null)
     }
   }, [isOpen, userEmail, userFirstName, userLastName])
@@ -74,18 +69,7 @@ const SupportModal = ({ isOpen, onClose, userId, userEmail, userFirstName, userL
     }))
   }
 
-  const handleVoiceRecording = async (audioBlob) => {
-    if (audioBlob) {
-      setVoiceRecording(audioBlob)
-      // TODO: Upload to Convex storage
-      // Pour l'instant, on ne définit pas d'ID (fonctionnalité à implémenter)
-      setVoiceRecordingId(null)
-    } else {
-      setVoiceRecording(null)
-      setVoiceRecordingId(null)
-    }
-  }
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault()
     
@@ -117,7 +101,6 @@ const SupportModal = ({ isOpen, onClose, userId, userEmail, userFirstName, userL
         subject: formData.subject,
         category: formData.category,
         description: formData.description,
-        voiceRecording: voiceRecordingId || undefined,
         relatedSellerId: formData.relatedSellerId || undefined,
       })
 
@@ -335,18 +318,6 @@ const SupportModal = ({ isOpen, onClose, userId, userEmail, userFirstName, userL
                   disabled={isSubmitting}
                 />
                 <div className="char-count">{formData.description.length}/2000</div>
-              </div>
-
-              {/* Enregistrement vocal optionnel */}
-              <div className="support-form-group support-form-group-full">
-                <label>Message vocal (optionnel)</label>
-                <VoiceRecorder 
-                  onRecordingComplete={handleVoiceRecording}
-                  disabled={isSubmitting}
-                />
-                <div className="voice-recording-info">
-                  <p>💡 Vous pouvez ajouter un message vocal pour expliquer votre problème plus clairement.</p>
-                </div>
               </div>
 
               <div className="support-form-actions">

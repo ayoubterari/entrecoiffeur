@@ -15,7 +15,8 @@ import {
   Ticket,
   Home,
   X,
-  AlertTriangle
+  AlertTriangle,
+  UserCheck
 } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { Button } from '../ui/button'
@@ -52,10 +53,11 @@ const Sidebar = ({
       )
     }
     
-    // Ajouter Messages et Support
+    // Ajouter Messages, Support et Changement de compte
     baseItems.push(
       { id: 'messages', name: 'Messages', icon: MessageSquare, badge: unreadCount },
-      { id: 'support', name: 'Support', icon: Headphones }
+      { id: 'support', name: 'Support', icon: Headphones },
+      { id: 'account-change', name: 'Changement de compte', icon: UserCheck }
     )
     
     return baseItems
@@ -171,14 +173,6 @@ const Sidebar = ({
         <Button
           variant="outline"
           className="w-full justify-start"
-          onClick={() => navigate('/dashboard')}
-        >
-          <Home className="mr-2 h-4 w-4" />
-          Dashboard V1
-        </Button>
-        <Button
-          variant="outline"
-          className="mt-2 w-full justify-start"
           onClick={() => navigate('/')}
         >
           <Home className="mr-2 h-4 w-4" />

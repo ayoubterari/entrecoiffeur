@@ -13,26 +13,16 @@ import {
   BarChart3, 
   Settings,
   Home,
-  X
+  X,
+  UserCheck,
+  LogOut
 } from 'lucide-react'
 import { cn } from '../../lib/utils'
+import { useNavigate } from 'react-router-dom'
 
-const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onMobileClose }) => {
-  const handleLogoutAndGoHome = (e) => {
-    e.preventDefault()
-    
-    // Nettoyer toutes les données de session
-    localStorage.removeItem('userId')
-    localStorage.removeItem('userEmail')
-    localStorage.removeItem('userFirstName')
-    localStorage.removeItem('userLastName')
-    localStorage.removeItem('userType')
-    localStorage.removeItem('companyName')
-    
-    // Rediriger vers l'accueil
-    window.location.href = '/'
-  }
-
+const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onMobileClose, hasAccess }) => {
+  const navigate = useNavigate()
+  
   const handleTabClick = (tabId) => {
     setActiveTab(tabId)
     if (onMobileClose) {
@@ -54,6 +44,7 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onMobileClose }) => {
     { id: 'support', label: 'Support', icon: Headphones },
     { id: 'stats', label: 'Statistiques', icon: BarChart3 },
     { id: 'settings', label: 'Paramètres', icon: Settings },
+    { id: 'account-change-requests', label: 'Demandes de compte', icon: UserCheck },
   ]
 
   return (
@@ -92,6 +83,11 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onMobileClose }) => {
               const Icon = item.icon
               const isActive = activeTab === item.id
               
+              // Vérifier si l'utilisateur a accès à ce module
+              if (hasAccess && !hasAccess(item.id)) {
+                return null
+              }
+              
               return (
                 <button
                   key={item.id}
@@ -113,14 +109,26 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onMobileClose }) => {
 
         {/* Footer */}
         <div className="border-t p-4 space-y-2">
-          <a 
-            href="/"
-            onClick={handleLogoutAndGoHome}
-            className="flex items-center gap-2 w-full px-4 py-2 text-sm font-medium rounded-md border border-gray-300 bg-white hover:bg-gray-100 text-gray-900 transition-colors cursor-pointer"
+          <button 
+            type="button"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              // Nettoyer les données de session
+              localStorage.removeItem('userId')
+              localStorage.removeItem('userEmail')
+              localStorage.removeItem('userFirstName')
+              localStorage.removeItem('userLastName')
+              localStorage.removeItem('userType')
+              localStorage.removeItem('companyName')
+              // Rediriger vers la page d'accueil
+              window.location.href = '/'
+            }}
+            className="flex items-center gap-2 w-full px-4 py-2 text-sm font-medium rounded-md border border-red-300 bg-white hover:bg-red-50 text-red-600 transition-colors cursor-pointer"
           >
-            <Home className="h-4 w-4" />
-            Retour à l'accueil
-          </a>
+            <LogOut className="h-4 w-4" />
+            Déconnexion
+          </button>
         </div>
       </div>
     </aside>

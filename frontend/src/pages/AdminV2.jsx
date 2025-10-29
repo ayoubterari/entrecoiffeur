@@ -15,6 +15,9 @@ import PaymentModule from '../components/adminv2/PaymentModule'
 import BlogModule from '../components/adminv2/BlogModule'
 import CouponsModule from '../components/adminv2/CouponsModule'
 import SupportModule from '../components/adminv2/SupportModule'
+import StatisticsModule from '../components/adminv2/StatisticsModule'
+import SettingsModule from '../components/adminv2/SettingsModule'
+import AccountChangeRequestsModule from '../components/adminv2/AccountChangeRequestsModule'
 import '../styles/adminv2.css'
 
 const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, userType, userId, onLogout }) => {
@@ -22,12 +25,44 @@ const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, user
   const [activeTab, setActiveTab] = useState('dashboard')
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
 
+  // Récupérer les permissions de l'utilisateur
+  const userPermissions = useQuery(
+    api.functions.queries.adminUsers.getUserPermissions,
+    userId ? { userId } : 'skip'
+  )
+
   // Queries pour les données réelles
   const allUsers = useQuery(api.auth.getAllUsers)
   const allProducts = useQuery(api.products.getProducts, { limit: 1000 })
   const allOrders = useQuery(api.orders.getAllOrders)
   const allCategories = useQuery(api.products.getCategories)
   const supportStats = useQuery(api.functions.queries.support.getSupportTicketStats)
+
+  // Fonction pour vérifier l'accès à un module
+  const hasAccess = (module) => {
+    // Si userType est superadmin (compte principal), accès complet
+    if (userType === 'superadmin') {
+      return true
+    }
+
+    // Si pas de permissions chargées, pas d'accès (sécurité)
+    if (!userPermissions) {
+      return false
+    }
+
+    // Si le compte est désactivé
+    if (!userPermissions.isActive) {
+      return false
+    }
+
+    // Si superadmin role dans adminUsers, accès complet
+    if (userPermissions.role === 'superadmin') {
+      return true
+    }
+
+    // Vérifier la permission spécifique
+    return userPermissions.permissions?.[module] || false
+  }
 
   // Calculer les statistiques
   const stats = {
@@ -81,29 +116,59 @@ const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, user
       return
     }
 
-    // Vérifier si c'est un superadmin
-    const isSuperAdmin = storedUserType === 'superadmin'
-    
-    if (!isSuperAdmin) {
-      console.log('AdminV2 - Not superadmin, redirecting to dashboard')
-      navigate('/dashboard')
-      return
-    }
-
     console.log('AdminV2 - Access granted!')
   }, [isAuthenticated, userType, userEmail, navigate])
 
-  // Récupérer le userType depuis localStorage aussi
-  const storedUserType = localStorage.getItem('userType')
-  const isSuperAdmin = storedUserType === 'superadmin'
+  // Rediriger vers le premier module accessible si l'utilisateur n'a pas accès au module actuel
+  useEffect(() => {
+    if (userPermissions && !hasAccess(activeTab)) {
+      // Trouver le premier module accessible
+      const modules = ['dashboard', 'users', 'products', 'categories', 'orders', 'commissions', 'netvendeur', 'paiement', 'blog', 'coupons', 'support', 'stats', 'settings']
+      const firstAccessibleModule = modules.find(module => hasAccess(module))
+      
+      if (firstAccessibleModule) {
+        setActiveTab(firstAccessibleModule)
+      }
+    }
+  }, [userPermissions, activeTab])
 
-  // Si pas authentifié ou pas superadmin, afficher loading
-  if (!isAuthenticated || !isSuperAdmin) {
+  // Si pas authentifié, afficher loading
+  if (!isAuthenticated) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center">
           <h2 className="text-2xl font-bold">🔄 Vérification des permissions...</h2>
           <p className="text-muted-foreground mt-2">Redirection en cours...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Si pas superadmin, attendre le chargement des permissions
+  if (userType !== 'superadmin' && userPermissions === undefined) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold">🔄 Chargement des permissions...</h2>
+          <p className="text-muted-foreground mt-2">Veuillez patienter...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Si pas superadmin et pas de permissions trouvées, accès refusé
+  if (userType !== 'superadmin' && userPermissions === null) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold">🚫 Accès refusé</h2>
+          <p className="text-muted-foreground mt-2">Vous n'avez pas les permissions nécessaires pour accéder à cette interface.</p>
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="mt-4 px-4 py-2 bg-primary text-white rounded-lg"
+          >
+            Retour au dashboard
+          </button>
         </div>
       </div>
     )
@@ -117,6 +182,7 @@ const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, user
         setActiveTab={setActiveTab}
         isMobileOpen={isMobileSidebarOpen}
         onMobileClose={() => setIsMobileSidebarOpen(false)}
+        hasAccess={hasAccess}
       />
 
       {/* Main Content - Full width sur mobile, offset sur desktop */}
@@ -132,77 +198,69 @@ const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, user
 
         {/* Page Content */}
         <main className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6">
-          {activeTab === 'dashboard' && (
+          {activeTab === 'dashboard' && hasAccess('dashboard') && (
             <DashboardContent stats={stats} />
           )}
 
-          {activeTab === 'users' && (
+          {activeTab === 'users' && hasAccess('users') && (
             <UsersModule />
           )}
 
-          {activeTab === 'products' && (
+          {activeTab === 'products' && hasAccess('products') && (
             <ProductsModule />
           )}
 
-          {activeTab === 'categories' && (
+          {activeTab === 'categories' && hasAccess('categories') && (
             <CategoriesModule />
           )}
 
-          {activeTab === 'orders' && (
+          {activeTab === 'orders' && hasAccess('orders') && (
             <OrdersModule />
           )}
 
-          {activeTab === 'commissions' && (
+          {activeTab === 'commissions' && hasAccess('commissions') && (
             <CommissionsModule />
           )}
 
-          {activeTab === 'netvendeur' && (
+          {activeTab === 'netvendeur' && hasAccess('netvendeur') && (
             <NetVendeurModule />
           )}
 
-          {activeTab === 'paiement' && (
+          {activeTab === 'paiement' && hasAccess('paiement') && (
             <PaymentModule />
           )}
 
-          {activeTab === 'blog' && (
+          {activeTab === 'blog' && hasAccess('blog') && (
             <BlogModule userEmail={userEmail} />
           )}
 
-          {activeTab === 'coupons' && (
+          {activeTab === 'coupons' && hasAccess('coupons') && (
             <CouponsModule />
           )}
 
-          {activeTab === 'support' && (
+          {activeTab === 'support' && hasAccess('support') && (
             <SupportModule userId={userId} />
           )}
 
-          {activeTab === 'stats' && (
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-3xl font-bold tracking-tight">Statistiques</h2>
-                <p className="text-muted-foreground">
-                  Rapports et analytics
-                </p>
-              </div>
-              <div className="rounded-lg border bg-card p-8 text-center">
-                <p className="text-muted-foreground">
-                  Module en cours de développement...
-                </p>
-              </div>
-            </div>
+          {activeTab === 'stats' && hasAccess('stats') && (
+            <StatisticsModule />
           )}
 
-          {activeTab === 'settings' && (
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-3xl font-bold tracking-tight">Paramètres</h2>
-                <p className="text-muted-foreground">
-                  Configuration de la plateforme
-                </p>
-              </div>
-              <div className="rounded-lg border bg-card p-8 text-center">
-                <p className="text-muted-foreground">
-                  Module en cours de développement...
+          {activeTab === 'settings' && hasAccess('settings') && (
+            <SettingsModule currentUserId={userId} />
+          )}
+
+          {activeTab === 'account-change-requests' && hasAccess('settings') && (
+            <AccountChangeRequestsModule currentUserId={userId} />
+          )}
+
+          {/* Message si pas d'accès */}
+          {!hasAccess(activeTab) && (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold">🚫 Accès refusé</h2>
+                <p className="text-muted-foreground mt-2">
+                  Vous n'avez pas la permission d'accéder à ce module.
                 </p>
               </div>
             </div>

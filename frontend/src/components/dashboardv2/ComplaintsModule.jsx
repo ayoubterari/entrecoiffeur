@@ -19,8 +19,7 @@ import {
   Eye,
   Calendar,
   Mail,
-  User,
-  Mic
+  User
 } from 'lucide-react'
 import {
   Dialog,
@@ -56,6 +55,7 @@ const ComplaintsModule = ({ userId, userEmail }) => {
     selectedComplaint ? { ticketId: selectedComplaint } : 'skip'
   )
 
+  
   // Mutation pour ajouter une réponse
   const addTicketResponse = useMutation(api.functions.mutations.support.addTicketResponse)
 
@@ -428,23 +428,6 @@ const ComplaintsModule = ({ userId, userEmail }) => {
                   <div className="prose max-w-none">
                     <p className="whitespace-pre-wrap text-sm text-orange-900">{complaintDetails.description}</p>
                   </div>
-                  
-                  {/* Enregistrement vocal si présent */}
-                  {complaintDetails.voiceRecording && (
-                    <div className="border-t border-orange-200 pt-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Mic className="h-4 w-4 text-orange-700" />
-                        <span className="text-sm font-medium text-orange-900">Enregistrement vocal du client</span>
-                      </div>
-                      <audio 
-                        controls 
-                        className="w-full"
-                        src={complaintDetails.voiceRecording}
-                      >
-                        Votre navigateur ne supporte pas la lecture audio.
-                      </audio>
-                    </div>
-                  )}
                 </CardContent>
               </Card>
 

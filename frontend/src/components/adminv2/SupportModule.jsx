@@ -15,8 +15,7 @@ import {
   Mail,
   Calendar,
   Tag,
-  UserCheck,
-  Mic
+  UserCheck
 } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
@@ -77,7 +76,8 @@ const SupportModule = ({ userId }) => {
     selectedTicket ? api.functions.queries.support.getSupportTicketById : 'skip',
     selectedTicket ? { ticketId: selectedTicket } : 'skip'
   )
-  
+
+    
   const updateTicketStatus = useMutation(api.functions.mutations.support.updateTicketStatus)
   const updateTicketPriority = useMutation(api.functions.mutations.support.updateTicketPriority)
   const addTicketResponse = useMutation(api.functions.mutations.support.addTicketResponse)
@@ -562,23 +562,6 @@ const SupportModule = ({ userId }) => {
                   <div className="prose max-w-none">
                     <p className="whitespace-pre-wrap">{ticketDetails.description}</p>
                   </div>
-                  
-                  {/* Enregistrement vocal si présent */}
-                  {ticketDetails.voiceRecording && (
-                    <div className="border-t pt-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Mic className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">Enregistrement vocal du client</span>
-                      </div>
-                      <audio 
-                        controls 
-                        className="w-full"
-                        src={ticketDetails.voiceRecording}
-                      >
-                        Votre navigateur ne supporte pas la lecture audio.
-                      </audio>
-                    </div>
-                  )}
                 </CardContent>
               </Card>
 
