@@ -557,11 +557,12 @@ body {
 }
 
 .bannerSlide:nth-child(2) {
-  background: linear-gradient(135deg, #2d2d2d 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6B5D56 0%, #8B7E74 100%);
 }
 
 .bannerSlide:nth-child(3) {
-  background: linear-gradient(135deg, #555555 0%, #5ac8fa 100%);
+  background: linear-gradient(135deg, #F5F5F0 0%, #FAFAF7 100%);
+  color: #2d2d2d;
 }
 
 .bannerContent {

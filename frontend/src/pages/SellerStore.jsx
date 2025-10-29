@@ -312,7 +312,7 @@ const SellerStore = ({ onAddToCart, onToggleFavorite, isAuthenticated, userId })
                   </button>
                 ) : currentUserId === sellerId ? (
                   <button className="follow-btn own-store" disabled>
-                    <span className="follow-icon">👤</span>
+                    <span className="follow-icon">●</span>
                     Votre store
                   </button>
                 ) : (
@@ -421,7 +421,7 @@ const SellerStore = ({ onAddToCart, onToggleFavorite, isAuthenticated, userId })
             ) : (
               <div className="no-products">
                 <div className="empty-store">
-                  <span className="empty-icon">📦</span>
+                  <span className="empty-icon">□</span>
                   <h3>Aucun produit disponible</h3>
                   <p>Ce vendeur n'a pas encore ajouté de produits à sa boutique</p>
                 </div>

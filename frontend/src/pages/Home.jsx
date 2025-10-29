@@ -246,14 +246,14 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
           {/* Desktop: Actions à gauche (Search, Favoris, Panier) */}
           <div className={styles.headerActionsLeft}>
             <button className={styles.searchBtn} title="Rechercher">
-              🔍
+              ⚲
             </button>
             <button 
               className={styles.headerBtn} 
               title="Favoris"
               onClick={onOpenFavorites}
             >
-              ❤️ <span className={styles.badge}>{favoritesCount}</span>
+              ♡ <span className={styles.badge}>{favoritesCount}</span>
             </button>
             <button 
               className={styles.headerBtn} 

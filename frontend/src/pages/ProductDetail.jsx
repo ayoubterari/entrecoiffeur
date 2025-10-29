@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
@@ -219,7 +219,7 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
           <div className="purchase-section">
             <div className="stock-info">
               <span className={`stock-status ${product.stock > 10 ? 'in-stock' : 'low-stock'}`}>
-                {product.stock > 10 ? '✅ En stock' : `⚠️ Plus que ${product.stock} en stock`}
+                {product.stock > 10 ? '✓ En stock' : `⚠ Plus que ${product.stock} en stock`}
               </span>
             </div>
 
@@ -303,7 +303,7 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
                 <span>Livraison gratuite dès 50€</span>
               </div>
               <div className="shipping-item">
-                <span className="icon">📦</span>
+                <span className="icon">□</span>
                 <span>Expédition sous 24h</span>
               </div>
               <div className="shipping-item">
@@ -395,7 +395,7 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
                       )}
                       {review.productQualityRating && (
                         <div className="detailed-rating">
-                          <span className="rating-label">📦 Qualité:</span>
+                          <span className="rating-label">Qualité:</span>
                           <div className="mini-stars">
                             {[...Array(5)].map((_, i) => (
                               <span key={i} className={`mini-star ${i < review.productQualityRating ? 'filled' : ''}`}>⭐</span>
@@ -405,7 +405,7 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
                       )}
                       {review.sellerServiceRating && (
                         <div className="detailed-rating">
-                          <span className="rating-label">👤 Service:</span>
+                          <span className="rating-label">Service:</span>
                           <div className="mini-stars">
                             {[...Array(5)].map((_, i) => (
                               <span key={i} className={`mini-star ${i < review.sellerServiceRating ? 'filled' : ''}`}>⭐</span>
