@@ -178,9 +178,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
     setCurrentSlide((prev) => (prev - 1 + bannerSlides.length) % bannerSlides.length)
   }
 
-  const goToSlide = (index) => {
-    setCurrentSlide(index)
-  }
+
 
   // Auto-play carousel
   useEffect(() => {
@@ -332,16 +330,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
             ›
           </button>
           
-          {/* Dots Navigation */}
-          <div className={styles.carouselDots}>
-            {bannerSlides.map((_, index) => (
-              <button
-                key={index}
-                className={`${styles.carouselDot} ${index === currentSlide ? styles.active : ''}`}
-                onClick={() => goToSlide(index)}
-              />
-            ))}
-          </div>
+
         </div>
       </section>
 

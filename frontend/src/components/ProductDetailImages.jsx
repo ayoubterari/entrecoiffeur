@@ -60,6 +60,13 @@ const ConvexImageWithFallback = ({ image, alt, className }) => {
         src={imageUrl} 
         alt={alt}
         className={className}
+        style={{ 
+          width: '100%', 
+          height: '100%', 
+          objectFit: 'contain',
+          maxWidth: 'none',
+          maxHeight: 'none'
+        }}
         onError={(e) => {
           e.target.style.display = 'none'
           if (e.target.nextSibling) {
@@ -77,6 +84,13 @@ const ConvexImageWithFallback = ({ image, alt, className }) => {
         src={image} 
         alt={alt}
         className={className}
+        style={{ 
+          width: '100%', 
+          height: '100%', 
+          objectFit: 'contain',
+          maxWidth: 'none',
+          maxHeight: 'none'
+        }}
         onError={(e) => {
           e.target.style.display = 'none'
           if (e.target.nextSibling) {
