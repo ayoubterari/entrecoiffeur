@@ -57,6 +57,12 @@
   visibility: visible !important;
 }
 
+.back-btn::before,
+.back-btn::after {
+  content: none !important;
+  display: none !important;
+}
+
 .back-btn:hover {
   background: linear-gradient(135deg, #404040, #C0B4A5) !important;
   color: white !important;

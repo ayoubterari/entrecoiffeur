@@ -190,7 +190,7 @@
 }
 
 .sidebarHeader::after {
-  content: '🔍';
+  content: '';
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -217,7 +217,7 @@
 }
 
 .sidebarHeader h3::before {
-  content: '🔍';
+  content: '';
   font-size: 0.9rem;
   animation: pulse 2s infinite;
 }
@@ -271,7 +271,7 @@
 }
 
 .filterTitle::before {
-  content: '🔍';
+  content: '';
   position: absolute;
   left: 0;
   top: 50%;
@@ -313,7 +313,7 @@
 }
 
 .categoryBtn::before {
-  content: '🔍';
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;
@@ -352,7 +352,7 @@
 }
 
 .categoryBtn.hasSubcategories::after {
-  content: '🔍';
+  content: '';
   position: absolute;
   right: 0.8rem;
   top: 50%;
@@ -387,7 +387,7 @@
 }
 
 .count::before {
-  content: '🔍';
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;
@@ -441,7 +441,7 @@
 }
 
 .subcategoryList::before {
-  content: '🔍';
+  content: '';
   position: absolute;
   left: -2px;
   top: 0;
@@ -488,7 +488,7 @@
 }
 
 .subcategoryBtn::before {
-  content: '🔍';
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;
@@ -557,7 +557,7 @@
 }
 
 .storeBtn::before {
-  content: '🔍';
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;
@@ -616,7 +616,7 @@
 }
 
 .priceRangeBtn::before {
-  content: '🔍';
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;
@@ -713,7 +713,7 @@
 }
 
 .priceValue::before {
-  content: '🔍';
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;
@@ -833,7 +833,7 @@
 }
 
 .sliderRange::before {
-  content: '🔍';
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;
@@ -932,12 +932,12 @@
 }
 
 .resetBtn::before {
-  content: '🔍';
+  content: '';
   transition: transform 0.3s ease;
 }
 
 .resetBtn::after {
-  content: '🔍';
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;

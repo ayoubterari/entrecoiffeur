@@ -207,9 +207,8 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
             >
               <div className="seller-content">
                 <div className="seller-main-line">
-                  <span className="store-name">{seller?.firstName} {seller?.lastName}</span>
+                  <span className="store-name">{seller?.companyName || 'Disway'}</span>
                   <span className="seller-badge">{seller?.userType === 'professionnel' ? 'Pro' : 'Particulier'}</span>
-                  <span className="seller-company">{seller?.companyName || 'Disway'}</span>
                 </div>
               </div>
             </div>

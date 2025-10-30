@@ -83,6 +83,12 @@
   white-space: nowrap;
 }
 
+.seller-badge::before,
+.seller-badge::after {
+  content: none !important;
+  display: none !important;
+}
+
 .seller-company {
   font-size: 0.8rem;
   color: #636e72;
