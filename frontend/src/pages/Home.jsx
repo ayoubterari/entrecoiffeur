@@ -9,7 +9,7 @@ import SupportModal from '../components/SupportModal'
 import MobileMenu from '../components/MobileMenu'
 import styles from '../components/Home.module.css'
 
-const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName, onAddToCart, cart, onOpenCart, onShowLogin, onToggleFavorite, favoritesCount, userId, onOpenFavorites }) => {
+const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName, onAddToCart, cart, onOpenCart, onShowLogin, onToggleFavorite, favoritesCount, userId, onOpenFavorites, userType }) => {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
@@ -24,9 +24,12 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [storesCarouselIndex, setStoresCarouselIndex] = useState(0)
 
-  // Get real data from Convex
+  // Get real data from Convex with visibility filtering
   const categoriesData = useQuery(api.products.getCategories)
-  const allProducts = useQuery(api.products.getProducts, { limit: 20 })
+  const allProducts = useQuery(api.products.getProducts, { 
+    limit: 20,
+    userType: userType && userType !== '' ? userType : undefined
+  })
   const storesData = useQuery(api.auth.getStores, { limit: 20 })
   
   // Get search results when searching

@@ -11,9 +11,10 @@ import { Checkbox } from '../ui/checkbox'
 import { Badge } from '../ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
-import { Search, X, Package, Plus, Edit, Trash2, AlertCircle } from 'lucide-react'
+import { Search, X, Package, Plus, Edit, Trash2, AlertCircle, MapPin } from 'lucide-react'
 import ImageUpload from '../ImageUpload'
 import ProductImageDisplay from '../ProductImageDisplay'
+import { frenchCities } from '../../data/frenchCities'
 
 const ProductsModule = ({ userId, userType }) => {
   const navigate = useNavigate()
@@ -36,6 +37,10 @@ const ProductsModule = ({ userId, userType }) => {
     parentCategoryId: '', // Catégorie principale
     stock: '',
     tags: '',
+    location: '',
+    visibleByParticulier: false,
+    visibleByProfessionnel: true,
+    visibleByGrossiste: true,
     featured: false,
     onSale: false
   })
@@ -106,6 +111,10 @@ const ProductsModule = ({ userId, userType }) => {
       parentCategoryId: '',
       stock: '',
       tags: '',
+      location: '',
+      visibleByParticulier: false,
+      visibleByProfessionnel: true,
+      visibleByGrossiste: true,
       featured: false,
       onSale: false
     })
@@ -137,6 +146,10 @@ const ProductsModule = ({ userId, userType }) => {
         sellerId: userId,
         stock: parseInt(productForm.stock),
         tags: productForm.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+        location: productForm.location || undefined,
+        visibleByParticulier: productForm.visibleByParticulier,
+        visibleByProfessionnel: productForm.visibleByProfessionnel,
+        visibleByGrossiste: productForm.visibleByGrossiste,
         images: imageStorageIds,
         featured: productForm.featured,
         onSale: productForm.onSale
@@ -167,6 +180,10 @@ const ProductsModule = ({ userId, userType }) => {
       parentCategoryId: isSubcategory ? productCategory.parentCategoryId : product.categoryId,
       stock: product.stock.toString(),
       tags: product.tags?.join(', ') || '',
+      location: product.location || '',
+      visibleByParticulier: product.visibleByParticulier || false,
+      visibleByProfessionnel: product.visibleByProfessionnel !== false,
+      visibleByGrossiste: product.visibleByGrossiste !== false,
       featured: product.featured || false,
       onSale: product.onSale || false
     })
@@ -203,6 +220,10 @@ const ProductsModule = ({ userId, userType }) => {
         categoryId: finalCategoryId,
         stock: parseInt(productForm.stock),
         tags: productForm.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+        location: productForm.location || undefined,
+        visibleByParticulier: productForm.visibleByParticulier,
+        visibleByProfessionnel: productForm.visibleByProfessionnel,
+        visibleByGrossiste: productForm.visibleByGrossiste,
         images: imageStorageIds,
         featured: productForm.featured,
         onSale: productForm.onSale
@@ -357,6 +378,7 @@ const ProductsModule = ({ userId, userType }) => {
                       <TableHead>Image</TableHead>
                       <TableHead>Produit</TableHead>
                       <TableHead>Description</TableHead>
+                      <TableHead>Localisation</TableHead>
                       <TableHead>Prix</TableHead>
                       <TableHead>Stock</TableHead>
                       <TableHead>Catégorie</TableHead>
@@ -383,6 +405,16 @@ const ProductsModule = ({ userId, userType }) => {
                           <div className="max-w-xs truncate text-sm text-muted-foreground">
                             {product.description}
                           </div>
+                        </TableCell>
+                        <TableCell>
+                          {product.location ? (
+                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                              <MapPin className="h-3 w-3" />
+                              {product.location}
+                            </div>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">Non spécifiée</span>
+                          )}
                         </TableCell>
                         <TableCell>
                           <div className="font-semibold">{product.price}€</div>
@@ -575,6 +607,26 @@ const ProductsModule = ({ userId, userType }) => {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="location">Localisation (Ville)</Label>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <select
+                  id="location"
+                  className="flex h-10 w-full rounded-md border border-input bg-white pl-10 pr-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  value={productForm.location}
+                  onChange={(e) => setProductForm({...productForm, location: e.target.value})}
+                >
+                  <option value="">Sélectionner une ville</option>
+                  {frenchCities.map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
               <Label>Images du produit *</Label>
               <ImageUpload 
                 images={productImages}
@@ -583,22 +635,35 @@ const ProductsModule = ({ userId, userType }) => {
               />
             </div>
 
-            <div className="flex gap-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="featured"
-                  checked={productForm.featured}
-                  onCheckedChange={(checked) => setProductForm({...productForm, featured: checked})}
-                />
-                <Label htmlFor="featured" className="cursor-pointer">Produit en vedette</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="onSale"
-                  checked={productForm.onSale}
-                  onCheckedChange={(checked) => setProductForm({...productForm, onSale: checked})}
-                />
-                <Label htmlFor="onSale" className="cursor-pointer">En promotion</Label>
+            {/* Visibilité du produit */}
+            <div className="space-y-3 p-4 border rounded-lg bg-muted/50">
+              <Label className="text-base font-semibold">👁️ Visibilité du produit</Label>
+              <p className="text-sm text-muted-foreground">Choisissez qui peut voir ce produit</p>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="visibleByProfessionnel"
+                    checked={productForm.visibleByProfessionnel}
+                    onCheckedChange={(checked) => setProductForm({...productForm, visibleByProfessionnel: checked})}
+                  />
+                  <Label htmlFor="visibleByProfessionnel" className="cursor-pointer">💼 Visible par les professionnels</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="visibleByGrossiste"
+                    checked={productForm.visibleByGrossiste}
+                    onCheckedChange={(checked) => setProductForm({...productForm, visibleByGrossiste: checked})}
+                  />
+                  <Label htmlFor="visibleByGrossiste" className="cursor-pointer">🏢 Visible par les grossistes</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="visibleByParticulier"
+                    checked={productForm.visibleByParticulier}
+                    onCheckedChange={(checked) => setProductForm({...productForm, visibleByParticulier: checked})}
+                  />
+                  <Label htmlFor="visibleByParticulier" className="cursor-pointer">👤 Visible par les particuliers</Label>
+                </div>
               </div>
             </div>
 
@@ -736,6 +801,26 @@ const ProductsModule = ({ userId, userType }) => {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="edit-location">Localisation (Ville)</Label>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <select
+                  id="edit-location"
+                  className="flex h-10 w-full rounded-md border border-input bg-white pl-10 pr-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  value={productForm.location}
+                  onChange={(e) => setProductForm({...productForm, location: e.target.value})}
+                >
+                  <option value="">Sélectionner une ville</option>
+                  {frenchCities.map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
               <Label>Images du produit *</Label>
               <ImageUpload 
                 images={productImages}
@@ -744,22 +829,35 @@ const ProductsModule = ({ userId, userType }) => {
               />
             </div>
 
-            <div className="flex gap-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="edit-featured"
-                  checked={productForm.featured}
-                  onCheckedChange={(checked) => setProductForm({...productForm, featured: checked})}
-                />
-                <Label htmlFor="edit-featured" className="cursor-pointer">Produit en vedette</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="edit-onSale"
-                  checked={productForm.onSale}
-                  onCheckedChange={(checked) => setProductForm({...productForm, onSale: checked})}
-                />
-                <Label htmlFor="edit-onSale" className="cursor-pointer">En promotion</Label>
+            {/* Visibilité du produit */}
+            <div className="space-y-3 p-4 border rounded-lg bg-muted/50">
+              <Label className="text-base font-semibold">👁️ Visibilité du produit</Label>
+              <p className="text-sm text-muted-foreground">Choisissez qui peut voir ce produit</p>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="edit-visibleByProfessionnel"
+                    checked={productForm.visibleByProfessionnel}
+                    onCheckedChange={(checked) => setProductForm({...productForm, visibleByProfessionnel: checked})}
+                  />
+                  <Label htmlFor="edit-visibleByProfessionnel" className="cursor-pointer">💼 Visible par les professionnels</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="edit-visibleByGrossiste"
+                    checked={productForm.visibleByGrossiste}
+                    onCheckedChange={(checked) => setProductForm({...productForm, visibleByGrossiste: checked})}
+                  />
+                  <Label htmlFor="edit-visibleByGrossiste" className="cursor-pointer">🏢 Visible par les grossistes</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="edit-visibleByParticulier"
+                    checked={productForm.visibleByParticulier}
+                    onCheckedChange={(checked) => setProductForm({...productForm, visibleByParticulier: checked})}
+                  />
+                  <Label htmlFor="edit-visibleByParticulier" className="cursor-pointer">👤 Visible par les particuliers</Label>
+                </div>
               </div>
             </div>
 

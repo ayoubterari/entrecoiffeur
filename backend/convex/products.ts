@@ -112,25 +112,50 @@ export const getProductsByCategory = query({
   },
 });
 
-// Get all products with pagination
+// Get all products with pagination and visibility filtering
 export const getProducts = query({
   args: { 
     limit: v.optional(v.number()),
-    search: v.optional(v.string())
+    search: v.optional(v.string()),
+    userType: v.optional(v.union(v.literal("particulier"), v.literal("professionnel"), v.literal("grossiste"))),
+    skipVisibilityFilter: v.optional(v.boolean()) // Pour l'admin : voir tous les produits
   },
   handler: async (ctx, args) => {
     let query = ctx.db.query("products");
+    let products = await query.collect();
     
-    if (args.search) {
-      // Simple search implementation
-      const allProducts = await query.collect();
-      return allProducts.filter(product => 
-        product.name.toLowerCase().includes(args.search!.toLowerCase()) ||
-        product.description.toLowerCase().includes(args.search!.toLowerCase())
-      ).slice(0, args.limit || 20);
+    // Skip visibility filter for admin
+    if (args.skipVisibilityFilter) {
+      // Admin voit tous les produits, pas de filtrage
+    } else if (args.userType) {
+      // Filter by visibility based on user type
+      products = products.filter(product => {
+        if (args.userType === "particulier") {
+          // Particuliers : doit être explicitement true
+          return product.visibleByParticulier === true;
+        } else if (args.userType === "professionnel") {
+          // Professionnels : visible si true ou undefined (par défaut)
+          return product.visibleByProfessionnel === true || product.visibleByProfessionnel === undefined;
+        } else if (args.userType === "grossiste") {
+          // Grossistes : visible si true ou undefined (par défaut)
+          return product.visibleByGrossiste === true || product.visibleByGrossiste === undefined;
+        }
+        return true;
+      });
+    } else {
+      // Non connecté : afficher uniquement les produits visibles par les particuliers
+      products = products.filter(product => product.visibleByParticulier === true);
     }
     
-    return await query.take(args.limit || 20);
+    // Apply search filter
+    if (args.search) {
+      products = products.filter(product => 
+        product.name.toLowerCase().includes(args.search!.toLowerCase()) ||
+        product.description.toLowerCase().includes(args.search!.toLowerCase())
+      );
+    }
+    
+    return products.slice(0, args.limit || 20);
   },
 });
 
@@ -154,6 +179,10 @@ export const createProduct = mutation({
     sellerId: v.id("users"), // Add sellerId as parameter
     stock: v.number(),
     tags: v.array(v.string()),
+    location: v.optional(v.string()), // Ville où se trouve l'annonce
+    visibleByParticulier: v.optional(v.boolean()),
+    visibleByProfessionnel: v.optional(v.boolean()),
+    visibleByGrossiste: v.optional(v.boolean()),
     featured: v.optional(v.boolean()),
     onSale: v.optional(v.boolean()),
   },
@@ -199,6 +228,10 @@ export const createProduct = mutation({
       sellerId: args.sellerId,
       images: args.images,
       tags: args.tags,
+      location: args.location,
+      visibleByParticulier: args.visibleByParticulier,
+      visibleByProfessionnel: args.visibleByProfessionnel,
+      visibleByGrossiste: args.visibleByGrossiste,
       featured: args.featured || false,
       onSale: args.onSale || false,
       createdAt: Date.now(),
@@ -240,6 +273,10 @@ export const updateProduct = mutation({
     categoryId: v.optional(v.id("categories")),
     stock: v.optional(v.number()),
     tags: v.optional(v.array(v.string())),
+    location: v.optional(v.string()), // Ville où se trouve l'annonce
+    visibleByParticulier: v.optional(v.boolean()),
+    visibleByProfessionnel: v.optional(v.boolean()),
+    visibleByGrossiste: v.optional(v.boolean()),
     featured: v.optional(v.boolean()),
     onSale: v.optional(v.boolean()),
   },

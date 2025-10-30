@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useMutation } from 'convex/react'
 import { api } from '../lib/convex'
+import { frenchCities } from '../data/frenchCities'
 
 const Login = ({ onLogin, onBack }) => {
   const [isSignUp, setIsSignUp] = useState(false)
@@ -8,6 +9,8 @@ const Login = ({ onLogin, onBack }) => {
   const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
+  const [city, setCity] = useState('')
+  const [userType, setUserType] = useState('particulier')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -26,7 +29,14 @@ const Login = ({ onLogin, onBack }) => {
 
     try {
       if (isSignUp) {
-        const result = await createUser({ email, password, firstName, lastName })
+        const result = await createUser({ 
+          email, 
+          password, 
+          firstName, 
+          lastName, 
+          city,
+          userType
+        })
         onLogin(result.userId)
       } else {
         const result = await signIn({ email, password })
@@ -46,6 +56,7 @@ const Login = ({ onLogin, onBack }) => {
     setPassword('')
     setFirstName('')
     setLastName('')
+    setCity('')
   }
 
   if (!mounted) return null
@@ -101,6 +112,37 @@ const Login = ({ onLogin, onBack }) => {
                 required
                 autoComplete="family-name"
               />
+            </div>
+
+            <div className="input-group">
+              <label className="form-label">📍 Ville *</label>
+              <select
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="form-select"
+                required
+              >
+                <option value="">Sélectionnez votre ville</option>
+                {frenchCities.map((cityName) => (
+                  <option key={cityName} value={cityName}>
+                    {cityName}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="input-group">
+              <label className="form-label">Type de compte</label>
+              <select
+                value={userType}
+                onChange={(e) => setUserType(e.target.value)}
+                className="form-select"
+                required
+              >
+                <option value="particulier">👤 Particulier</option>
+                <option value="professionnel">💼 Professionnel</option>
+                <option value="grossiste">🏢 Grossiste</option>
+              </select>
             </div>
           </>
         )}

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from './lib/convex'
@@ -217,6 +217,7 @@ function AppContent() {
                 favoritesCount={favoritesCount || 0}
                 userId={userId}
                 onOpenFavorites={() => setShowFavoritesModal(true)}
+                userType={localStorage.getItem('userType') || ''}
               />
             } 
           />
@@ -360,6 +361,7 @@ function AppContent() {
                 userId={userId}
                 isAuthenticated={isAuthenticated}
                 onShowLogin={handleShowLogin}
+                userType={localStorage.getItem('userType') || ''}
               />
             } 
           />

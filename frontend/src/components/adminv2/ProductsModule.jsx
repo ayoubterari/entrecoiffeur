@@ -11,8 +11,10 @@ import {
   Star,
   Tag,
   AlertCircle,
-  Image as ImageIcon
+  Image as ImageIcon,
+  MapPin
 } from 'lucide-react'
+import { frenchCities } from '../../data/frenchCities'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
@@ -61,7 +63,10 @@ const ProductsModule = () => {
   const [filterCategory, setFilterCategory] = useState('all')
 
   // Convex queries et mutations
-  const allProducts = useQuery(api.products.getProducts, { limit: 1000 })
+  const allProducts = useQuery(api.products.getProducts, { 
+    limit: 1000,
+    skipVisibilityFilter: true // Admin voit tous les produits
+  })
   const categories = useQuery(api.products.getCategories)
   const createProduct = useMutation(api.products.createProduct)
   const updateProduct = useMutation(api.products.updateProduct)
@@ -76,6 +81,7 @@ const ProductsModule = () => {
     images: [],
     stock: '',
     brand: '',
+    location: '',
     isOnSale: false,
     salePrice: '',
     isFeatured: false
@@ -117,6 +123,7 @@ const ProductsModule = () => {
         images: [],
         stock: '',
         brand: '',
+        location: '',
         isOnSale: false,
         salePrice: '',
         isFeatured: false
@@ -137,6 +144,7 @@ const ProductsModule = () => {
       images: product.images || [],
       stock: product.stock?.toString() || '0',
       brand: product.brand || '',
+      location: product.location || '',
       isOnSale: product.isOnSale || false,
       salePrice: product.salePrice?.toString() || '',
       isFeatured: product.isFeatured || false
@@ -296,6 +304,7 @@ const ProductsModule = () => {
                     <TableHead>Image</TableHead>
                     <TableHead>Produit</TableHead>
                     <TableHead>Catégorie</TableHead>
+                    <TableHead>Localisation</TableHead>
                     <TableHead>Prix</TableHead>
                     <TableHead>Stock</TableHead>
                     <TableHead>Statut</TableHead>
@@ -329,6 +338,16 @@ const ProductsModule = () => {
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">{product.category}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        {product.location ? (
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <MapPin className="h-3 w-3" />
+                            {product.location}
+                          </div>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">Non spécifiée</span>
+                        )}
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col gap-1">
@@ -487,6 +506,23 @@ const ProductsModule = () => {
                 </Select>
               </div>
               
+              <div className="space-y-2">
+                <Label htmlFor="location">Localisation (Ville)</Label>
+                <Select value={productForm.location} onValueChange={(value) => setProductForm({...productForm, location: value})}>
+                  <SelectTrigger>
+                    <MapPin className="mr-2 h-4 w-4" />
+                    <SelectValue placeholder="Sélectionner une ville" />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[300px]">
+                    {frenchCities.map((city) => (
+                      <SelectItem key={city} value={city}>
+                        {city}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
               <div className="flex items-center space-x-6">
                 <div className="flex items-center space-x-2">
                   <Switch
@@ -593,6 +629,23 @@ const ProductsModule = () => {
                     required
                   />
                 </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-location">Localisation (Ville)</Label>
+                <Select value={productForm.location} onValueChange={(value) => setProductForm({...productForm, location: value})}>
+                  <SelectTrigger>
+                    <MapPin className="mr-2 h-4 w-4" />
+                    <SelectValue placeholder="Sélectionner une ville" />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[300px]">
+                    {frenchCities.map((city) => (
+                      <SelectItem key={city} value={city}>
+                        {city}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               
               <div className="flex items-center space-x-6">

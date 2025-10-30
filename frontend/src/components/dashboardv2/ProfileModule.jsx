@@ -7,7 +7,8 @@ import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Badge } from '../ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { Camera, Save, X } from 'lucide-react'
+import { Camera, Save, X, MapPin } from 'lucide-react'
+import { frenchCities } from '../../data/frenchCities'
 
 const ProfileModule = ({ userId, userEmail, userFirstName, userLastName, userType, companyName }) => {
   const [isEditing, setIsEditing] = useState(false)
@@ -16,6 +17,7 @@ const ProfileModule = ({ userId, userEmail, userFirstName, userLastName, userTyp
     lastName: userLastName || '',
     phone: '',
     address: '',
+    city: '',
     companyName: companyName || '',
     siret: '',
     tvaNumber: ''
@@ -44,6 +46,7 @@ const ProfileModule = ({ userId, userEmail, userFirstName, userLastName, userTyp
         lastName: userData.lastName || '',
         phone: userData.phone || '',
         address: userData.address || '',
+        city: userData.city || '',
         companyName: userData.companyName || '',
         siret: userData.siret || '',
         tvaNumber: userData.tvaNumber || ''
@@ -110,6 +113,7 @@ const ProfileModule = ({ userId, userEmail, userFirstName, userLastName, userTyp
         lastName: userData.lastName || '',
         phone: userData.phone || '',
         address: userData.address || '',
+        city: userData.city || '',
         companyName: userData.companyName || '',
         siret: userData.siret || '',
         tvaNumber: userData.tvaNumber || ''
@@ -239,6 +243,35 @@ const ProfileModule = ({ userId, userEmail, userFirstName, userLastName, userTyp
                 disabled={!isEditing}
                 placeholder="123 Rue de la Paix, 75001 Paris"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="city">
+                <MapPin className="inline h-4 w-4 mr-1" />
+                Ville
+              </Label>
+              {isEditing ? (
+                <select
+                  id="city"
+                  value={profileForm.city}
+                  onChange={(e) => setProfileForm({...profileForm, city: e.target.value})}
+                  className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                >
+                  <option value="">Sélectionnez votre ville</option>
+                  {frenchCities.map((cityName) => (
+                    <option key={cityName} value={cityName}>
+                      {cityName}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <Input
+                  id="city"
+                  value={profileForm.city || 'Non renseignée'}
+                  disabled
+                  className="bg-muted"
+                />
+              )}
             </div>
 
             <div className="space-y-2">

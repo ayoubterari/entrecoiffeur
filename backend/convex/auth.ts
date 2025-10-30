@@ -9,6 +9,7 @@ export const createUser = mutation({
     password: v.string(),
     firstName: v.string(),
     lastName: v.string(),
+    city: v.string(), // Ville obligatoire
     userType: v.union(v.literal("particulier"), v.literal("professionnel"), v.literal("grossiste"), v.literal("superadmin")),
     companyName: v.optional(v.string()),
     siret: v.optional(v.string()),
@@ -52,6 +53,7 @@ export const createUser = mutation({
       password: args.password, // In production, hash this password
       firstName: args.firstName,
       lastName: args.lastName,
+      city: args.city,
       userType: args.userType,
       companyName: args.companyName,
       siret: args.siret,
@@ -197,6 +199,7 @@ export const updateOwnProfile = mutation({
     lastName: v.optional(v.string()),
     phone: v.optional(v.string()),
     address: v.optional(v.string()),
+    city: v.optional(v.string()),
     companyName: v.optional(v.string()),
     siret: v.optional(v.string()),
     tvaNumber: v.optional(v.string()),

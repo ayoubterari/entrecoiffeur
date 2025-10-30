@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useMutation } from 'convex/react'
 import { api } from '../lib/convex'
+import { frenchCities } from '../data/frenchCities'
 
 const LoginModal = ({ isOpen, onClose, onLogin, initialMode = 'signin' }) => {
   const [isSignUp, setIsSignUp] = useState(initialMode === 'signup')
@@ -8,6 +9,7 @@ const LoginModal = ({ isOpen, onClose, onLogin, initialMode = 'signin' }) => {
   const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
+  const [city, setCity] = useState('')
   const [userType, setUserType] = useState('particulier')
   const [companyName, setCompanyName] = useState('')
   const [siret, setSiret] = useState('')
@@ -46,6 +48,7 @@ const LoginModal = ({ isOpen, onClose, onLogin, initialMode = 'signin' }) => {
           password, 
           firstName, 
           lastName, 
+          city,
           userType,
           companyName: companyName || undefined,
           siret: siret || undefined,
@@ -94,6 +97,7 @@ const LoginModal = ({ isOpen, onClose, onLogin, initialMode = 'signin' }) => {
     setPassword('')
     setFirstName('')
     setLastName('')
+    setCity('')
     setIsGroupMember(false)
     setGroupAccessCode('')
   }
@@ -111,6 +115,7 @@ const LoginModal = ({ isOpen, onClose, onLogin, initialMode = 'signin' }) => {
     setPassword('')
     setFirstName('')
     setLastName('')
+    setCity('')
     setIsGroupMember(false)
     setGroupAccessCode('')
     onClose()
@@ -162,6 +167,23 @@ const LoginModal = ({ isOpen, onClose, onLogin, initialMode = 'signin' }) => {
                   required
                   autoComplete="family-name"
                 />
+              </div>
+
+              <div className="input-group">
+                <label className="form-label">📍 Ville *</label>
+                <select
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="form-select"
+                  required
+                >
+                  <option value="">Sélectionnez votre ville</option>
+                  {frenchCities.map((cityName) => (
+                    <option key={cityName} value={cityName}>
+                      {cityName}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="input-group">

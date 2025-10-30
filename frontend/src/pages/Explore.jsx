@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
 import ProductCard from '../components/ProductCard'
+import { frenchCities } from '../data/frenchCities'
 import styles from './Explore.module.css'
 
-const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onShowLogin }) => {
+const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onShowLogin, userType }) => {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -16,9 +17,20 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
   const [selectedPriceRange, setSelectedPriceRange] = useState('all')
   const [isSliderActive, setIsSliderActive] = useState(false)
   const [showStores, setShowStores] = useState(false)
+  const [selectedLocation, setSelectedLocation] = useState('all')
 
-  // Fetch data from Convex
-  const allProducts = useQuery(api.products.getProducts, { limit: 100 })
+  // Debug: Log userType
+  console.log('🔍 Explore - userType reçu:', userType)
+  console.log('🔍 Explore - userType envoyé à la query:', userType && userType !== '' ? userType : undefined)
+
+  // Fetch data from Convex with visibility filtering
+  const allProducts = useQuery(api.products.getProducts, { 
+    limit: 100,
+    userType: userType && userType !== '' ? userType : undefined
+  })
+  
+  // Debug: Log products
+  console.log('🔍 Explore - Produits reçus:', allProducts?.length, 'produits')
   const categories = useQuery(api.products.getCategories)
   const mainCategories = useQuery(api.products.getMainCategories)
   const userFavorites = useQuery(
@@ -89,6 +101,15 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
     { id: 'over200', label: 'Plus de 200€', min: 200, max: 10000 },
   ]
 
+  // Get unique locations from products
+  const availableLocations = React.useMemo(() => {
+    if (!allProducts) return []
+    const locations = allProducts
+      .map(p => p.location)
+      .filter(loc => loc && loc.trim() !== '')
+    return [...new Set(locations)].sort()
+  }, [allProducts])
+
   // Filter and sort products
   const filteredProducts = allProducts?.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -96,8 +117,9 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory
     const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1]
     const matchesStore = !showStores || product.sellerId === showStores
+    const matchesLocation = selectedLocation === 'all' || product.location === selectedLocation
     
-    return matchesSearch && matchesCategory && matchesPrice && matchesStore
+    return matchesSearch && matchesCategory && matchesPrice && matchesStore && matchesLocation
   }) || []
 
   // Sort products
@@ -265,6 +287,34 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
             </div>
           </div>
 
+          {/* Location Filter */}
+          <div className={styles.filterGroup}>
+            <h4 className={styles.filterTitle}>📍 Localisation</h4>
+            <div className={styles.locationList}>
+              <button
+                className={`${styles.locationBtn} ${selectedLocation === 'all' ? styles.active : ''}`}
+                onClick={() => setSelectedLocation('all')}
+              >
+                <span>🌍 Toutes les villes</span>
+                <span className={styles.count}>{allProducts?.length || 0}</span>
+              </button>
+              
+              {availableLocations.map(location => {
+                const locationProductCount = allProducts?.filter(p => p.location === location).length || 0
+                return (
+                  <button
+                    key={location}
+                    className={`${styles.locationBtn} ${selectedLocation === location ? styles.active : ''}`}
+                    onClick={() => setSelectedLocation(location)}
+                  >
+                    <span>📍 {location}</span>
+                    <span className={styles.count}>{locationProductCount}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
           {/* Stores Filter */}
           <div className={styles.filterGroup}>
             <h4 className={styles.filterTitle}>Stores</h4>
@@ -382,6 +432,7 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
               setSelectedPriceRange('all')
               setExpandedCategories(new Set())
               setShowStores(false)
+              setSelectedLocation('all')
             }}
           >
             Réinitialiser les filtres
@@ -442,6 +493,7 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
                   setPriceRange([0, 1000])
                   setSearchQuery('')
                   setShowStores(false)
+                  setSelectedLocation('all')
                 }}
               >
                 Réinitialiser les filtres

@@ -1,4 +1,4 @@
-﻿/* Container */
+/* Container */
 .exploreContainer {
   min-height: 100vh;
   background: #f8f9fa;
@@ -529,6 +529,65 @@
 
 .subcategoryBtn.active .subcatIndicator {
   color: rgba(255, 255, 255, 0.8);
+}
+
+/* Location List */
+.locationList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.locationBtn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.76rem;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.locationBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.locationBtn:hover::before {
+  left: 100%;
+}
+
+.locationBtn:hover {
+  background: #f8f9fa;
+  color: #C0B4A5;
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.locationBtn.active {
+  background: linear-gradient(135deg, #C0B4A5 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.locationBtn.active::before {
+  display: none;
 }
 
 /* Stores List */

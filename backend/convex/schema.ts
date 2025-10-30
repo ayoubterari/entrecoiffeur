@@ -11,6 +11,7 @@ export default defineSchema({
     avatar: v.optional(v.string()),
     phone: v.optional(v.string()),
     address: v.optional(v.string()),
+    city: v.optional(v.string()), // Ville de l'utilisateur (obligatoire à l'inscription)
     companyName: v.optional(v.string()), // Pour professionnels et grossistes
     siret: v.optional(v.string()), // Pour professionnels et grossistes
     tvaNumber: v.optional(v.string()), // Pour professionnels et grossistes
@@ -21,7 +22,8 @@ export default defineSchema({
     createdAt: v.number(),
   }).index("by_email", ["email"])
     .index("by_user_type", ["userType"])
-    .index("by_group_member", ["isGroupMember"]),
+    .index("by_group_member", ["isGroupMember"])
+    .index("by_city", ["city"]),
   
   categories: defineTable({
     name: v.string(),
@@ -48,6 +50,11 @@ export default defineSchema({
     sellerId: v.id("users"),
     images: v.array(v.union(v.string(), v.id("_storage"))),
     tags: v.optional(v.array(v.string())),
+    location: v.optional(v.string()), // Ville où se trouve l'annonce
+    // Visibilité du produit par type d'utilisateur
+    visibleByParticulier: v.optional(v.boolean()), // Visible par les particuliers
+    visibleByProfessionnel: v.optional(v.boolean()), // Visible par les professionnels
+    visibleByGrossiste: v.optional(v.boolean()), // Visible par les grossistes
     featured: v.boolean(),
     onSale: v.boolean(),
     rating: v.optional(v.number()),
@@ -56,7 +63,8 @@ export default defineSchema({
   }).index("by_seller", ["sellerId"])
     .index("by_category", ["category"])
     .index("by_featured", ["featured"])
-    .index("by_sale", ["onSale"]),
+    .index("by_sale", ["onSale"])
+    .index("by_location", ["location"]),
 
   // Orders table
   orders: defineTable({
