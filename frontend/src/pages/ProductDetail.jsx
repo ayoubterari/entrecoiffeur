@@ -138,9 +138,9 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
             
             {/* Prix */}
             <div className="price-section">
-              <div className="current-price">{product.price}€</div>
+              <div className="current-price">{product.price.toFixed(2)}€</div>
               {product.originalPrice && (
-                <div className="original-price">{product.originalPrice}€</div>
+                <div className="original-price">{product.originalPrice.toFixed(2)}€</div>
               )}
               {savings > 0 && (
                 <div className="savings">Économisez {savings}€</div>
@@ -247,7 +247,7 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
               <div className="price-breakdown">
                 <div className="line-item">
                   <span>Prix unitaire:</span>
-                  <span>{product.price}€</span>
+                  <span>{product.price.toFixed(2)}€</span>
                 </div>
                 <div className="line-item">
                   <span>Quantité:</span>
