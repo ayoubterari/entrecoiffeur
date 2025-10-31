@@ -494,17 +494,9 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
       {/* Featured Products Mobile */}
       <section className={styles.productsSection}>
         <div className={styles.container}>
-          <h3 className={styles.sectionTitle}>
-            {isSearching && searchQuery ? (
-              `Résultats pour "${searchQuery}" (${filteredProducts.length})`
-            ) : selectedCategory === 'all' ? (
-              'Produits en vedette'
-            ) : (
-              `Catégorie: ${categories.find(c => c.id === selectedCategory)?.name}`
-            )}
-          </h3>
+          <h3 className={styles.sectionTitle}>Produits en vedette</h3>
           
-          {filteredProducts.length > 0 ? (
+          {displayFeaturedProducts.length > 0 ? (
             <div className={styles.featuredCarousel}>
               <div className={styles.featuredCarouselWrapper}>
                 <div 
@@ -513,7 +505,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
                     transform: `translateX(-${featuredCarouselIndex * (160 + 12)}px)`
                   }}
                 >
-                  {filteredProducts.slice(0, 10).map((product) => (
+                  {displayFeaturedProducts.map((product) => (
                     <div key={product._id} className={styles.featuredProductCard}>
                       <ProductCard
                         product={product}
@@ -527,7 +519,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
                 </div>
               </div>
               
-              {filteredProducts.length > 2 && (
+              {displayFeaturedProducts.length > 2 && (
                 <>
                   <button
                     className={`${styles.carouselNavBtn} ${styles.carouselNavBtnPrev}`}
@@ -541,9 +533,9 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
                   </button>
                   <button
                     className={`${styles.carouselNavBtn} ${styles.carouselNavBtnNext}`}
-                    onClick={() => setFeaturedCarouselIndex(Math.min(filteredProducts.length - 2, featuredCarouselIndex + 1))}
-                    disabled={featuredCarouselIndex >= filteredProducts.length - 2}
-                    style={{ opacity: featuredCarouselIndex >= filteredProducts.length - 2 ? 0.3 : 1 }}
+                    onClick={() => setFeaturedCarouselIndex(Math.min(displayFeaturedProducts.length - 2, featuredCarouselIndex + 1))}
+                    disabled={featuredCarouselIndex >= displayFeaturedProducts.length - 2}
+                    style={{ opacity: featuredCarouselIndex >= displayFeaturedProducts.length - 2 ? 0.3 : 1 }}
                   >
                     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -554,40 +546,10 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
             </div>
           ) : (
             <div style={{ textAlign: 'center', padding: '3rem 1.5rem' }}>
-              {isSearching && searchQuery ? (
-                <div>
-                  <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>😔</div>
-                  <h4 style={{ color: '#2d3436', marginBottom: '1rem' }}>
-                    Aucun produit trouvé pour "{searchQuery}"
-                  </h4>
-                  <p style={{ color: '#636e72', marginBottom: '1.5rem' }}>
-                    Essayez avec des mots-clés différents ou plus généraux
-                  </p>
-                  <button 
-                    className={styles.signupBtn}
-                    onClick={() => handleSearch('')}
-                  >
-                    Voir tous les produits
-                  </button>
-                </div>
-              ) : !isAuthenticated ? (
-                <p style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
-                  <button 
-                    className={styles.signupBtn} 
-                    onClick={() => handleShowLogin('signup')}
-                  >
-                    Inscrivez-vous
-                  </button> 
-                  pour commencer à vendre vos produits !
-                </p>
-              ) : (
-                <div>
-                  <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🛍️</div>
-                  <p style={{ color: '#636e72' }}>
-                    Aucun produit disponible dans cette catégorie pour le moment.
-                  </p>
-                </div>
-              )}
+              <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⭐</div>
+              <p style={{ color: '#636e72' }}>
+                Aucun produit en vedette pour le moment.
+              </p>
             </div>
           )}
         </div>

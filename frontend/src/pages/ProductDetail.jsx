@@ -275,19 +275,19 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
                 fontFamily: "'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif",
                 cursor: 'pointer',
                 marginTop: '1rem',
-                boxShadow: '0 4px 15px rgba(233, 30, 99, 0.25)',
+                boxShadow: '0 4px 15px rgba(192, 180, 165, 0.25)',
                 transition: 'all 0.3s ease',
                 letterSpacing: '0.5px'
               }}
               onMouseEnter={(e) => {
                 if (!e.currentTarget.disabled) {
                   e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(233, 30, 99, 0.35)';
+                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(192, 180, 165, 0.35)';
                 }
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(233, 30, 99, 0.25)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(192, 180, 165, 0.25)';
               }}
             >
               {!isAuthenticated ? 'Se connecter pour acheter' : 

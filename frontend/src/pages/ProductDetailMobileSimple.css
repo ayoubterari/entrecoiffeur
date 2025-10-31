@@ -1,4 +1,4 @@
-﻿/* Correction simple et efficace pour la barre blanche mobile */
+/* Correction simple et efficace pour la barre blanche mobile */
 
 @media (max-width: 768px) {
   /* Reset complet pour la page produit - RÉDUIT DE 15% */
@@ -214,6 +214,11 @@
 /* Réd
 uction de 15% pour tous les éléments de contenu sur mobile */
 @media (max-width: 768px) {
+  /* Espace entre l'image et le titre */
+  .product-images-section {
+    margin-bottom: 3rem !important; /* Double espace entre image et titre */
+  }
+
   /* Titre du produit */
   .product-title {
     font-size: 1.53rem !important; /* Réduit de 15% (1.8rem -> 1.53rem) */
@@ -221,23 +226,29 @@ uction de 15% pour tous les éléments de contenu sur mobile */
     margin: 0.68rem 0 !important; /* Réduit de 15% */
   }
 
-  /* Section prix */
+  /* Section prix - Prix et discount sur la même ligne */
   .price-section {
     margin: 0.85rem 0 !important; /* Réduit de 15% */
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.8rem !important;
+    flex-wrap: wrap !important;
   }
 
   .current-price {
     font-size: 1.7rem !important; /* Réduit de 15% (2rem -> 1.7rem) */
-    margin: 0.425rem 0 !important; /* Réduit de 15% */
+    margin: 0 !important; /* Suppression de la marge pour alignement horizontal */
   }
 
   .original-price {
     font-size: 1.02rem !important; /* Réduit de 15% */
+    margin: 0 !important;
   }
 
   .savings {
     font-size: 0.765rem !important; /* Réduit de 15% */
     padding: 0.255rem 0.51rem !important; /* Réduit de 15% */
+    margin: 0 !important;
   }
 
   /* Section description */

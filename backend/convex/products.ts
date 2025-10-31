@@ -81,7 +81,7 @@ export const getFeaturedProducts = query({
     return await ctx.db
       .query("products")
       .filter((q) => q.eq(q.field("featured"), true))
-      .take(8);
+      .collect(); // Récupérer tous les produits en vedette sans limite
   },
 });
 
@@ -127,24 +127,30 @@ export const getProducts = query({
     // Skip visibility filter for admin
     if (args.skipVisibilityFilter) {
       // Admin voit tous les produits, pas de filtrage
-    } else if (args.userType) {
-      // Filter by visibility based on user type
-      products = products.filter(product => {
-        if (args.userType === "particulier") {
-          // Particuliers : doit être explicitement true
-          return product.visibleByParticulier === true;
-        } else if (args.userType === "professionnel") {
-          // Professionnels : visible si true ou undefined (par défaut)
-          return product.visibleByProfessionnel === true || product.visibleByProfessionnel === undefined;
-        } else if (args.userType === "grossiste") {
-          // Grossistes : visible si true ou undefined (par défaut)
-          return product.visibleByGrossiste === true || product.visibleByGrossiste === undefined;
-        }
-        return true;
-      });
     } else {
-      // Non connecté : afficher uniquement les produits visibles par les particuliers
-      products = products.filter(product => product.visibleByParticulier === true);
+      // Filtrer les produits masqués par l'admin (isVisible = false)
+      products = products.filter(product => product.isVisible !== false);
+      
+      // Ensuite filtrer par type d'utilisateur
+      if (args.userType) {
+        // Filter by visibility based on user type
+        products = products.filter(product => {
+          if (args.userType === "particulier") {
+            // Particuliers : doit être explicitement true
+            return product.visibleByParticulier === true;
+          } else if (args.userType === "professionnel") {
+            // Professionnels : visible si true ou undefined (par défaut)
+            return product.visibleByProfessionnel === true || product.visibleByProfessionnel === undefined;
+          } else if (args.userType === "grossiste") {
+            // Grossistes : visible si true ou undefined (par défaut)
+            return product.visibleByGrossiste === true || product.visibleByGrossiste === undefined;
+          }
+          return true;
+        });
+      } else {
+        // Non connecté : afficher uniquement les produits visibles par les particuliers
+        products = products.filter(product => product.visibleByParticulier === true);
+      }
     }
     
     // Apply search filter
@@ -677,5 +683,83 @@ export const deleteCategory = mutation({
 
     await ctx.db.delete(args.categoryId);
     return { success: true, message: "Category deleted successfully" };
+  },
+});
+
+// Toggle product visibility (admin only)
+export const toggleProductVisibility = mutation({
+  args: { 
+    productId: v.id("products"),
+    isVisible: v.boolean()
+  },
+  handler: async (ctx, args) => {
+    // Check if product exists
+    const product = await ctx.db.get(args.productId);
+    if (!product) {
+      throw new ConvexError("Product not found");
+    }
+
+    // Update the product visibility
+    await ctx.db.patch(args.productId, {
+      isVisible: args.isVisible
+    });
+
+    return { 
+      success: true, 
+      message: args.isVisible ? "Produit rendu visible" : "Produit masqué",
+      productId: args.productId
+    };
+  },
+});
+
+// Toggle product featured status (admin only)
+export const toggleProductFeatured = mutation({
+  args: { 
+    productId: v.id("products"),
+    isFeatured: v.boolean()
+  },
+  handler: async (ctx, args) => {
+    // Check if product exists
+    const product = await ctx.db.get(args.productId);
+    if (!product) {
+      throw new ConvexError("Product not found");
+    }
+
+    // Update the product featured status
+    await ctx.db.patch(args.productId, {
+      featured: args.isFeatured
+    });
+
+    return { 
+      success: true, 
+      message: args.isFeatured ? "Produit mis en vedette" : "Produit retiré de la vedette",
+      productId: args.productId
+    };
+  },
+});
+
+// Toggle product flash sale status (admin only)
+export const toggleProductFlashSale = mutation({
+  args: { 
+    productId: v.id("products"),
+    onSale: v.boolean()
+  },
+  handler: async (ctx, args) => {
+    // Check if product exists
+    const product = await ctx.db.get(args.productId);
+    if (!product) {
+      throw new ConvexError("Product not found");
+    }
+
+    // Update the product flash sale status
+    await ctx.db.patch(args.productId, {
+      onSale: args.onSale
+    });
+
+    return { 
+      success: true, 
+      message: args.onSale ? "Produit ajouté aux ventes flash" : "Produit retiré des ventes flash",
+      productId: args.productId
+    };
   },
 });

@@ -3,15 +3,15 @@ import { useQuery, useMutation } from 'convex/react'
 import { api } from '../../lib/convex'
 import { 
   Package, 
-  PackagePlus, 
   Search, 
   Filter, 
-  Edit, 
   Trash2, 
   Star,
   Tag,
   AlertCircle,
-  Image as ImageIcon,
+  Eye,
+  EyeOff,
+  Zap,
   MapPin
 } from 'lucide-react'
 import { frenchCities } from '../../data/frenchCities'
@@ -53,12 +53,86 @@ import { Badge } from '../ui/badge'
 import { Switch } from '../ui/switch'
 import { Checkbox } from '../ui/checkbox'
 
+// Component to display a single product image
+const ProductImage = ({ imageId, productName, index }) => {
+  // Try to get URL from Convex Storage if it's a storage ID
+  const imageUrl = useQuery(
+    typeof imageId === 'string' && !imageId.startsWith('http') 
+      ? api.files.getFileUrl 
+      : 'skip',
+    typeof imageId === 'string' && !imageId.startsWith('http')
+      ? { storageId: imageId }
+      : 'skip'
+  )
+
+  // Determine the actual URL to display
+  const displayUrl = typeof imageId === 'string' && imageId.startsWith('http') 
+    ? imageId 
+    : imageUrl
+
+  if (!displayUrl) {
+    return (
+      <div className="aspect-square rounded-lg overflow-hidden bg-muted flex items-center justify-center">
+        <Package className="h-8 w-8 text-muted-foreground" />
+      </div>
+    )
+  }
+
+  return (
+    <div className="aspect-square rounded-lg overflow-hidden bg-muted">
+      <img 
+        src={displayUrl} 
+        alt={`${productName} - ${index + 1}`}
+        className="h-full w-full object-cover"
+        onError={(e) => {
+          e.target.src = 'https://via.placeholder.com/200x200?text=Image+non+disponible'
+        }}
+      />
+    </div>
+  )
+}
+
+// Component to display product thumbnail in table
+const ProductThumbnail = ({ imageId, productName }) => {
+  // Try to get URL from Convex Storage if it's a storage ID
+  const imageUrl = useQuery(
+    imageId && typeof imageId === 'string' && !imageId.startsWith('http') 
+      ? api.files.getFileUrl 
+      : 'skip',
+    imageId && typeof imageId === 'string' && !imageId.startsWith('http')
+      ? { storageId: imageId }
+      : 'skip'
+  )
+
+  // Determine the actual URL to display
+  const displayUrl = imageId && typeof imageId === 'string' && imageId.startsWith('http') 
+    ? imageId 
+    : imageUrl
+
+  return (
+    <div className="h-12 w-12 rounded-md overflow-hidden bg-muted flex items-center justify-center">
+      {displayUrl ? (
+        <img 
+          src={displayUrl} 
+          alt={productName}
+          className="h-full w-full object-cover"
+          onError={(e) => {
+            e.target.style.display = 'none'
+            e.target.parentElement.innerHTML = '<div class="text-2xl">📦</div>'
+          }}
+        />
+      ) : (
+        <div className="text-2xl">📦</div>
+      )}
+    </div>
+  )
+}
+
 const ProductsModule = () => {
-  const [showAddProduct, setShowAddProduct] = useState(false)
-  const [showEditProduct, setShowEditProduct] = useState(false)
-  const [editingProduct, setEditingProduct] = useState(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [productToDelete, setProductToDelete] = useState(null)
+  const [showProductDetails, setShowProductDetails] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterCategory, setFilterCategory] = useState('all')
 
@@ -68,24 +142,13 @@ const ProductsModule = () => {
     skipVisibilityFilter: true // Admin voit tous les produits
   })
   const categories = useQuery(api.products.getCategories)
-  const createProduct = useMutation(api.products.createProduct)
-  const updateProduct = useMutation(api.products.updateProduct)
   const deleteProduct = useMutation(api.products.deleteProduct)
+  const toggleProductVisibility = useMutation(api.products.toggleProductVisibility)
+  const toggleProductFeatured = useMutation(api.products.toggleProductFeatured)
+  const toggleProductFlashSale = useMutation(api.products.toggleProductFlashSale)
 
-  // État du formulaire
-  const [productForm, setProductForm] = useState({
-    name: '',
-    description: '',
-    price: '',
-    categoryId: '',
-    images: [],
-    stock: '',
-    brand: '',
-    location: '',
-    isOnSale: false,
-    salePrice: '',
-    isFeatured: false
-  })
+  // État pour les actions en cours
+  const [loadingActions, setLoadingActions] = useState({})
 
   // Filtrer les produits
   const filteredProducts = allProducts?.filter(product => {
@@ -99,74 +162,50 @@ const ProductsModule = () => {
   // Statistiques
   const stats = {
     total: allProducts?.length || 0,
-    featured: allProducts?.filter(p => p.isFeatured).length || 0,
-    onSale: allProducts?.filter(p => p.isOnSale).length || 0,
+    featured: allProducts?.filter(p => p.featured).length || 0,
+    onSale: allProducts?.filter(p => p.onSale).length || 0,
     lowStock: allProducts?.filter(p => (p.stock || 0) < 10).length || 0,
   }
 
-  const handleCreateProduct = async (e) => {
-    e.preventDefault()
+  const handleToggleVisibility = async (productId, currentVisibility) => {
+    setLoadingActions(prev => ({ ...prev, [`visibility-${productId}`]: true }))
     try {
-      await createProduct({
-        ...productForm,
-        price: parseFloat(productForm.price),
-        stock: parseInt(productForm.stock),
-        salePrice: productForm.salePrice ? parseFloat(productForm.salePrice) : undefined,
-        images: productForm.images.length > 0 ? productForm.images : ['https://via.placeholder.com/300x300?text=Produit']
+      await toggleProductVisibility({ 
+        productId, 
+        isVisible: !currentVisibility 
       })
-      
-      setProductForm({
-        name: '',
-        description: '',
-        price: '',
-        categoryId: '',
-        images: [],
-        stock: '',
-        brand: '',
-        location: '',
-        isOnSale: false,
-        salePrice: '',
-        isFeatured: false
-      })
-      setShowAddProduct(false)
     } catch (error) {
-      console.error('Erreur lors de la création:', error)
+      console.error('Erreur lors du changement de visibilité:', error)
+    } finally {
+      setLoadingActions(prev => ({ ...prev, [`visibility-${productId}`]: false }))
     }
   }
 
-  const handleEditProduct = (product) => {
-    setEditingProduct(product)
-    setProductForm({
-      name: product.name,
-      description: product.description,
-      price: product.price.toString(),
-      categoryId: '',
-      images: product.images || [],
-      stock: product.stock?.toString() || '0',
-      brand: product.brand || '',
-      location: product.location || '',
-      isOnSale: product.isOnSale || false,
-      salePrice: product.salePrice?.toString() || '',
-      isFeatured: product.isFeatured || false
-    })
-    setShowEditProduct(true)
+  const handleToggleFeatured = async (productId, currentFeatured) => {
+    setLoadingActions(prev => ({ ...prev, [`featured-${productId}`]: true }))
+    try {
+      await toggleProductFeatured({ 
+        productId, 
+        isFeatured: !currentFeatured 
+      })
+    } catch (error) {
+      console.error('Erreur lors du changement de vedette:', error)
+    } finally {
+      setLoadingActions(prev => ({ ...prev, [`featured-${productId}`]: false }))
+    }
   }
 
-  const handleUpdateProduct = async (e) => {
-    e.preventDefault()
+  const handleToggleFlashSale = async (productId, currentFlashSale) => {
+    setLoadingActions(prev => ({ ...prev, [`flash-${productId}`]: true }))
     try {
-      await updateProduct({
-        productId: editingProduct._id,
-        ...productForm,
-        price: parseFloat(productForm.price),
-        stock: parseInt(productForm.stock),
-        salePrice: productForm.salePrice ? parseFloat(productForm.salePrice) : undefined
+      await toggleProductFlashSale({ 
+        productId, 
+        onSale: !currentFlashSale 
       })
-      
-      setShowEditProduct(false)
-      setEditingProduct(null)
     } catch (error) {
-      console.error('Erreur lors de la modification:', error)
+      console.error('Erreur lors du changement de vente flash:', error)
+    } finally {
+      setLoadingActions(prev => ({ ...prev, [`flash-${productId}`]: false }))
     }
   }
 
@@ -187,6 +226,11 @@ const ProductsModule = () => {
     }
   }
 
+  const handleViewProduct = (product) => {
+    setSelectedProduct(product)
+    setShowProductDetails(true)
+  }
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
@@ -205,15 +249,11 @@ const ProductsModule = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Produits</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Gestion des Produits</h2>
           <p className="text-muted-foreground">
-            Gérez tous les produits de la plateforme
+            Validez la visibilité et classifiez les produits sur la plateforme
           </p>
         </div>
-        <Button onClick={() => setShowAddProduct(true)}>
-          <PackagePlus className="mr-2 h-4 w-4" />
-          Ajouter un produit
-        </Button>
       </div>
 
       {/* Statistiques */}
@@ -304,10 +344,10 @@ const ProductsModule = () => {
                     <TableHead>Image</TableHead>
                     <TableHead>Produit</TableHead>
                     <TableHead>Catégorie</TableHead>
-                    <TableHead>Localisation</TableHead>
                     <TableHead>Prix</TableHead>
                     <TableHead>Stock</TableHead>
-                    <TableHead>Statut</TableHead>
+                    <TableHead>Visibilité</TableHead>
+                    <TableHead>Classification</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -315,13 +355,10 @@ const ProductsModule = () => {
                   {filteredProducts.map((product) => (
                     <TableRow key={product._id}>
                       <TableCell>
-                        <div className="h-12 w-12 rounded-md overflow-hidden bg-muted">
-                          <img 
-                            src={product.images?.[0] || 'https://via.placeholder.com/60x60?text=📦'} 
-                            alt={product.name}
-                            className="h-full w-full object-cover"
-                          />
-                        </div>
+                        <ProductThumbnail 
+                          imageId={product.images?.[0]} 
+                          productName={product.name}
+                        />
                       </TableCell>
                       <TableCell>
                         <div>
@@ -340,24 +377,14 @@ const ProductsModule = () => {
                         <Badge variant="outline">{product.category}</Badge>
                       </TableCell>
                       <TableCell>
-                        {product.location ? (
-                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <MapPin className="h-3 w-3" />
-                            {product.location}
-                          </div>
-                        ) : (
-                          <span className="text-xs text-muted-foreground">Non spécifiée</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
                         <div className="flex flex-col gap-1">
-                          {product.isOnSale && product.salePrice ? (
+                          {product.onSale && product.originalPrice ? (
                             <>
                               <span className="font-bold text-green-600">
-                                {formatPrice(product.salePrice)}
+                                {formatPrice(product.price)}
                               </span>
                               <span className="text-xs text-muted-foreground line-through">
-                                {formatPrice(product.price)}
+                                {formatPrice(product.originalPrice)}
                               </span>
                             </>
                           ) : (
@@ -374,34 +401,64 @@ const ProductsModule = () => {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {product.isFeatured && (
-                            <Badge variant="secondary" className="text-xs">
-                              <Star className="h-3 w-3 mr-1" />
-                              Vedette
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={product.isVisible !== false}
+                            onCheckedChange={() => handleToggleVisibility(product._id, product.isVisible !== false)}
+                            disabled={loadingActions[`visibility-${product._id}`]}
+                          />
+                          {product.isVisible !== false ? (
+                            <Badge variant="default" className="bg-green-500">
+                              <Eye className="h-3 w-3 mr-1" />
+                              Visible
                             </Badge>
-                          )}
-                          {product.isOnSale && (
-                            <Badge variant="outline" className="text-xs border-orange-500 text-orange-500">
-                              <Tag className="h-3 w-3 mr-1" />
-                              Promo
+                          ) : (
+                            <Badge variant="secondary">
+                              <EyeOff className="h-3 w-3 mr-1" />
+                              Masqué
                             </Badge>
                           )}
                         </div>
                       </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-2">
+                          <Button
+                            variant={product.featured ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => handleToggleFeatured(product._id, product.featured)}
+                            disabled={loadingActions[`featured-${product._id}`]}
+                            className="w-full justify-start"
+                          >
+                            <Star className="h-3 w-3 mr-1" />
+                            {product.featured ? 'En vedette' : 'Mettre en vedette'}
+                          </Button>
+                          <Button
+                            variant={product.onSale ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => handleToggleFlashSale(product._id, product.onSale)}
+                            disabled={loadingActions[`flash-${product._id}`]}
+                            className="w-full justify-start"
+                          >
+                            <Zap className="h-3 w-3 mr-1" />
+                            {product.onSale ? 'Vente flash' : 'Ajouter vente flash'}
+                          </Button>
+                        </div>
+                      </TableCell>
                       <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
+                        <div className="flex items-center justify-end gap-2">
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => handleEditProduct(product)}
+                            onClick={() => handleViewProduct(product)}
+                            title="Voir les détails"
                           >
-                            <Edit className="h-4 w-4" />
+                            <Eye className="h-4 w-4" />
                           </Button>
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => handleDeleteProduct(product)}
+                            title="Supprimer"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -424,269 +481,197 @@ const ProductsModule = () => {
         </CardContent>
       </Card>
 
-      {/* Modal d'ajout */}
-      <Dialog open={showAddProduct} onOpenChange={setShowAddProduct}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      {/* Modal de détails du produit */}
+      <Dialog open={showProductDetails} onOpenChange={setShowProductDetails}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Ajouter un produit</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Package className="h-5 w-5" />
+              Détails du produit
+            </DialogTitle>
             <DialogDescription>
-              Créez un nouveau produit dans le catalogue
+              Informations complètes sur {selectedProduct?.name}
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleCreateProduct}>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Nom du produit *</Label>
-                  <Input
-                    id="name"
-                    value={productForm.name}
-                    onChange={(e) => setProductForm({...productForm, name: e.target.value})}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="brand">Marque</Label>
-                  <Input
-                    id="brand"
-                    value={productForm.brand}
-                    onChange={(e) => setProductForm({...productForm, brand: e.target.value})}
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="description">Description *</Label>
-                <Textarea
-                  id="description"
-                  value={productForm.description}
-                  onChange={(e) => setProductForm({...productForm, description: e.target.value})}
-                  required
-                  rows={3}
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="price">Prix (€) *</Label>
-                  <Input
-                    id="price"
-                    type="number"
-                    step="0.01"
-                    value={productForm.price}
-                    onChange={(e) => setProductForm({...productForm, price: e.target.value})}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="stock">Stock *</Label>
-                  <Input
-                    id="stock"
-                    type="number"
-                    value={productForm.stock}
-                    onChange={(e) => setProductForm({...productForm, stock: e.target.value})}
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="category">Catégorie *</Label>
-                <Select value={productForm.categoryId} onValueChange={(value) => setProductForm({...productForm, categoryId: value})} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner une catégorie" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories?.map((category) => (
-                      <SelectItem key={category._id} value={category._id}>
-                        {category.icon} {category.name}
-                      </SelectItem>
+          
+          {selectedProduct && (
+            <div className="space-y-6">
+              {/* Images */}
+              {selectedProduct.images && selectedProduct.images.length > 0 && (
+                <div>
+                  <h3 className="font-semibold mb-3">Images</h3>
+                  <div className="grid grid-cols-4 gap-3">
+                    {selectedProduct.images.map((imageId, index) => (
+                      <ProductImage 
+                        key={index}
+                        imageId={imageId}
+                        productName={selectedProduct.name}
+                        index={index}
+                      />
                     ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="location">Localisation (Ville)</Label>
-                <Select value={productForm.location} onValueChange={(value) => setProductForm({...productForm, location: value})}>
-                  <SelectTrigger>
-                    <MapPin className="mr-2 h-4 w-4" />
-                    <SelectValue placeholder="Sélectionner une ville" />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-[300px]">
-                    {frenchCities.map((city) => (
-                      <SelectItem key={city} value={city}>
-                        {city}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="flex items-center space-x-6">
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="isOnSale"
-                    checked={productForm.isOnSale}
-                    onCheckedChange={(checked) => setProductForm({...productForm, isOnSale: checked})}
-                  />
-                  <Label htmlFor="isOnSale" className="cursor-pointer">En promotion</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="isFeatured"
-                    checked={productForm.isFeatured}
-                    onCheckedChange={(checked) => setProductForm({...productForm, isFeatured: checked})}
-                  />
-                  <Label htmlFor="isFeatured" className="cursor-pointer">Mettre en avant</Label>
-                </div>
-              </div>
-              
-              {productForm.isOnSale && (
-                <div className="space-y-2">
-                  <Label htmlFor="salePrice">Prix de promotion (€)</Label>
-                  <Input
-                    id="salePrice"
-                    type="number"
-                    step="0.01"
-                    value={productForm.salePrice}
-                    onChange={(e) => setProductForm({...productForm, salePrice: e.target.value})}
-                  />
+                  </div>
                 </div>
               )}
-            </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setShowAddProduct(false)}>
-                Annuler
-              </Button>
-              <Button type="submit">Créer le produit</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
 
-      {/* Modal de modification */}
-      <Dialog open={showEditProduct} onOpenChange={setShowEditProduct}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Modifier le produit</DialogTitle>
-            <DialogDescription>
-              Modifiez les informations du produit
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleUpdateProduct}>
-            <div className="grid gap-4 py-4">
+              {/* Informations générales */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-name">Nom du produit *</Label>
-                  <Input
-                    id="edit-name"
-                    value={productForm.name}
-                    onChange={(e) => setProductForm({...productForm, name: e.target.value})}
-                    required
-                  />
+                <div>
+                  <Label className="text-muted-foreground">Nom du produit</Label>
+                  <p className="font-medium">{selectedProduct.name}</p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-brand">Marque</Label>
-                  <Input
-                    id="edit-brand"
-                    value={productForm.brand}
-                    onChange={(e) => setProductForm({...productForm, brand: e.target.value})}
-                  />
+                <div>
+                  <Label className="text-muted-foreground">Marque</Label>
+                  <p className="font-medium">{selectedProduct.brand || 'Non spécifié'}</p>
+                </div>
+                <div>
+                  <Label className="text-muted-foreground">Catégorie</Label>
+                  <Badge variant="outline">{selectedProduct.category}</Badge>
+                </div>
+                <div>
+                  <Label className="text-muted-foreground">Stock</Label>
+                  <div className="flex items-center gap-2">
+                    {getStockBadge(selectedProduct.stock || 0)}
+                    <span className="text-sm">{selectedProduct.stock || 0} unités</span>
+                  </div>
                 </div>
               </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="edit-description">Description *</Label>
-                <Textarea
-                  id="edit-description"
-                  value={productForm.description}
-                  onChange={(e) => setProductForm({...productForm, description: e.target.value})}
-                  required
-                  rows={3}
-                />
+
+              {/* Description */}
+              <div>
+                <Label className="text-muted-foreground">Description</Label>
+                <p className="text-sm mt-1">{selectedProduct.description}</p>
               </div>
-              
+
+              {/* Prix */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-price">Prix (€) *</Label>
-                  <Input
-                    id="edit-price"
-                    type="number"
-                    step="0.01"
-                    value={productForm.price}
-                    onChange={(e) => setProductForm({...productForm, price: e.target.value})}
-                    required
-                  />
+                <div>
+                  <Label className="text-muted-foreground">Prix normal</Label>
+                  <p className="text-lg font-bold">{formatPrice(selectedProduct.price)}</p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-stock">Stock *</Label>
-                  <Input
-                    id="edit-stock"
-                    type="number"
-                    value={productForm.stock}
-                    onChange={(e) => setProductForm({...productForm, stock: e.target.value})}
-                    required
-                  />
-                </div>
+                {selectedProduct.onSale && selectedProduct.originalPrice && (
+                  <div>
+                    <Label className="text-muted-foreground">Prix en promotion</Label>
+                    <p className="text-lg font-bold text-green-600">{formatPrice(selectedProduct.price)}</p>
+                    <p className="text-sm text-muted-foreground line-through">{formatPrice(selectedProduct.originalPrice)}</p>
+                  </div>
+                )}
               </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="edit-location">Localisation (Ville)</Label>
-                <Select value={productForm.location} onValueChange={(value) => setProductForm({...productForm, location: value})}>
-                  <SelectTrigger>
-                    <MapPin className="mr-2 h-4 w-4" />
-                    <SelectValue placeholder="Sélectionner une ville" />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-[300px]">
-                    {frenchCities.map((city) => (
-                      <SelectItem key={city} value={city}>
-                        {city}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="flex items-center space-x-6">
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="edit-isOnSale"
-                    checked={productForm.isOnSale}
-                    onCheckedChange={(checked) => setProductForm({...productForm, isOnSale: checked})}
-                  />
-                  <Label htmlFor="edit-isOnSale" className="cursor-pointer">En promotion</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="edit-isFeatured"
-                    checked={productForm.isFeatured}
-                    onCheckedChange={(checked) => setProductForm({...productForm, isFeatured: checked})}
-                  />
-                  <Label htmlFor="edit-isFeatured" className="cursor-pointer">Mettre en avant</Label>
-                </div>
-              </div>
-              
-              {productForm.isOnSale && (
-                <div className="space-y-2">
-                  <Label htmlFor="edit-salePrice">Prix de promotion (€)</Label>
-                  <Input
-                    id="edit-salePrice"
-                    type="number"
-                    step="0.01"
-                    value={productForm.salePrice}
-                    onChange={(e) => setProductForm({...productForm, salePrice: e.target.value})}
-                  />
+
+              {/* Localisation */}
+              {selectedProduct.city && (
+                <div>
+                  <Label className="text-muted-foreground flex items-center gap-2">
+                    <MapPin className="h-4 w-4" />
+                    Localisation
+                  </Label>
+                  <p className="font-medium">{selectedProduct.city}</p>
                 </div>
               )}
+
+              {/* Statuts */}
+              <div>
+                <Label className="text-muted-foreground mb-2 block">Statuts</Label>
+                <div className="flex flex-wrap gap-2">
+                  {selectedProduct.isVisible !== false ? (
+                    <Badge variant="default" className="bg-green-500">
+                      <Eye className="h-3 w-3 mr-1" />
+                      Visible
+                    </Badge>
+                  ) : (
+                    <Badge variant="secondary">
+                      <EyeOff className="h-3 w-3 mr-1" />
+                      Masqué
+                    </Badge>
+                  )}
+                  {selectedProduct.featured && (
+                    <Badge variant="default">
+                      <Star className="h-3 w-3 mr-1" />
+                      En vedette
+                    </Badge>
+                  )}
+                  {selectedProduct.onSale && (
+                    <Badge variant="default">
+                      <Zap className="h-3 w-3 mr-1" />
+                      Vente flash
+                    </Badge>
+                  )}
+                </div>
+              </div>
+
+              {/* Visibilité par type d'utilisateur */}
+              <div>
+                <Label className="text-muted-foreground mb-2 block">Visibilité par type d'utilisateur</Label>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between p-2 bg-muted rounded">
+                    <span className="text-sm">Particuliers</span>
+                    {selectedProduct.visibleByParticulier ? (
+                      <Badge variant="default" className="bg-green-500">Visible</Badge>
+                    ) : (
+                      <Badge variant="secondary">Masqué</Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-muted rounded">
+                    <span className="text-sm">Professionnels</span>
+                    {selectedProduct.visibleByProfessionnel !== false ? (
+                      <Badge variant="default" className="bg-green-500">Visible</Badge>
+                    ) : (
+                      <Badge variant="secondary">Masqué</Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-muted rounded">
+                    <span className="text-sm">Grossistes</span>
+                    {selectedProduct.visibleByGrossiste !== false ? (
+                      <Badge variant="default" className="bg-green-500">Visible</Badge>
+                    ) : (
+                      <Badge variant="secondary">Masqué</Badge>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Informations vendeur */}
+              {selectedProduct.sellerId && (
+                <div>
+                  <Label className="text-muted-foreground">ID Vendeur</Label>
+                  <p className="text-sm font-mono">{selectedProduct.sellerId}</p>
+                </div>
+              )}
+
+              {/* Dates */}
+              <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
+                {selectedProduct.createdAt && (
+                  <div>
+                    <Label className="text-muted-foreground">Créé le</Label>
+                    <p>{new Date(selectedProduct.createdAt).toLocaleDateString('fr-FR', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}</p>
+                  </div>
+                )}
+                {selectedProduct.updatedAt && (
+                  <div>
+                    <Label className="text-muted-foreground">Modifié le</Label>
+                    <p>{new Date(selectedProduct.updatedAt).toLocaleDateString('fr-FR', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}</p>
+                  </div>
+                )}
+              </div>
             </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setShowEditProduct(false)}>
-                Annuler
-              </Button>
-              <Button type="submit">Sauvegarder</Button>
-            </DialogFooter>
-          </form>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowProductDetails(false)}>
+              Fermer
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 

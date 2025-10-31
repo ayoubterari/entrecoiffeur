@@ -55,6 +55,7 @@ export default defineSchema({
     visibleByParticulier: v.optional(v.boolean()), // Visible par les particuliers
     visibleByProfessionnel: v.optional(v.boolean()), // Visible par les professionnels
     visibleByGrossiste: v.optional(v.boolean()), // Visible par les grossistes
+    isVisible: v.optional(v.boolean()), // Visibilité générale du produit (admin peut masquer)
     featured: v.boolean(),
     onSale: v.boolean(),
     rating: v.optional(v.number()),
