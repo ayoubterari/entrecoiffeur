@@ -203,6 +203,7 @@ export const updateOwnProfile = mutation({
     companyName: v.optional(v.string()),
     siret: v.optional(v.string()),
     tvaNumber: v.optional(v.string()),
+    rib: v.optional(v.string()),
     avatar: v.optional(v.id("_storage")),
   },
   handler: async (ctx, args) => {

@@ -26,7 +26,7 @@
   --text-pink: #C0B4A5;
 
   --border-color: rgba(45, 52, 54, 0.1);
-  --border-pink: rgba(253, 121, 168, 0.3);
+  --border-pink: rgba(192, 180, 165, 0.3);
   --shadow-primary: 0 8px 32px rgba(192, 180, 165, 0.4);
   --shadow-hover: 0 12px 40px rgba(192, 180, 165, 0.5);
   --shadow-pink: 0 8px 32px rgba(192, 180, 165, 0.6);
@@ -8534,7 +8534,7 @@ body.dashboard-body #root {
 .form-input:focus {
   outline: none;
   border-color: var(--text-pink);
-  box-shadow: 0 0 0 3px rgba(218, 204, 187, );
+  box-shadow: 0 0 0 3px rgba(192, 180, 165, 0.3);
 }
 
 .form-actions {

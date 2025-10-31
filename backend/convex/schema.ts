@@ -15,6 +15,7 @@ export default defineSchema({
     companyName: v.optional(v.string()), // Pour professionnels et grossistes
     siret: v.optional(v.string()), // Pour professionnels et grossistes
     tvaNumber: v.optional(v.string()), // Pour professionnels et grossistes
+    rib: v.optional(v.string()), // RIB pour professionnels et grossistes
     // Champs pour la gestion des groupes
     isGroupMember: v.optional(v.boolean()), // Si l'utilisateur appartient à un groupe
     groupAccessCode: v.optional(v.string()), // Code d'accès du groupe utilisé lors de l'inscription

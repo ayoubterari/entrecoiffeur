@@ -20,7 +20,8 @@ const ProfileModule = ({ userId, userEmail, userFirstName, userLastName, userTyp
     city: '',
     companyName: companyName || '',
     siret: '',
-    tvaNumber: ''
+    tvaNumber: '',
+    rib: ''
   })
   const [avatarFile, setAvatarFile] = useState(null)
   const [avatarPreview, setAvatarPreview] = useState(null)
@@ -49,7 +50,8 @@ const ProfileModule = ({ userId, userEmail, userFirstName, userLastName, userTyp
         city: userData.city || '',
         companyName: userData.companyName || '',
         siret: userData.siret || '',
-        tvaNumber: userData.tvaNumber || ''
+        tvaNumber: userData.tvaNumber || '',
+        rib: userData.rib || ''
       })
     }
   }, [userData])
@@ -116,7 +118,8 @@ const ProfileModule = ({ userId, userEmail, userFirstName, userLastName, userTyp
         city: userData.city || '',
         companyName: userData.companyName || '',
         siret: userData.siret || '',
-        tvaNumber: userData.tvaNumber || ''
+        tvaNumber: userData.tvaNumber || '',
+        rib: userData.rib || ''
       })
     }
   }
@@ -325,6 +328,19 @@ const ProfileModule = ({ userId, userEmail, userFirstName, userLastName, userTyp
                       placeholder="FR 12 345678901"
                     />
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="rib">RIB (Relevé d'Identité Bancaire)</Label>
+                  <Input
+                    id="rib"
+                    value={profileForm.rib}
+                    onChange={(e) => setProfileForm({...profileForm, rib: e.target.value})}
+                    disabled={!isEditing}
+                    placeholder="FR76 1234 5678 9012 3456 7890 123"
+                    maxLength={27}
+                  />
+                  <p className="text-xs text-muted-foreground">Format IBAN : 27 caractères</p>
                 </div>
               </>
             )}
