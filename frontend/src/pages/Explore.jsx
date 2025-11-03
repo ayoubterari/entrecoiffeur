@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
 import ProductCard from '../components/ProductCard'
+import FranceMapModalLeaflet from '../components/FranceMapModalLeaflet'
 import { frenchCities } from '../data/frenchCities'
 import styles from './Explore.module.css'
 
@@ -18,6 +19,7 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
   const [isSliderActive, setIsSliderActive] = useState(false)
   const [showStores, setShowStores] = useState(false)
   const [selectedLocation, setSelectedLocation] = useState('all')
+  const [showMapModal, setShowMapModal] = useState(false)
 
   // Debug: Log userType
   console.log('🔍 Explore - userType reçu:', userType)
@@ -202,6 +204,17 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
             </button>
           )}
         </div>
+        <button 
+          className={styles.mapBtn}
+          onClick={() => setShowMapModal(true)}
+          title="Voir la carte des produits"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3V6z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M9 3v15M15 6v15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Carte
+        </button>
         <button 
           className={styles.filterToggleBtn}
           onClick={() => setShowFilters(!showFilters)}
@@ -510,6 +523,13 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
           onClick={() => setShowFilters(false)}
         />
       )}
+
+      {/* France Map Modal */}
+      <FranceMapModalLeaflet 
+        isOpen={showMapModal}
+        onClose={() => setShowMapModal(false)}
+        products={allProducts || []}
+      />
     </div>
   )
 }

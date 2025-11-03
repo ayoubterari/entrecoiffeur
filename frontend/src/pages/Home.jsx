@@ -7,6 +7,7 @@ import ProductCard from '../components/ProductCard'
 import GroupWelcomeModal from '../components/GroupWelcomeModal'
 import SupportModal from '../components/SupportModal'
 import MobileMenu from '../components/MobileMenu'
+import FranceMapModalLeaflet from '../components/FranceMapModalLeaflet'
 import styles from '../components/Home.module.css'
 
 const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName, onAddToCart, cart, onOpenCart, onShowLogin, onToggleFavorite, favoritesCount, userId, onOpenFavorites, userType }) => {
@@ -23,6 +24,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   const [flashSaleCarouselIndex, setFlashSaleCarouselIndex] = useState(0)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [storesCarouselIndex, setStoresCarouselIndex] = useState(0)
+  const [showMapModal, setShowMapModal] = useState(false)
 
   // Get real data from Convex with visibility filtering
   const categoriesData = useQuery(api.products.getCategories)
@@ -415,11 +417,86 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         </div>
       </div>
 
+      {/* Banner Carte Interactive */}
+      <div className={styles.mapBannerContainer}>
+        <div className={styles.mapBanner}>
+          <div className={styles.mapBannerContent}>
+            <div className={styles.mapBannerLeft}>
+              <div className={styles.mapBannerIcon}>
+                <span className={styles.mapIconPulse}>📍</span>
+                <span className={styles.mapIconGlobe}>🗺️</span>
+              </div>
+              <div className={styles.mapBannerText}>
+                <h2 className={styles.mapBannerTitle}>
+                  Découvrez où vivent vos Produits !
+                </h2>
+                <p className={styles.mapBannerDescription}>
+                  Explorez notre carte interactive et trouvez les produits disponibles près de chez vous dans toute la France
+                </p>
+                <div className={styles.mapBannerFeatures}>
+                  <span className={styles.mapFeature}>
+                    <span className={styles.mapFeatureIcon}>🎯</span>
+                    Localisation précise
+                  </span>
+                  <span className={styles.mapFeature}>
+                    <span className={styles.mapFeatureIcon}>🏙️</span>
+                    Toutes les régions
+                  </span>
+                  <span className={styles.mapFeature}>
+                    <span className={styles.mapFeatureIcon}>⚡</span>
+                    Temps réel
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className={styles.mapBannerRight}>
+              <button 
+                className={styles.mapBannerCTA}
+                onClick={() => setShowMapModal(true)}
+              >
+                <span className={styles.mapBannerCTAText}>Explorer la carte</span>
+                <span className={styles.mapBannerCTAIcon}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </span>
+              </button>
+              <div className={styles.mapBannerStats}>
+                <div className={styles.mapStat}>
+                  <span className={styles.mapStatNumber}>{allProducts?.length || 0}</span>
+                  <span className={styles.mapStatLabel}>Produits</span>
+                </div>
+                <div className={styles.mapStat}>
+                  <span className={styles.mapStatNumber}>{storesData?.length || 0}</span>
+                  <span className={styles.mapStatLabel}>Vendeurs</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Flash Sales - Carousel */}
       {displaySaleProducts.length > 0 && (
         <section className={styles.productsSection}>
           <div className={styles.container}>
-            <h3 className={styles.sectionTitle}>⚡ Ventes Flash - Offres limitées</h3>
+            <div className={styles.flashSalesHeader}>
+              <div className={styles.flashSalesHeaderContent}>
+                <div className={styles.flashSalesIconGroup}>
+                  <span className={styles.flashIcon1}>⚡</span>
+                  <span className={styles.flashIcon2}>🔥</span>
+                  <span className={styles.flashIcon3}>💥</span>
+                </div>
+                <div className={styles.flashSalesText}>
+                  <h3 className={styles.flashSalesTitle}>Ventes Flash</h3>
+                  <p className={styles.flashSalesSubtitle}>Offres limitées - Profitez-en maintenant !</p>
+                </div>
+                <div className={styles.flashSalesTimer}>
+                  <span className={styles.timerIcon}>⏰</span>
+                  <span className={styles.timerText}>Expire bientôt</span>
+                </div>
+              </div>
+            </div>
             <div className={styles.featuredCarousel}>
               <div className={styles.featuredCarouselWrapper}>
                 <div 
@@ -471,30 +548,96 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         </section>
       )}
 
-      {/* Call to Action Banner */}
-      <div className={styles.ctaBanner}>
-        <h2 className={styles.ctaBannerText}>C'est le moment de vendre</h2>
-        <button 
-          className={styles.ctaBannerButton} 
-          onClick={() => {
-            if (isAuthenticated) {
-              // Rediriger vers le dashboard avec l'onglet "Mes Produits" actif
-              navigate('/dashboard', { state: { activeTab: 'products' } })
-            } else {
-              // Rediriger vers la page de connexion
-              onShowLogin()
-            }
-          }}
-        >
-          <span>📦</span>
-          Déposer une annonce
-        </button>
+      {/* Call to Action Banner - Sell Your Products */}
+      <div className={styles.sellBannerContainer}>
+        <div className={styles.sellBanner}>
+          <div className={styles.sellBannerBackground}>
+            <div className={styles.sellBannerCircle1}></div>
+            <div className={styles.sellBannerCircle2}></div>
+            <div className={styles.sellBannerCircle3}></div>
+          </div>
+          
+          <div className={styles.sellBannerContent}>
+            <div className={styles.sellBannerLeft}>
+              <div className={styles.sellBannerIconGroup}>
+                <span className={styles.sellIcon1}>💰</span>
+                <span className={styles.sellIcon2}>📦</span>
+                <span className={styles.sellIcon3}>✨</span>
+              </div>
+            </div>
+            
+            <div className={styles.sellBannerCenter}>
+              <h2 className={styles.sellBannerTitle}>
+                C'est le moment de vendre !
+              </h2>
+              <p className={styles.sellBannerSubtitle}>
+                Rejoignez des milliers de vendeurs et développez votre activité
+              </p>
+              <div className={styles.sellBannerBenefits}>
+                <div className={styles.sellBenefit}>
+                  <span className={styles.sellBenefitIcon}>⚡</span>
+                  <span className={styles.sellBenefitText}>Publication rapide</span>
+                </div>
+                <div className={styles.sellBenefit}>
+                  <span className={styles.sellBenefitIcon}>💳</span>
+                  <span className={styles.sellBenefitText}>Paiement sécurisé</span>
+                </div>
+                <div className={styles.sellBenefit}>
+                  <span className={styles.sellBenefitIcon}>📈</span>
+                  <span className={styles.sellBenefitText}>Visibilité maximale</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className={styles.sellBannerRight}>
+              <button 
+                className={styles.sellBannerButton} 
+                onClick={() => {
+                  if (isAuthenticated) {
+                    navigate('/dashboard', { state: { activeTab: 'products' } })
+                  } else {
+                    onShowLogin()
+                  }
+                }}
+              >
+                <span className={styles.sellButtonIcon}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                </span>
+                <span className={styles.sellButtonText}>Déposer une annonce</span>
+                <span className={styles.sellButtonArrow}>→</span>
+              </button>
+              
+              <div className={styles.sellBannerNote}>
+                <span className={styles.sellNoteIcon}>🎁</span>
+                <span className={styles.sellNoteText}>Inscription gratuite</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Featured Products Mobile */}
       <section className={styles.productsSection}>
         <div className={styles.container}>
-          <h3 className={styles.sectionTitle}>Produits en vedette</h3>
+          <div className={styles.featuredHeader}>
+            <div className={styles.featuredHeaderContent}>
+              <div className={styles.featuredIconGroup}>
+                <span className={styles.featuredIcon1}>⭐</span>
+                <span className={styles.featuredIcon2}>✨</span>
+                <span className={styles.featuredIcon3}>🌟</span>
+              </div>
+              <div className={styles.featuredText}>
+                <h3 className={styles.featuredTitle}>Produits en vedette</h3>
+                <p className={styles.featuredSubtitle}>Nos meilleures sélections pour vous</p>
+              </div>
+              <div className={styles.featuredBadge}>
+                <span className={styles.badgeIcon}>👑</span>
+                <span className={styles.badgeText}>Premium</span>
+              </div>
+            </div>
+          </div>
           
           {displayFeaturedProducts.length > 0 ? (
             <div className={styles.featuredCarousel}>
@@ -555,27 +698,98 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         </div>
       </section>
 
-      {/* Newsletter Mobile */}
+      {/* Newsletter Section - Creative Design */}
       <section className={styles.newsletterSection}>
-        <div className={styles.newsletterCard}>
-          <h3>Restez informé(e) des dernières nouveautés</h3>
-          <p>Recevez nos offres exclusives et les tendances beauté</p>
-          <div className={styles.newsletterForm}>
-            <input 
-              type="email" 
-              placeholder="Votre adresse email"
-              className={styles.newsletterInput}
-            />
-            <button className={styles.newsletterBtn}>S'abonner</button>
+        <div className={styles.newsletterContainer}>
+          <div className={styles.newsletterBackground}>
+            <div className={styles.newsletterCircle1}></div>
+            <div className={styles.newsletterCircle2}></div>
+            <div className={styles.newsletterPattern}></div>
+          </div>
+          
+          <div className={styles.newsletterContent}>
+            <div className={styles.newsletterLeft}>
+              <div className={styles.newsletterIconWrapper}>
+                <span className={styles.newsletterIcon1}>📧</span>
+                <span className={styles.newsletterIcon2}>✨</span>
+                <span className={styles.newsletterIcon3}>🎁</span>
+              </div>
+            </div>
+            
+            <div className={styles.newsletterCenter}>
+              <h3 className={styles.newsletterTitle}>
+                Restez informé(e) des dernières nouveautés
+              </h3>
+              <p className={styles.newsletterSubtitle}>
+                Recevez nos offres exclusives et les tendances beauté directement dans votre boîte mail
+              </p>
+              <div className={styles.newsletterBadges}>
+                <span className={styles.newsletterBadge}>
+                  <span className={styles.badgeIcon}>🎯</span>
+                  Offres exclusives
+                </span>
+                <span className={styles.newsletterBadge}>
+                  <span className={styles.badgeIcon}>💎</span>
+                  Nouveautés en avant-première
+                </span>
+                <span className={styles.newsletterBadge}>
+                  <span className={styles.badgeIcon}>🔔</span>
+                  Alertes promotions
+                </span>
+              </div>
+            </div>
+            
+            <div className={styles.newsletterRight}>
+              <div className={styles.newsletterForm}>
+                <div className={styles.newsletterInputWrapper}>
+                  <span className={styles.newsletterInputIcon}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                      <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                  </span>
+                  <input 
+                    type="email" 
+                    placeholder="votre@email.com"
+                    className={styles.newsletterInput}
+                  />
+                </div>
+                <button className={styles.newsletterBtn}>
+                  <span className={styles.newsletterBtnText}>S'abonner</span>
+                  <span className={styles.newsletterBtnIcon}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+              <p className={styles.newsletterNote}>
+                <span className={styles.newsletterNoteIcon}>🔒</span>
+                Vos données sont sécurisées et ne seront jamais partagées
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Stores Carousel Section */}
       <section className={styles.storesSection}>
-        <div className={styles.storesSectionHeader}>
-          <h2>Découvrez nos boutiques</h2>
-          <p>Visitez les boutiques de nos vendeurs professionnels</p>
+        <div className={styles.storesHeaderContainer}>
+          <div className={styles.storesHeaderContent}>
+            <div className={styles.storesIconGroup}>
+              <span className={styles.storeIcon1}>🏪</span>
+              <span className={styles.storeIcon2}>🛍️</span>
+              <span className={styles.storeIcon3}>💼</span>
+            </div>
+            <div className={styles.storesTextContent}>
+              <h2 className={styles.storesMainTitle}>Découvrez nos boutiques</h2>
+              <p className={styles.storesSubtitle}>Visitez les boutiques de nos vendeurs professionnels</p>
+            </div>
+            <div className={styles.storesCountBadge}>
+              <span className={styles.countIcon}>🎯</span>
+              <span className={styles.countText}>{storesData?.length || 0} Boutiques</span>
+            </div>
+          </div>
         </div>
         
         <div className={styles.storesCarouselContainer}>
@@ -636,25 +850,75 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         </div>
       </section>
 
-      {/* Support Section */}
+      {/* Support Section - Creative Design */}
       <section className={styles.supportSection}>
-        <div className={styles.container}>
-          <div className={styles.supportCard}>
-            <div className={styles.supportContent}>
-              <div className={styles.supportIcon}>🎧</div>
-              <div className={styles.supportText}>
-                <h3>Besoin d'aide ?</h3>
-                <p>Notre équipe support est là pour vous accompagner. Posez vos questions, signalez un problème ou demandez des clarifications.</p>
+        <div className={styles.supportContainer}>
+          <div className={styles.supportBackground}>
+            <div className={styles.supportWave1}></div>
+            <div className={styles.supportWave2}></div>
+            <div className={styles.supportDots}></div>
+          </div>
+          
+          <div className={styles.supportContent}>
+            <div className={styles.supportLeft}>
+              <div className={styles.supportIconGroup}>
+                <span className={styles.supportIcon1}>🎧</span>
+                <span className={styles.supportIcon2}>💬</span>
+                <span className={styles.supportIcon3}>❓</span>
               </div>
             </div>
-            <div className={styles.supportActions}>
+            
+            <div className={styles.supportCenter}>
+              <h3 className={styles.supportTitle}>
+                Besoin d'aide ?
+              </h3>
+              <p className={styles.supportSubtitle}>
+                Notre équipe support est là pour vous accompagner. Posez vos questions, signalez un problème ou demandez des clarifications.
+              </p>
+              <div className={styles.supportFeatures}>
+                <div className={styles.supportFeature}>
+                  <span className={styles.featureIcon}>⚡</span>
+                  <span className={styles.featureText}>Réponse rapide</span>
+                </div>
+                <div className={styles.supportFeature}>
+                  <span className={styles.featureIcon}>👥</span>
+                  <span className={styles.featureText}>Équipe dédiée</span>
+                </div>
+                <div className={styles.supportFeature}>
+                  <span className={styles.featureIcon}>🔧</span>
+                  <span className={styles.featureText}>Solutions efficaces</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className={styles.supportRight}>
               <button 
                 className={styles.supportBtn}
                 onClick={() => setShowSupportModal(true)}
               >
-                <span>💬</span>
-                Contacter le support
+                <span className={styles.supportBtnIcon}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                </span>
+                <span className={styles.supportBtnText}>Contacter le support</span>
+                <span className={styles.supportBtnArrow}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </span>
               </button>
+              
+              <div className={styles.supportInfo}>
+                <div className={styles.supportInfoItem}>
+                  <span className={styles.supportInfoIcon}>🕐</span>
+                  <span className={styles.supportInfoText}>Disponible 24/7</span>
+                </div>
+                <div className={styles.supportInfoItem}>
+                  <span className={styles.supportInfoIcon}>📧</span>
+                  <span className={styles.supportInfoText}>support@entrecoiffeur.com</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -719,6 +983,13 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         userFirstName={userFirstName}
         userId={userId}
         onShowLogin={onShowLogin}
+      />
+
+      {/* Modal Carte Interactive */}
+      <FranceMapModalLeaflet
+        isOpen={showMapModal}
+        onClose={() => setShowMapModal(false)}
+        products={allProducts}
       />
     </div>
   )

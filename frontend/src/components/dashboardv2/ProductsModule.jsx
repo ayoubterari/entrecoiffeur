@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Search, X, Package, Plus, Edit, Trash2, AlertCircle, MapPin } from 'lucide-react'
 import ImageUpload from '../ImageUpload'
 import ProductImageDisplay from '../ProductImageDisplay'
+import LocationSelector from '../LocationSelector'
 import { frenchCities } from '../../data/frenchCities'
 
 const ProductsModule = ({ userId, userType }) => {
@@ -607,23 +608,11 @@ const ProductsModule = ({ userId, userType }) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="location">Localisation (Ville)</Label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <select
-                  id="location"
-                  className="flex h-10 w-full rounded-md border border-input bg-white pl-10 pr-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                  value={productForm.location}
-                  onChange={(e) => setProductForm({...productForm, location: e.target.value})}
-                >
-                  <option value="">Sélectionner une ville</option>
-                  {frenchCities.map((city) => (
-                    <option key={city} value={city}>
-                      {city}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <Label>📍 Localisation du produit</Label>
+              <LocationSelector
+                value={productForm.location}
+                onChange={(location) => setProductForm({...productForm, location})}
+              />
             </div>
 
             <div className="space-y-2">
@@ -801,23 +790,11 @@ const ProductsModule = ({ userId, userType }) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="edit-location">Localisation (Ville)</Label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <select
-                  id="edit-location"
-                  className="flex h-10 w-full rounded-md border border-input bg-white pl-10 pr-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                  value={productForm.location}
-                  onChange={(e) => setProductForm({...productForm, location: e.target.value})}
-                >
-                  <option value="">Sélectionner une ville</option>
-                  {frenchCities.map((city) => (
-                    <option key={city} value={city}>
-                      {city}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <Label>📍 Localisation du produit</Label>
+              <LocationSelector
+                value={productForm.location}
+                onChange={(location) => setProductForm({...productForm, location})}
+              />
             </div>
 
             <div className="space-y-2">

@@ -26,6 +26,7 @@ import type * as functions_mutations_blog from "../functions/mutations/blog.js";
 import type * as functions_mutations_coupons from "../functions/mutations/coupons.js";
 import type * as functions_mutations_notifications from "../functions/mutations/notifications.js";
 import type * as functions_mutations_support from "../functions/mutations/support.js";
+import type * as functions_mutations_updateProductLocations from "../functions/mutations/updateProductLocations.js";
 import type * as functions_queries_accountChangeRequests from "../functions/queries/accountChangeRequests.js";
 import type * as functions_queries_adminUsers from "../functions/queries/adminUsers.js";
 import type * as functions_queries_blog from "../functions/queries/blog.js";
@@ -43,6 +44,8 @@ import type * as orders from "../orders.js";
 import type * as payments from "../payments.js";
 import type * as products from "../products.js";
 import type * as sellerPosts from "../sellerPosts.js";
+import type * as updateProductLocations from "../updateProductLocations.js";
+import type * as updateSellerCities from "../updateSellerCities.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -66,6 +69,7 @@ declare const fullApi: ApiFromModules<{
   "functions/mutations/coupons": typeof functions_mutations_coupons;
   "functions/mutations/notifications": typeof functions_mutations_notifications;
   "functions/mutations/support": typeof functions_mutations_support;
+  "functions/mutations/updateProductLocations": typeof functions_mutations_updateProductLocations;
   "functions/queries/accountChangeRequests": typeof functions_queries_accountChangeRequests;
   "functions/queries/adminUsers": typeof functions_queries_adminUsers;
   "functions/queries/blog": typeof functions_queries_blog;
@@ -83,6 +87,8 @@ declare const fullApi: ApiFromModules<{
   payments: typeof payments;
   products: typeof products;
   sellerPosts: typeof sellerPosts;
+  updateProductLocations: typeof updateProductLocations;
+  updateSellerCities: typeof updateSellerCities;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

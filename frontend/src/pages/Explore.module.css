@@ -132,6 +132,35 @@
   background: #dee2e6;
 }
 
+.mapBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.7rem 1.2rem;
+  background: linear-gradient(135deg, #C0B4A5 0%, #D4C9BC 100%);
+  border: none;
+  border-radius: 9.6px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(192, 180, 165, 0.3);
+}
+
+.mapBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(192, 180, 165, 0.4);
+}
+
+.mapBtn:active {
+  transform: translateY(0);
+}
+
+.mapBtn svg {
+  stroke: currentColor;
+}
+
 .filterToggleBtn {
   display: none;
   align-items: center;
@@ -1176,6 +1205,11 @@
 
   .searchContainer {
     max-width: 100%;
+  }
+
+  .mapBtn {
+    width: 100%;
+    justify-content: center;
   }
 
   .filterToggleBtn {
