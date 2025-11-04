@@ -26,6 +26,7 @@ import type * as functions_mutations_adminUsers from "../functions/mutations/adm
 import type * as functions_mutations_blog from "../functions/mutations/blog.js";
 import type * as functions_mutations_coupons from "../functions/mutations/coupons.js";
 import type * as functions_mutations_notifications from "../functions/mutations/notifications.js";
+import type * as functions_mutations_reviews from "../functions/mutations/reviews.js";
 import type * as functions_mutations_sellerCoupons from "../functions/mutations/sellerCoupons.js";
 import type * as functions_mutations_sellerUsers from "../functions/mutations/sellerUsers.js";
 import type * as functions_mutations_support from "../functions/mutations/support.js";
@@ -36,6 +37,7 @@ import type * as functions_queries_adminUsers from "../functions/queries/adminUs
 import type * as functions_queries_blog from "../functions/queries/blog.js";
 import type * as functions_queries_coupons from "../functions/queries/coupons.js";
 import type * as functions_queries_notifications from "../functions/queries/notifications.js";
+import type * as functions_queries_reviews from "../functions/queries/reviews.js";
 import type * as functions_queries_search from "../functions/queries/search.js";
 import type * as functions_queries_sellerCoupons from "../functions/queries/sellerCoupons.js";
 import type * as functions_queries_sellerUsers from "../functions/queries/sellerUsers.js";
@@ -75,6 +77,7 @@ declare const fullApi: ApiFromModules<{
   "functions/mutations/blog": typeof functions_mutations_blog;
   "functions/mutations/coupons": typeof functions_mutations_coupons;
   "functions/mutations/notifications": typeof functions_mutations_notifications;
+  "functions/mutations/reviews": typeof functions_mutations_reviews;
   "functions/mutations/sellerCoupons": typeof functions_mutations_sellerCoupons;
   "functions/mutations/sellerUsers": typeof functions_mutations_sellerUsers;
   "functions/mutations/support": typeof functions_mutations_support;
@@ -85,6 +88,7 @@ declare const fullApi: ApiFromModules<{
   "functions/queries/blog": typeof functions_queries_blog;
   "functions/queries/coupons": typeof functions_queries_coupons;
   "functions/queries/notifications": typeof functions_queries_notifications;
+  "functions/queries/reviews": typeof functions_queries_reviews;
   "functions/queries/search": typeof functions_queries_search;
   "functions/queries/sellerCoupons": typeof functions_queries_sellerCoupons;
   "functions/queries/sellerUsers": typeof functions_queries_sellerUsers;

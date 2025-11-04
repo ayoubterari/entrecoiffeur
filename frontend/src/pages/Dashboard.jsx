@@ -12,6 +12,7 @@ import AffiliateTab from '../components/AffiliateTab'
 import SupportResponses from '../components/SupportResponses'
 import SellerComplaintsManagement from '../components/SellerComplaintsManagement'
 import ProductImageDisplay from '../components/ProductImageDisplay'
+import MyReviewsTab from '../components/MyReviewsTab'
 import './Dashboard.css'
 
 const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, companyName }) => {
@@ -176,6 +177,7 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
     const baseTabs = [
       { id: 'profile', name: 'Profil', icon: '👤' },
       { id: 'purchases', name: 'Mes achats', icon: '🛒' },
+      { id: 'reviews', name: 'Mes avis', icon: '⭐' },
     ]
     
     // Ajouter les onglets de vente uniquement pour professionnels et grossistes
@@ -2022,6 +2024,12 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {activeTab === 'reviews' && (
+            <div className="tab-content">
+              <MyReviewsTab buyerReviews={buyerReviews} />
             </div>
           )}
         </div>

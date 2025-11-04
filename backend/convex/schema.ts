@@ -122,9 +122,14 @@ export default defineSchema({
     productId: v.id("products"),
     rating: v.number(),
     comment: v.string(),
+    status: v.optional(v.union(v.literal("approved"), v.literal("rejected"))), // Statut de modération (approved par défaut)
+    moderatedBy: v.optional(v.id("users")), // Admin qui a modéré
+    moderatedAt: v.optional(v.number()), // Date de modération
+    moderationNote: v.optional(v.string()), // Note de modération
     createdAt: v.number(),
   }).index("by_product", ["productId"])
-    .index("by_user", ["userId"]),
+    .index("by_user", ["userId"])
+    .index("by_status", ["status"]),
 
   // Order Reviews table - Évaluations des commandes livrées
   orderReviews: defineTable({
@@ -138,6 +143,10 @@ export default defineSchema({
     productQualityRating: v.optional(v.number()), // Note pour la qualité du produit (1-5)
     sellerServiceRating: v.optional(v.number()), // Note pour le service vendeur (1-5)
     isRecommended: v.optional(v.boolean()), // Recommande-t-il ce vendeur/produit ?
+    status: v.optional(v.union(v.literal("approved"), v.literal("rejected"))), // Statut de modération (approved par défaut)
+    moderatedBy: v.optional(v.id("users")), // Admin qui a modéré
+    moderatedAt: v.optional(v.number()), // Date de modération
+    moderationNote: v.optional(v.string()), // Note de modération
     createdAt: v.number(),
     updatedAt: v.number(),
   }).index("by_order", ["orderId"])
@@ -145,7 +154,8 @@ export default defineSchema({
     .index("by_seller", ["sellerId"])
     .index("by_product", ["productId"])
     .index("by_rating", ["rating"])
-    .index("by_created_date", ["createdAt"]),
+    .index("by_created_date", ["createdAt"])
+    .index("by_status", ["status"]),
 
   // Blog articles table
   blogArticles: defineTable({
@@ -571,6 +581,7 @@ export default defineSchema({
       paiement: v.boolean(), // Gestion des paiements
       blog: v.boolean(), // Gestion du blog
       coupons: v.boolean(), // Gestion des coupons
+      reviews: v.optional(v.boolean()), // Gestion des avis
       support: v.boolean(), // Gestion du support
       stats: v.boolean(), // Accès aux statistiques
       settings: v.boolean(), // Accès aux paramètres

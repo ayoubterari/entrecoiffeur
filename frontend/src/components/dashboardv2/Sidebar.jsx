@@ -17,7 +17,8 @@ import {
   X,
   AlertTriangle,
   UserCheck,
-  Users
+  Users,
+  Star
 } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { Button } from '../ui/button'
@@ -53,6 +54,9 @@ const Sidebar = ({
     if (!hasAccess || hasAccess('purchases')) {
       allItems.push({ id: 'purchases', name: 'Mes achats', icon: ShoppingCart })
     }
+    
+    // Mes avis - accessible à tous
+    allItems.push({ id: 'reviews', name: 'Mes avis', icon: Star })
     
     // Onglets pour professionnels et grossistes
     if (userType === 'professionnel' || userType === 'grossiste') {

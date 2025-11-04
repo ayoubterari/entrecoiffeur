@@ -14,6 +14,7 @@ import NetVendeurModule from '../components/adminv2/NetVendeurModule'
 import PaymentModule from '../components/adminv2/PaymentModule'
 import BlogModule from '../components/adminv2/BlogModule'
 import CouponsModule from '../components/adminv2/CouponsModule'
+import ReviewsModule from '../components/adminv2/ReviewsModule'
 import SupportModule from '../components/adminv2/SupportModule'
 import StatisticsModule from '../components/adminv2/StatisticsModule'
 import SettingsModule from '../components/adminv2/SettingsModule'
@@ -61,7 +62,9 @@ const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, user
     }
 
     // Vérifier la permission spécifique
-    return userPermissions.permissions?.[module] || false
+    // Si la permission n'existe pas (undefined), on considère qu'il n'y a pas d'accès
+    const permission = userPermissions.permissions?.[module]
+    return permission === true
   }
 
   // Calculer les statistiques
@@ -236,6 +239,10 @@ const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, user
 
           {activeTab === 'coupons' && hasAccess('coupons') && (
             <CouponsModule />
+          )}
+
+          {activeTab === 'reviews' && hasAccess('reviews') && (
+            <ReviewsModule userId={userId} />
           )}
 
           {activeTab === 'support' && hasAccess('support') && (

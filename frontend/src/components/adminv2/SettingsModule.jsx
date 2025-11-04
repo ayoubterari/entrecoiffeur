@@ -67,6 +67,7 @@ const SettingsModule = ({ currentUserId }) => {
       paiement: false,
       blog: false,
       coupons: false,
+      reviews: false,
       support: false,
       stats: false,
       settings: false
@@ -145,6 +146,7 @@ const SettingsModule = ({ currentUserId }) => {
           paiement: false,
           blog: false,
           coupons: false,
+          reviews: false,
           support: false,
           stats: false,
           settings: false
@@ -249,6 +251,7 @@ const SettingsModule = ({ currentUserId }) => {
     { key: 'paiement', label: 'Paiements', icon: '💵' },
     { key: 'blog', label: 'Blog', icon: '📝' },
     { key: 'coupons', label: 'Coupons', icon: '🎟️' },
+    { key: 'reviews', label: 'Avis', icon: '💬' },
     { key: 'support', label: 'Support', icon: '🎧' },
     { key: 'stats', label: 'Statistiques', icon: '📈' },
     { key: 'settings', label: 'Paramètres', icon: '⚙️' }

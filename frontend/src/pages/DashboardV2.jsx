@@ -13,6 +13,7 @@ import ComplaintsModule from '../components/dashboardv2/ComplaintsModule'
 import CouponsModule from '../components/dashboardv2/CouponsModule'
 import AccountChangeRequest from '../components/dashboardv2/AccountChangeRequest'
 import TeamModule from '../components/dashboardv2/TeamModule'
+import MyReviewsTab from '../components/MyReviewsTab'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import '../styles/dashboardv2.css'
 
@@ -31,6 +32,11 @@ const DashboardV2 = ({ userEmail, userFirstName, userLastName, userId, userType,
   // Get user permissions if they are a sub-user
   const userPermissions = useQuery(api.functions.queries.sellerUsers.getUserPermissions,
     userId ? { userId } : "skip"
+  )
+
+  // Get buyer reviews
+  const buyerReviews = useQuery(api.orderReviews.getBuyerReviews,
+    userId ? { buyerId: userId, limit: 50 } : "skip"
   )
 
   // Check if user has access to a module
@@ -94,6 +100,10 @@ const DashboardV2 = ({ userEmail, userFirstName, userLastName, userId, userType,
 
           {activeTab === 'purchases' && hasAccess('purchases') && (
             <PurchasesModule userId={userId} />
+          )}
+
+          {activeTab === 'reviews' && (
+            <MyReviewsTab buyerReviews={buyerReviews} />
           )}
 
           {activeTab === 'products' && hasAccess('products') && (

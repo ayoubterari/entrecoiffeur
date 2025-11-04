@@ -158,11 +158,16 @@ export const getSellerReviews = query({
   handler: async (ctx, args) => {
     const limit = args.limit || 50;
     
-    const reviews = await ctx.db
+    const allReviews = await ctx.db
       .query("orderReviews")
       .withIndex("by_seller", (q) => q.eq("sellerId", args.sellerId))
       .order("desc")
-      .take(limit);
+      .collect();
+    
+    // Filtrer pour n'afficher que les avis approuvés
+    const reviews = allReviews
+      .filter(r => !r.status || r.status === "approved")
+      .slice(0, limit);
 
     // Enrichir avec les informations de commande, produit et acheteur
     const enrichedReviews = await Promise.all(
@@ -191,10 +196,13 @@ export const getSellerReviewStats = query({
     sellerId: v.id("users"),
   },
   handler: async (ctx, args) => {
-    const reviews = await ctx.db
+    const allReviews = await ctx.db
       .query("orderReviews")
       .withIndex("by_seller", (q) => q.eq("sellerId", args.sellerId))
       .collect();
+    
+    // Filtrer pour n'afficher que les avis approuvés
+    const reviews = allReviews.filter(r => !r.status || r.status === "approved");
 
     if (reviews.length === 0) {
       return {
@@ -320,11 +328,16 @@ export const getProductReviews = query({
   handler: async (ctx, args) => {
     const limit = args.limit || 20;
     
-    const reviews = await ctx.db
+    const allReviews = await ctx.db
       .query("orderReviews")
       .withIndex("by_product", (q) => q.eq("productId", args.productId))
       .order("desc")
-      .take(limit);
+      .collect();
+    
+    // Filtrer pour n'afficher que les avis approuvés
+    const reviews = allReviews
+      .filter(r => !r.status || r.status === "approved")
+      .slice(0, limit);
 
     // Enrichir avec les informations des acheteurs
     const enrichedReviews = await Promise.all(
@@ -353,10 +366,13 @@ export const getProductReviewStats = query({
     productId: v.id("products"),
   },
   handler: async (ctx, args) => {
-    const reviews = await ctx.db
+    const allReviews = await ctx.db
       .query("orderReviews")
       .withIndex("by_product", (q) => q.eq("productId", args.productId))
       .collect();
+    
+    // Filtrer pour n'afficher que les avis approuvés
+    const reviews = allReviews.filter(r => !r.status || r.status === "approved");
 
     if (reviews.length === 0) {
       return {

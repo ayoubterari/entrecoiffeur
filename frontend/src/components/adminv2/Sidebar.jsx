@@ -41,6 +41,7 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onMobileClose, hasAcce
     { id: 'paiement', label: 'Paiement', icon: CreditCard },
     { id: 'blog', label: 'Blog', icon: FileText },
     { id: 'coupons', label: 'Coupons', icon: Ticket },
+    { id: 'reviews', label: 'Avis', icon: FileText },
     { id: 'support', label: 'Support', icon: Headphones },
     { id: 'stats', label: 'Statistiques', icon: BarChart3 },
     { id: 'settings', label: 'Paramètres', icon: Settings },
