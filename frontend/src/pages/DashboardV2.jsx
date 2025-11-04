@@ -10,7 +10,9 @@ import OrdersModule from '../components/dashboardv2/OrdersModule'
 import MessagesModule from '../components/dashboardv2/MessagesModule'
 import SupportModule from '../components/dashboardv2/SupportModule'
 import ComplaintsModule from '../components/dashboardv2/ComplaintsModule'
+import CouponsModule from '../components/dashboardv2/CouponsModule'
 import AccountChangeRequest from '../components/dashboardv2/AccountChangeRequest'
+import TeamModule from '../components/dashboardv2/TeamModule'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import '../styles/dashboardv2.css'
 
@@ -25,6 +27,27 @@ const DashboardV2 = ({ userEmail, userFirstName, userLastName, userId, userType,
   const unreadCount = useQuery(api.messaging.getUnreadMessageCount,
     userId ? { userId } : "skip"
   )
+
+  // Get user permissions if they are a sub-user
+  const userPermissions = useQuery(api.functions.queries.sellerUsers.getUserPermissions,
+    userId ? { userId } : "skip"
+  )
+
+  // Check if user has access to a module
+  const hasAccess = (module) => {
+    // If not a sub-user, they have full access
+    if (!userPermissions || !userPermissions.isSubUser) {
+      return true
+    }
+
+    // If account is disabled, no access
+    if (!userPermissions.isActive) {
+      return false
+    }
+
+    // Check specific permission
+    return userPermissions.permissions?.[module] || false
+  }
 
   return (
     <div className="dashboard-v2-container flex h-screen overflow-hidden bg-background">
@@ -41,6 +64,8 @@ const DashboardV2 = ({ userEmail, userFirstName, userLastName, userId, userType,
         isGroupMember={currentUser?.isGroupMember}
         isMobileOpen={isMobileSidebarOpen}
         onMobileClose={() => setIsMobileSidebarOpen(false)}
+        userPermissions={userPermissions}
+        hasAccess={hasAccess}
       />
 
       {/* Main Content - Full width sur mobile, offset sur desktop */}
@@ -56,7 +81,7 @@ const DashboardV2 = ({ userEmail, userFirstName, userLastName, userId, userType,
         
         {/* Main content with top padding for fixed header */}
         <main className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 mt-16">
-          {activeTab === 'profile' && (
+          {activeTab === 'profile' && hasAccess('profile') && (
             <ProfileModule 
               userId={userId}
               userEmail={userEmail}
@@ -67,37 +92,62 @@ const DashboardV2 = ({ userEmail, userFirstName, userLastName, userId, userType,
             />
           )}
 
-          {activeTab === 'purchases' && (
+          {activeTab === 'purchases' && hasAccess('purchases') && (
             <PurchasesModule userId={userId} />
           )}
 
-          {activeTab === 'products' && (
+          {activeTab === 'products' && hasAccess('products') && (
             <ProductsModule userId={userId} userType={userType} />
           )}
 
-          {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'orders' && (
+          {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'orders' && hasAccess('orders') && (
             <OrdersModule userId={userId} />
           )}
 
-          {activeTab === 'messages' && (
+          {activeTab === 'messages' && hasAccess('messages') && (
             <MessagesModule userId={userId} />
           )}
 
-          {activeTab === 'support' && (
+          {activeTab === 'support' && hasAccess('support') && (
             <SupportModule userId={userId} userEmail={userEmail} />
           )}
 
-          {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'complaints' && (
+          {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'complaints' && hasAccess('complaints') && (
             <ComplaintsModule userId={userId} userEmail={userEmail} />
           )}
 
-          {activeTab === 'account-change' && (
+          {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'coupons' && hasAccess('coupons') && (
+            <CouponsModule userId={userId} userType={userType} />
+          )}
+
+          {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'team' && (!userPermissions || !userPermissions.isSubUser) && (
+            <TeamModule userId={userId} userType={userType} />
+          )}
+
+          {activeTab === 'account-change' && (!userPermissions || !userPermissions.isSubUser) && (
             <AccountChangeRequest 
               userId={userId}
               currentType={userType}
               firstName={userFirstName}
               lastName={userLastName}
             />
+          )}
+
+          {/* Message d'accès refusé si l'utilisateur n'a pas les permissions */}
+          {userPermissions && userPermissions.isSubUser && !hasAccess(activeTab) && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Accès refusé</CardTitle>
+                <CardDescription>
+                  Vous n'avez pas la permission d'accéder à ce module.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Contactez l'administrateur de votre compte pour obtenir l'accès à ce module.
+                </p>
+              </CardContent>
+            </Card>
           )}
         </main>
       </div>

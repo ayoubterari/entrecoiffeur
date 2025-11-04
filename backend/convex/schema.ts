@@ -285,24 +285,58 @@ export default defineSchema({
     .index("by_receiver", ["receiverId"])
     .index("by_conversation_created", ["conversationId", "createdAt"]),
 
-  // Coupons table - Admin discount codes management
+  // Coupons table - Advanced discount codes management for sellers
   coupons: defineTable({
     code: v.string(), // Unique coupon code (e.g., "SUMMER20", "WELCOME10")
-    discountPercentage: v.number(), // Percentage discount (0-100)
-    description: v.optional(v.string()), // Optional description of the coupon
-    isActive: v.boolean(), // Whether the coupon is currently active
-    usageLimit: v.optional(v.number()), // Maximum number of uses (null = unlimited)
-    usageCount: v.number(), // Current number of uses
-    validFrom: v.number(), // Start date timestamp
-    validUntil: v.optional(v.number()), // End date timestamp (null = no expiry)
-    minimumAmount: v.optional(v.number()), // Minimum order amount to use coupon
-    createdBy: v.id("users"), // Admin who created the coupon
+    discountType: v.union(v.literal("percentage"), v.literal("fixed")), // Type de réduction
+    discountValue: v.number(), // Valeur de la réduction (pourcentage 0-100 ou montant fixe)
+    description: v.optional(v.string()), // Description du coupon
+    isActive: v.boolean(), // Statut actif/inactif
+    
+    // Limitations d'utilisation
+    usageLimit: v.optional(v.number()), // Limite globale d'utilisation (null = illimité)
+    usageLimitPerUser: v.optional(v.number()), // Limite par utilisateur (null = illimité)
+    usageCount: v.number(), // Nombre total d'utilisations
+    
+    // Période de validité
+    validFrom: v.number(), // Date de début (timestamp)
+    validUntil: v.optional(v.number()), // Date de fin (timestamp, null = pas d'expiration)
+    
+    // Restrictions de montant
+    minimumAmount: v.optional(v.number()), // Montant minimum de commande
+    maximumDiscount: v.optional(v.number()), // Réduction maximale (pour les pourcentages)
+    
+    // Restrictions de produits et catégories
+    applicableToAllProducts: v.boolean(), // S'applique à tous les produits
+    specificProductIds: v.optional(v.array(v.id("products"))), // IDs des produits spécifiques
+    specificCategoryIds: v.optional(v.array(v.id("categories"))), // IDs des catégories spécifiques
+    
+    // Restrictions utilisateur
+    applicableToAllUsers: v.boolean(), // S'applique à tous les utilisateurs
+    specificUserTypes: v.optional(v.array(v.string())), // Types d'utilisateurs (particulier, professionnel, grossiste)
+    
+    // Métadonnées
+    sellerId: v.id("users"), // Vendeur qui a créé le coupon
     createdAt: v.number(),
     updatedAt: v.number(),
   }).index("by_code", ["code"])
     .index("by_active", ["isActive"])
-    .index("by_created_by", ["createdBy"])
-    .index("by_valid_from", ["validFrom"]),
+    .index("by_seller", ["sellerId"])
+    .index("by_valid_from", ["validFrom"])
+    .index("by_seller_active", ["sellerId", "isActive"]),
+  
+  // Coupon Usage Tracking - Suivi des utilisations par utilisateur
+  couponUsages: defineTable({
+    couponId: v.id("coupons"),
+    userId: v.id("users"),
+    orderId: v.optional(v.id("orders")), // Commande associée
+    usageCount: v.number(), // Nombre d'utilisations par cet utilisateur
+    lastUsedAt: v.number(), // Dernière utilisation
+    createdAt: v.number(),
+  }).index("by_coupon", ["couponId"])
+    .index("by_user", ["userId"])
+    .index("by_coupon_user", ["couponId", "userId"])
+    .index("by_order", ["orderId"]),
 
   // Seller Posts table - Posts created by sellers in their store
   sellerPosts: defineTable({
@@ -567,4 +601,39 @@ export default defineSchema({
     updatedAt: v.number(), // Date de mise à jour
   }).index("by_user", ["userId"])
     .index("by_status", ["status"]),
+
+  // Seller Users - Sous-utilisateurs créés par les professionnels/grossistes
+  sellerUsers: defineTable({
+    userId: v.id("users"), // Référence vers le compte utilisateur créé
+    parentSellerId: v.id("users"), // ID du professionnel/grossiste qui a créé ce compte
+    email: v.string(),
+    firstName: v.string(),
+    lastName: v.string(),
+    role: v.union(
+      v.literal("manager"), // Gestionnaire avec accès étendu
+      v.literal("employee"), // Employé avec accès limité
+      v.literal("viewer") // Observateur en lecture seule
+    ),
+    permissions: v.object({
+      profile: v.boolean(), // Accès au profil
+      products: v.boolean(), // Gestion des produits
+      orders: v.boolean(), // Gestion des commandes/ventes
+      purchases: v.boolean(), // Voir les achats
+      messages: v.boolean(), // Accès aux messages
+      complaints: v.boolean(), // Gestion des réclamations
+      coupons: v.boolean(), // Gestion des coupons
+      support: v.boolean(), // Accès au support
+      stats: v.boolean(), // Voir les statistiques
+      settings: v.boolean(), // Modifier les paramètres
+    }),
+    isActive: v.boolean(), // Compte actif ou désactivé
+    createdBy: v.id("users"), // Qui a créé ce sous-utilisateur
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"])
+    .index("by_parent_seller", ["parentSellerId"])
+    .index("by_email", ["email"])
+    .index("by_role", ["role"])
+    .index("by_active", ["isActive"])
+    .index("by_parent_active", ["parentSellerId", "isActive"]),
 });

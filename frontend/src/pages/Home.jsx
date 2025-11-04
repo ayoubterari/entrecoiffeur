@@ -275,7 +275,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
 
           {/* Logo - Centré sur desktop, à droite sur mobile */}
           <div className={styles.marketplaceLogo}>
-            <h1 className={styles.marketplaceTitle}>Entre Coiffeur</h1>
+            <h1 className={styles.marketplaceTitle}>Entre Coiffeurs</h1>
             <p className={styles.marketplaceSubtitle}>Marketplace beauté & coiffure</p>
           </div>
 

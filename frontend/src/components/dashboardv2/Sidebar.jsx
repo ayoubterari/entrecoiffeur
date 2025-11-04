@@ -16,7 +16,8 @@ import {
   Home,
   X,
   AlertTriangle,
-  UserCheck
+  UserCheck,
+  Users
 } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { Button } from '../ui/button'
@@ -34,33 +35,61 @@ const Sidebar = ({
   unreadCount,
   isGroupMember,
   isMobileOpen,
-  onMobileClose 
+  onMobileClose,
+  userPermissions,
+  hasAccess 
 }) => {
   const navigate = useNavigate()
 
   const getMenuItems = () => {
-    const baseItems = [
-      { id: 'profile', name: 'Profil', icon: User },
-      { id: 'purchases', name: 'Mes achats', icon: ShoppingCart },
-    ]
+    const allItems = []
     
-    // Ajouter les onglets de vente uniquement pour professionnels et grossistes
-    if (userType === 'professionnel' || userType === 'grossiste') {
-      baseItems.push(
-        { id: 'products', name: 'Mes Produits', icon: Package },
-        { id: 'orders', name: 'Mes ventes', icon: ClipboardList },
-        { id: 'complaints', name: 'Réclamations', icon: AlertTriangle }
-      )
+    // Profil - toujours accessible
+    if (!hasAccess || hasAccess('profile')) {
+      allItems.push({ id: 'profile', name: 'Profil', icon: User })
     }
     
-    // Ajouter Messages, Support et Changement de compte
-    baseItems.push(
-      { id: 'messages', name: 'Messages', icon: MessageSquare, badge: unreadCount },
-      { id: 'support', name: 'Support', icon: Headphones },
-      { id: 'account-change', name: 'Changement de compte', icon: UserCheck }
-    )
+    // Mes achats
+    if (!hasAccess || hasAccess('purchases')) {
+      allItems.push({ id: 'purchases', name: 'Mes achats', icon: ShoppingCart })
+    }
     
-    return baseItems
+    // Onglets pour professionnels et grossistes
+    if (userType === 'professionnel' || userType === 'grossiste') {
+      if (!hasAccess || hasAccess('products')) {
+        allItems.push({ id: 'products', name: 'Mes Produits', icon: Package })
+      }
+      if (!hasAccess || hasAccess('orders')) {
+        allItems.push({ id: 'orders', name: 'Mes ventes', icon: ClipboardList })
+      }
+      if (!hasAccess || hasAccess('complaints')) {
+        allItems.push({ id: 'complaints', name: 'Réclamations', icon: AlertTriangle })
+      }
+      if (!hasAccess || hasAccess('coupons')) {
+        allItems.push({ id: 'coupons', name: 'Mes Coupons', icon: Ticket })
+      }
+      // Team - uniquement pour le compte principal (pas pour les sous-utilisateurs)
+      if (!userPermissions || !userPermissions.isSubUser) {
+        allItems.push({ id: 'team', name: 'Mon équipe', icon: Users })
+      }
+    }
+    
+    // Messages
+    if (!hasAccess || hasAccess('messages')) {
+      allItems.push({ id: 'messages', name: 'Messages', icon: MessageSquare, badge: unreadCount })
+    }
+    
+    // Support
+    if (!hasAccess || hasAccess('support')) {
+      allItems.push({ id: 'support', name: 'Support', icon: Headphones })
+    }
+    
+    // Changement de compte - uniquement pour le compte principal
+    if (!userPermissions || !userPermissions.isSubUser) {
+      allItems.push({ id: 'account-change', name: 'Changement de compte', icon: UserCheck })
+    }
+    
+    return allItems
   }
 
   const menuItems = getMenuItems()
