@@ -38,7 +38,8 @@ export const createCoupon = mutation({
     
     const couponId = await ctx.db.insert("coupons", {
       code: args.code.toUpperCase(),
-      discountPercentage: args.discountPercentage,
+      discountType: 'percentage' as const,
+      discountValue: args.discountPercentage,
       description: args.description,
       isActive: true,
       usageLimit: args.usageLimit,
@@ -46,10 +47,12 @@ export const createCoupon = mutation({
       validFrom: args.validFrom,
       validUntil: args.validUntil,
       minimumAmount: args.minimumAmount,
-      createdBy: args.createdBy,
+      sellerId: args.createdBy,
+      applicableToAllProducts: true,
+      applicableToAllUsers: true,
       createdAt: now,
       updatedAt: now,
-    });
+    } as any);
 
     return couponId;
   },
@@ -81,7 +84,7 @@ export const updateCoupon = mutation({
     if (updates.code && updates.code.toUpperCase() !== existingCoupon.code) {
       const duplicateCoupon = await ctx.db
         .query("coupons")
-        .withIndex("by_code", (q) => q.eq("code", updates.code.toUpperCase()))
+        .withIndex("by_code", (q) => q.eq("code", updates.code!.toUpperCase()))
         .first();
 
       if (duplicateCoupon) {
@@ -196,16 +199,42 @@ export const validateCoupon = mutation({
       throw new Error(`Montant minimum de ${coupon.minimumAmount}€ requis pour ce coupon`);
     }
 
-    // Calculate discount
-    const discountAmount = (args.orderAmount * coupon.discountPercentage) / 100;
-    const finalAmount = args.orderAmount - discountAmount;
+    // Calculate discount based on type
+    let discountAmount = 0;
+    let discountPercentage = 0;
+    
+    // Support both old and new schema
+    const couponAny = coupon as any;
+    
+    if (coupon.discountType) {
+      // New schema
+      if (coupon.discountType === 'percentage') {
+        discountPercentage = coupon.discountValue || 0;
+        discountAmount = (args.orderAmount * discountPercentage) / 100;
+        
+        // Apply maximum discount if set
+        if (coupon.maximumDiscount && discountAmount > coupon.maximumDiscount) {
+          discountAmount = coupon.maximumDiscount;
+        }
+      } else if (coupon.discountType === 'fixed') {
+        discountAmount = coupon.discountValue || 0;
+        discountPercentage = (discountAmount / args.orderAmount) * 100;
+      }
+    } else if (couponAny.discountPercentage) {
+      // Old schema (backward compatibility)
+      discountPercentage = couponAny.discountPercentage;
+      discountAmount = (args.orderAmount * discountPercentage) / 100;
+    }
+    
+    const finalAmount = Math.max(0, args.orderAmount - discountAmount);
 
     return {
       isValid: true,
+      code: coupon.code,
       couponId: coupon._id,
-      discountPercentage: coupon.discountPercentage,
-      discountAmount,
-      finalAmount,
+      discountPercentage: Math.round(discountPercentage * 100) / 100,
+      discountAmount: Math.round(discountAmount * 100) / 100,
+      finalAmount: Math.round(finalAmount * 100) / 100,
       description: coupon.description,
     };
   },
