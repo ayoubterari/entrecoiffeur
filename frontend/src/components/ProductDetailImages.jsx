@@ -63,7 +63,7 @@ const ConvexImageWithFallback = ({ image, alt, className }) => {
         style={{ 
           width: '100%', 
           height: '100%', 
-          objectFit: 'contain',
+          objectFit: 'cover',
           maxWidth: 'none',
           maxHeight: 'none'
         }}
@@ -87,7 +87,7 @@ const ConvexImageWithFallback = ({ image, alt, className }) => {
         style={{ 
           width: '100%', 
           height: '100%', 
-          objectFit: 'contain',
+          objectFit: 'cover',
           maxWidth: 'none',
           maxHeight: 'none'
         }}

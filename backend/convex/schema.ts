@@ -61,6 +61,18 @@ export default defineSchema({
     onSale: v.boolean(),
     rating: v.optional(v.number()),
     reviewCount: v.optional(v.number()),
+    // Champs détaillés optionnels pour la description
+    marque: v.optional(v.string()), // Marque du produit
+    contenance: v.optional(v.string()), // Contenance (ex: 500ml, 1L)
+    typeProduit: v.optional(v.string()), // Type de produit
+    typePublic: v.optional(v.string()), // Type de public (homme, femme, enfant, mixte)
+    genre: v.optional(v.string()), // Genre
+    specificiteHygiene: v.optional(v.string()), // Spécificités - Hygiène
+    contenanceBeaute: v.optional(v.string()), // Contenance - Beauté
+    pourQui: v.optional(v.string()), // Pour qui ?
+    textureHygiene: v.optional(v.string()), // Texture - Hygiène
+    protectionUV: v.optional(v.string()), // Protection UV
+    produitsBio: v.optional(v.string()), // Produits Bio
     createdAt: v.number(),
   }).index("by_seller", ["sellerId"])
     .index("by_category", ["category"])
@@ -647,4 +659,60 @@ export default defineSchema({
     .index("by_role", ["role"])
     .index("by_active", ["isActive"])
     .index("by_parent_active", ["parentSellerId", "isActive"]),
+
+  // Business Sales (Fonds de commerce)
+  businessSales: defineTable({
+    // Informations générales
+    activityType: v.string(), // Type d'activité (café, boulangerie, salon de coiffure, etc.)
+    businessName: v.optional(v.string()), // Nom commercial (facultatif)
+    address: v.string(), // Adresse complète
+    city: v.string(), // Ville
+    district: v.optional(v.string()), // Quartier
+    totalArea: v.string(), // Surface totale (ex: 120 m²)
+    creationYear: v.number(), // Année de création
+    legalStatus: v.string(), // Statut juridique (SARL, personne physique, etc.)
+    saleReason: v.string(), // Motif de la vente
+    
+    // Données financières
+    salePrice: v.number(), // Prix de vente
+    annualRevenue: v.string(), // Chiffre d'affaires annuel
+    netProfit: v.optional(v.string()), // Résultat net
+    monthlyRent: v.number(), // Loyer mensuel
+    fixedCharges: v.optional(v.string()), // Charges fixes
+    leaseRemaining: v.string(), // Durée du bail restante
+    deposit: v.optional(v.string()), // Dépôt de garantie
+    
+    // Détails du local
+    localDescription: v.string(), // Description du local
+    includedEquipment: v.string(), // Équipements inclus
+    recentWorks: v.optional(v.string()), // Travaux récents
+    compliance: v.optional(v.string()), // Conformité et autorisations
+    
+    // Clientèle et potentiel
+    clienteleType: v.string(), // Type de clientèle
+    footTraffic: v.string(), // Flux de passage
+    developmentPotential: v.optional(v.string()), // Potentiel de développement
+    
+    // Contenu visuel
+    images: v.optional(v.array(v.union(v.string(), v.id("_storage")))), // Photos du local (max 5)
+    floorPlan: v.optional(v.union(v.string(), v.id("_storage"))), // Plan du local
+    videoUrl: v.optional(v.string()), // URL vidéo (deprecated, pour rétrocompatibilité)
+    
+    // Métadonnées
+    sellerId: v.id("users"), // Vendeur
+    status: v.union(
+      v.literal("active"),
+      v.literal("pending"),
+      v.literal("sold"),
+      v.literal("inactive")
+    ), // Statut de l'annonce
+    views: v.optional(v.number()), // Nombre de vues
+    contactCount: v.optional(v.number()), // Nombre de contacts
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_seller", ["sellerId"])
+    .index("by_city", ["city"])
+    .index("by_status", ["status"])
+    .index("by_activity_type", ["activityType"])
+    .index("by_created_at", ["createdAt"]),
 });

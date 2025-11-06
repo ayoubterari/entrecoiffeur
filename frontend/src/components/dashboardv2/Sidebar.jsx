@@ -18,7 +18,8 @@ import {
   AlertTriangle,
   UserCheck,
   Users,
-  Star
+  Star,
+  Building2
 } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { Button } from '../ui/button'
@@ -71,6 +72,10 @@ const Sidebar = ({
       }
       if (!hasAccess || hasAccess('coupons')) {
         allItems.push({ id: 'coupons', name: 'Mes Coupons', icon: Ticket })
+      }
+      // Fonds de Commerce - uniquement pour le compte principal
+      if (!userPermissions || !userPermissions.isSubUser) {
+        allItems.push({ id: 'business-sales', name: 'Fonds de Commerce', icon: Building2 })
       }
       // Team - uniquement pour le compte principal (pas pour les sous-utilisateurs)
       if (!userPermissions || !userPermissions.isSubUser) {

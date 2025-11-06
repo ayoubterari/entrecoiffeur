@@ -191,6 +191,18 @@ export const createProduct = mutation({
     visibleByGrossiste: v.optional(v.boolean()),
     featured: v.optional(v.boolean()),
     onSale: v.optional(v.boolean()),
+    // Champs détaillés optionnels
+    marque: v.optional(v.string()),
+    contenance: v.optional(v.string()),
+    typeProduit: v.optional(v.string()),
+    typePublic: v.optional(v.string()),
+    genre: v.optional(v.string()),
+    specificiteHygiene: v.optional(v.string()),
+    contenanceBeaute: v.optional(v.string()),
+    pourQui: v.optional(v.string()),
+    textureHygiene: v.optional(v.string()),
+    protectionUV: v.optional(v.string()),
+    produitsBio: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     // Get the seller information to check user type
@@ -240,6 +252,18 @@ export const createProduct = mutation({
       visibleByGrossiste: args.visibleByGrossiste,
       featured: args.featured || false,
       onSale: args.onSale || false,
+      // Champs détaillés optionnels
+      marque: args.marque,
+      contenance: args.contenance,
+      typeProduit: args.typeProduit,
+      typePublic: args.typePublic,
+      genre: args.genre,
+      specificiteHygiene: args.specificiteHygiene,
+      contenanceBeaute: args.contenanceBeaute,
+      pourQui: args.pourQui,
+      textureHygiene: args.textureHygiene,
+      protectionUV: args.protectionUV,
+      produitsBio: args.produitsBio,
       createdAt: Date.now(),
     });
 
@@ -285,6 +309,18 @@ export const updateProduct = mutation({
     visibleByGrossiste: v.optional(v.boolean()),
     featured: v.optional(v.boolean()),
     onSale: v.optional(v.boolean()),
+    // Champs détaillés optionnels
+    marque: v.optional(v.string()),
+    contenance: v.optional(v.string()),
+    typeProduit: v.optional(v.string()),
+    typePublic: v.optional(v.string()),
+    genre: v.optional(v.string()),
+    specificiteHygiene: v.optional(v.string()),
+    contenanceBeaute: v.optional(v.string()),
+    pourQui: v.optional(v.string()),
+    textureHygiene: v.optional(v.string()),
+    protectionUV: v.optional(v.string()),
+    produitsBio: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const { productId, categoryId, ...updates } = args;

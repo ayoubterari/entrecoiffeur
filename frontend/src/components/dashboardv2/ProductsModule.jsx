@@ -43,7 +43,19 @@ const ProductsModule = ({ userId, userType }) => {
     visibleByProfessionnel: true,
     visibleByGrossiste: true,
     featured: false,
-    onSale: false
+    onSale: false,
+    // Champs détaillés optionnels
+    marque: '',
+    contenance: '',
+    typeProduit: '',
+    typePublic: '',
+    genre: '',
+    specificiteHygiene: '',
+    contenanceBeaute: '',
+    pourQui: '',
+    textureHygiene: '',
+    protectionUV: '',
+    produitsBio: ''
   })
 
   // Get categories and user products
@@ -117,7 +129,19 @@ const ProductsModule = ({ userId, userType }) => {
       visibleByProfessionnel: true,
       visibleByGrossiste: true,
       featured: false,
-      onSale: false
+      onSale: false,
+      // Champs détaillés optionnels
+      marque: '',
+      contenance: '',
+      typeProduit: '',
+      typePublic: '',
+      genre: '',
+      specificiteHygiene: '',
+      contenanceBeaute: '',
+      pourQui: '',
+      textureHygiene: '',
+      protectionUV: '',
+      produitsBio: ''
     })
     setProductImages([])
   }
@@ -153,7 +177,19 @@ const ProductsModule = ({ userId, userType }) => {
         visibleByGrossiste: productForm.visibleByGrossiste,
         images: imageStorageIds,
         featured: productForm.featured,
-        onSale: productForm.onSale
+        onSale: productForm.onSale,
+        // Champs détaillés optionnels
+        marque: productForm.marque || undefined,
+        contenance: productForm.contenance || undefined,
+        typeProduit: productForm.typeProduit || undefined,
+        typePublic: productForm.typePublic || undefined,
+        genre: productForm.genre || undefined,
+        specificiteHygiene: productForm.specificiteHygiene || undefined,
+        contenanceBeaute: productForm.contenanceBeaute || undefined,
+        pourQui: productForm.pourQui || undefined,
+        textureHygiene: productForm.textureHygiene || undefined,
+        protectionUV: productForm.protectionUV || undefined,
+        produitsBio: productForm.produitsBio || undefined
       })
       
       resetForm()
@@ -186,7 +222,19 @@ const ProductsModule = ({ userId, userType }) => {
       visibleByProfessionnel: product.visibleByProfessionnel !== false,
       visibleByGrossiste: product.visibleByGrossiste !== false,
       featured: product.featured || false,
-      onSale: product.onSale || false
+      onSale: product.onSale || false,
+      // Champs détaillés optionnels
+      marque: product.marque || '',
+      contenance: product.contenance || '',
+      typeProduit: product.typeProduit || '',
+      typePublic: product.typePublic || '',
+      genre: product.genre || '',
+      specificiteHygiene: product.specificiteHygiene || '',
+      contenanceBeaute: product.contenanceBeaute || '',
+      pourQui: product.pourQui || '',
+      textureHygiene: product.textureHygiene || '',
+      protectionUV: product.protectionUV || '',
+      produitsBio: product.produitsBio || ''
     })
     
     const existingImages = product.images?.map((imageId, index) => ({
@@ -227,7 +275,19 @@ const ProductsModule = ({ userId, userType }) => {
         visibleByGrossiste: productForm.visibleByGrossiste,
         images: imageStorageIds,
         featured: productForm.featured,
-        onSale: productForm.onSale
+        onSale: productForm.onSale,
+        // Champs détaillés optionnels
+        marque: productForm.marque || undefined,
+        contenance: productForm.contenance || undefined,
+        typeProduit: productForm.typeProduit || undefined,
+        typePublic: productForm.typePublic || undefined,
+        genre: productForm.genre || undefined,
+        specificiteHygiene: productForm.specificiteHygiene || undefined,
+        contenanceBeaute: productForm.contenanceBeaute || undefined,
+        pourQui: productForm.pourQui || undefined,
+        textureHygiene: productForm.textureHygiene || undefined,
+        protectionUV: productForm.protectionUV || undefined,
+        produitsBio: productForm.produitsBio || undefined
       })
       
       resetForm()
@@ -615,6 +675,114 @@ const ProductsModule = ({ userId, userType }) => {
               />
             </div>
 
+            {/* Champs détaillés optionnels */}
+            <div className="space-y-3 p-4 border rounded-lg bg-muted/50">
+              <Label className="text-base font-semibold">📋 Informations détaillées (optionnelles)</Label>
+              <p className="text-sm text-muted-foreground">Ces informations seront affichées dans la description du produit</p>
+              
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="marque">Marque</Label>
+                  <Input
+                    id="marque"
+                    value={productForm.marque}
+                    onChange={(e) => setProductForm({...productForm, marque: e.target.value})}
+                    placeholder="Ex: L'Oréal, Schwarzkopf..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contenance">Contenance</Label>
+                  <Input
+                    id="contenance"
+                    value={productForm.contenance}
+                    onChange={(e) => setProductForm({...productForm, contenance: e.target.value})}
+                    placeholder="Ex: 500ml, 1L..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="typeProduit">Type de Produit</Label>
+                  <Input
+                    id="typeProduit"
+                    value={productForm.typeProduit}
+                    onChange={(e) => setProductForm({...productForm, typeProduit: e.target.value})}
+                    placeholder="Ex: Shampoing, Masque..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="typePublic">Type de public</Label>
+                  <Input
+                    id="typePublic"
+                    value={productForm.typePublic}
+                    onChange={(e) => setProductForm({...productForm, typePublic: e.target.value})}
+                    placeholder="Ex: Homme, Femme, Mixte..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="genre">Genre</Label>
+                  <Input
+                    id="genre"
+                    value={productForm.genre}
+                    onChange={(e) => setProductForm({...productForm, genre: e.target.value})}
+                    placeholder="Ex: Capillaire, Visage..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="specificiteHygiene">Spécificités - Hygiène</Label>
+                  <Input
+                    id="specificiteHygiene"
+                    value={productForm.specificiteHygiene}
+                    onChange={(e) => setProductForm({...productForm, specificiteHygiene: e.target.value})}
+                    placeholder="Ex: Anti-pelliculaire..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contenanceBeaute">Contenance - Beauté</Label>
+                  <Input
+                    id="contenanceBeaute"
+                    value={productForm.contenanceBeaute}
+                    onChange={(e) => setProductForm({...productForm, contenanceBeaute: e.target.value})}
+                    placeholder="Ex: 50ml, 100ml..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pourQui">Pour qui ?</Label>
+                  <Input
+                    id="pourQui"
+                    value={productForm.pourQui}
+                    onChange={(e) => setProductForm({...productForm, pourQui: e.target.value})}
+                    placeholder="Ex: Cheveux secs, gras..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="textureHygiene">Texture - Hygiène</Label>
+                  <Input
+                    id="textureHygiene"
+                    value={productForm.textureHygiene}
+                    onChange={(e) => setProductForm({...productForm, textureHygiene: e.target.value})}
+                    placeholder="Ex: Crème, Gel, Liquide..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="protectionUV">Protection UV</Label>
+                  <Input
+                    id="protectionUV"
+                    value={productForm.protectionUV}
+                    onChange={(e) => setProductForm({...productForm, protectionUV: e.target.value})}
+                    placeholder="Ex: SPF 30, SPF 50..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="produitsBio">Produits Bio</Label>
+                  <Input
+                    id="produitsBio"
+                    value={productForm.produitsBio}
+                    onChange={(e) => setProductForm({...productForm, produitsBio: e.target.value})}
+                    placeholder="Ex: Bio, Naturel, Vegan..."
+                  />
+                </div>
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label>Images du produit *</Label>
               <ImageUpload 
@@ -795,6 +963,114 @@ const ProductsModule = ({ userId, userType }) => {
                 value={productForm.location}
                 onChange={(location) => setProductForm({...productForm, location})}
               />
+            </div>
+
+            {/* Champs détaillés optionnels */}
+            <div className="space-y-3 p-4 border rounded-lg bg-muted/50">
+              <Label className="text-base font-semibold">📋 Informations détaillées (optionnelles)</Label>
+              <p className="text-sm text-muted-foreground">Ces informations seront affichées dans la description du produit</p>
+              
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-marque">Marque</Label>
+                  <Input
+                    id="edit-marque"
+                    value={productForm.marque}
+                    onChange={(e) => setProductForm({...productForm, marque: e.target.value})}
+                    placeholder="Ex: L'Oréal, Schwarzkopf..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-contenance">Contenance</Label>
+                  <Input
+                    id="edit-contenance"
+                    value={productForm.contenance}
+                    onChange={(e) => setProductForm({...productForm, contenance: e.target.value})}
+                    placeholder="Ex: 500ml, 1L..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-typeProduit">Type de Produit</Label>
+                  <Input
+                    id="edit-typeProduit"
+                    value={productForm.typeProduit}
+                    onChange={(e) => setProductForm({...productForm, typeProduit: e.target.value})}
+                    placeholder="Ex: Shampoing, Masque..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-typePublic">Type de public</Label>
+                  <Input
+                    id="edit-typePublic"
+                    value={productForm.typePublic}
+                    onChange={(e) => setProductForm({...productForm, typePublic: e.target.value})}
+                    placeholder="Ex: Homme, Femme, Mixte..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-genre">Genre</Label>
+                  <Input
+                    id="edit-genre"
+                    value={productForm.genre}
+                    onChange={(e) => setProductForm({...productForm, genre: e.target.value})}
+                    placeholder="Ex: Capillaire, Visage..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-specificiteHygiene">Spécificités - Hygiène</Label>
+                  <Input
+                    id="edit-specificiteHygiene"
+                    value={productForm.specificiteHygiene}
+                    onChange={(e) => setProductForm({...productForm, specificiteHygiene: e.target.value})}
+                    placeholder="Ex: Anti-pelliculaire..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-contenanceBeaute">Contenance - Beauté</Label>
+                  <Input
+                    id="edit-contenanceBeaute"
+                    value={productForm.contenanceBeaute}
+                    onChange={(e) => setProductForm({...productForm, contenanceBeaute: e.target.value})}
+                    placeholder="Ex: 50ml, 100ml..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-pourQui">Pour qui ?</Label>
+                  <Input
+                    id="edit-pourQui"
+                    value={productForm.pourQui}
+                    onChange={(e) => setProductForm({...productForm, pourQui: e.target.value})}
+                    placeholder="Ex: Cheveux secs, gras..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-textureHygiene">Texture - Hygiène</Label>
+                  <Input
+                    id="edit-textureHygiene"
+                    value={productForm.textureHygiene}
+                    onChange={(e) => setProductForm({...productForm, textureHygiene: e.target.value})}
+                    placeholder="Ex: Crème, Gel, Liquide..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-protectionUV">Protection UV</Label>
+                  <Input
+                    id="edit-protectionUV"
+                    value={productForm.protectionUV}
+                    onChange={(e) => setProductForm({...productForm, protectionUV: e.target.value})}
+                    placeholder="Ex: SPF 30, SPF 50..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-produitsBio">Produits Bio</Label>
+                  <Input
+                    id="edit-produitsBio"
+                    value={productForm.produitsBio}
+                    onChange={(e) => setProductForm({...productForm, produitsBio: e.target.value})}
+                    placeholder="Ex: Bio, Naturel, Vegan..."
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="space-y-2">

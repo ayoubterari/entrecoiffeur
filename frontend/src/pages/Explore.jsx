@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
 import ProductCard from '../components/ProductCard'
+import BusinessSaleCard from '../components/BusinessSaleCard'
 import FranceMapModalLeaflet from '../components/FranceMapModalLeaflet'
 import { frenchCities } from '../data/frenchCities'
 import styles from './Explore.module.css'
@@ -20,6 +21,7 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
   const [showStores, setShowStores] = useState(false)
   const [selectedLocation, setSelectedLocation] = useState('all')
   const [showMapModal, setShowMapModal] = useState(false)
+  const [viewMode, setViewMode] = useState('products') // 'products' ou 'business-sales'
 
   // Debug: Log userType
   console.log('🔍 Explore - userType reçu:', userType)
@@ -35,6 +37,9 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
   console.log('🔍 Explore - Produits reçus:', allProducts?.length, 'produits')
   const categories = useQuery(api.products.getCategories)
   const mainCategories = useQuery(api.products.getMainCategories)
+  
+  // Fetch business sales (fonds de commerce)
+  const businessSales = useQuery(api.functions.queries.businessSales.getActiveBusinessSales, {})
   const userFavorites = useQuery(
     api.favorites.getUserFavorites,
     userId ? { userId } : "skip"
@@ -214,6 +219,17 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
             <path d="M9 3v15M15 6v15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
           Carte
+        </button>
+        <button 
+          className={`${styles.mapBtn} ${viewMode === 'business-sales' ? styles.active : ''}`}
+          onClick={() => setViewMode(viewMode === 'products' ? 'business-sales' : 'products')}
+          title={viewMode === 'products' ? 'Voir les fonds de commerce' : 'Voir les produits'}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <polyline points="9 22 9 12 15 12 15 22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          {viewMode === 'products' ? 'Fonds de Commerce' : 'Produits'}
         </button>
         <button 
           className={styles.filterToggleBtn}
@@ -457,61 +473,89 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
           {/* Toolbar */}
           <div className={styles.toolbar}>
             <div className={styles.resultsInfo}>
-              <h2>{sortedProducts.length} produits</h2>
+              <h2>
+                {viewMode === 'products' 
+                  ? `${sortedProducts.length} produits` 
+                  : `${businessSales?.length || 0} fonds de commerce`
+                }
+              </h2>
               {searchQuery && (
                 <span className={styles.searchInfo}>
                   pour "{searchQuery}"
                 </span>
               )}
             </div>
-            <div className={styles.sortContainer}>
-              <label>Trier par:</label>
-              <select 
-                value={sortBy} 
-                onChange={(e) => setSortBy(e.target.value)}
-                className={styles.sortSelect}
-              >
-                <option value="featured">Recommandés</option>
-                <option value="newest">Nouveautés</option>
-                <option value="price-asc">Prix croissant</option>
-                <option value="price-desc">Prix décroissant</option>
-                <option value="name">Nom A-Z</option>
-              </select>
-            </div>
+            {viewMode === 'products' && (
+              <div className={styles.sortContainer}>
+                <label>Trier par:</label>
+                <select 
+                  value={sortBy} 
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className={styles.sortSelect}
+                >
+                  <option value="featured">Recommandés</option>
+                  <option value="newest">Nouveautés</option>
+                  <option value="price-asc">Prix croissant</option>
+                  <option value="price-desc">Prix décroissant</option>
+                  <option value="name">Nom A-Z</option>
+                </select>
+              </div>
+            )}
           </div>
 
-          {/* Products Grid */}
-          {sortedProducts.length > 0 ? (
-            <div className={styles.productsGrid}>
-              {sortedProducts.map(product => (
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  onAddToCart={handleAddToCart}
-                  onToggleFavorite={handleToggleFavorite}
-                  onViewDetails={() => navigate(`/product/${product._id}`)}
-                  isFavorite={isFavorite(product._id)}
-                />
-              ))}
-            </div>
+          {/* Products or Business Sales Grid */}
+          {viewMode === 'products' ? (
+            // Affichage des produits
+            sortedProducts.length > 0 ? (
+              <div className={styles.productsGrid}>
+                {sortedProducts.map(product => (
+                  <ProductCard
+                    key={product._id}
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    onToggleFavorite={handleToggleFavorite}
+                    onViewDetails={() => navigate(`/product/${product._id}`)}
+                    isFavorite={isFavorite(product._id)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className={styles.emptyState}>
+                <div className={styles.emptyIcon}>🔍</div>
+                <h3>Aucun produit trouvé</h3>
+                <p>Essayez de modifier vos filtres ou votre recherche</p>
+                <button 
+                  className={styles.resetFiltersBtn}
+                  onClick={() => {
+                    setSelectedCategory('all')
+                    setPriceRange([0, 1000])
+                    setSearchQuery('')
+                    setShowStores(false)
+                    setSelectedLocation('all')
+                  }}
+                >
+                  Réinitialiser les filtres
+                </button>
+              </div>
+            )
           ) : (
-            <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>🔍</div>
-              <h3>Aucun produit trouvé</h3>
-              <p>Essayez de modifier vos filtres ou votre recherche</p>
-              <button 
-                className={styles.resetFiltersBtn}
-                onClick={() => {
-                  setSelectedCategory('all')
-                  setPriceRange([0, 1000])
-                  setSearchQuery('')
-                  setShowStores(false)
-                  setSelectedLocation('all')
-                }}
-              >
-                Réinitialiser les filtres
-              </button>
-            </div>
+            // Affichage des fonds de commerce
+            businessSales && businessSales.length > 0 ? (
+              <div className={styles.productsGrid}>
+                {businessSales.map(business => (
+                  <BusinessSaleCard
+                    key={business._id}
+                    business={business}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className={styles.emptyState}>
+                <div className={styles.emptyIcon}>🏢</div>
+                <h3>Aucun fonds de commerce disponible</h3>
+                <p>Il n'y a pas de fonds de commerce à vendre pour le moment</p>
+              </div>
+            )
           )}
         </main>
       </div>

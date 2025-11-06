@@ -14,6 +14,7 @@ import Checkout from './pages/Checkout'
 import OrderSuccess from './pages/OrderSuccess'
 import Favorites from './pages/Favorites'
 import Explore from './pages/Explore'
+import BusinessSaleDetail from './pages/BusinessSaleDetail'
 import CartToast from './components/CartToast'
 import CartModal from './components/CartModal'
 import LoginModal from './components/LoginModal'
@@ -364,6 +365,12 @@ function AppContent() {
                 userType={localStorage.getItem('userType') || ''}
               />
             } 
+          />
+          
+          {/* Business Sale Detail */}
+          <Route 
+            path="/business-sale/:id" 
+            element={<BusinessSaleDetail />} 
           />
           
           {/* Route par défaut - redirection vers accueil */}

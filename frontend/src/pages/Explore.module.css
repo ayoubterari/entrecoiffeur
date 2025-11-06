@@ -161,6 +161,12 @@
   stroke: currentColor;
 }
 
+.mapBtn.active {
+  background: linear-gradient(135deg, #A89985 0%, #C0B4A5 100%);
+  box-shadow: 0 4px 12px rgba(192, 180, 165, 0.5);
+  transform: translateY(-2px);
+}
+
 .filterToggleBtn {
   display: none;
   align-items: center;

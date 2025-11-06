@@ -24,6 +24,8 @@ import type * as follows from "../follows.js";
 import type * as functions_mutations_accountChangeRequests from "../functions/mutations/accountChangeRequests.js";
 import type * as functions_mutations_adminUsers from "../functions/mutations/adminUsers.js";
 import type * as functions_mutations_blog from "../functions/mutations/blog.js";
+import type * as functions_mutations_businessSales from "../functions/mutations/businessSales.js";
+import type * as functions_mutations_conversations from "../functions/mutations/conversations.js";
 import type * as functions_mutations_coupons from "../functions/mutations/coupons.js";
 import type * as functions_mutations_notifications from "../functions/mutations/notifications.js";
 import type * as functions_mutations_reviews from "../functions/mutations/reviews.js";
@@ -35,6 +37,7 @@ import type * as functions_queries_accountChangeRequests from "../functions/quer
 import type * as functions_queries_adminCoupons from "../functions/queries/adminCoupons.js";
 import type * as functions_queries_adminUsers from "../functions/queries/adminUsers.js";
 import type * as functions_queries_blog from "../functions/queries/blog.js";
+import type * as functions_queries_businessSales from "../functions/queries/businessSales.js";
 import type * as functions_queries_coupons from "../functions/queries/coupons.js";
 import type * as functions_queries_notifications from "../functions/queries/notifications.js";
 import type * as functions_queries_reviews from "../functions/queries/reviews.js";
@@ -75,6 +78,8 @@ declare const fullApi: ApiFromModules<{
   "functions/mutations/accountChangeRequests": typeof functions_mutations_accountChangeRequests;
   "functions/mutations/adminUsers": typeof functions_mutations_adminUsers;
   "functions/mutations/blog": typeof functions_mutations_blog;
+  "functions/mutations/businessSales": typeof functions_mutations_businessSales;
+  "functions/mutations/conversations": typeof functions_mutations_conversations;
   "functions/mutations/coupons": typeof functions_mutations_coupons;
   "functions/mutations/notifications": typeof functions_mutations_notifications;
   "functions/mutations/reviews": typeof functions_mutations_reviews;
@@ -86,6 +91,7 @@ declare const fullApi: ApiFromModules<{
   "functions/queries/adminCoupons": typeof functions_queries_adminCoupons;
   "functions/queries/adminUsers": typeof functions_queries_adminUsers;
   "functions/queries/blog": typeof functions_queries_blog;
+  "functions/queries/businessSales": typeof functions_queries_businessSales;
   "functions/queries/coupons": typeof functions_queries_coupons;
   "functions/queries/notifications": typeof functions_queries_notifications;
   "functions/queries/reviews": typeof functions_queries_reviews;

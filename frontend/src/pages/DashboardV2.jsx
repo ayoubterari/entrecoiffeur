@@ -11,6 +11,7 @@ import MessagesModule from '../components/dashboardv2/MessagesModule'
 import SupportModule from '../components/dashboardv2/SupportModule'
 import ComplaintsModule from '../components/dashboardv2/ComplaintsModule'
 import CouponsModule from '../components/dashboardv2/CouponsModule'
+import BusinessSalesModule from '../components/dashboardv2/BusinessSalesModule'
 import AccountChangeRequest from '../components/dashboardv2/AccountChangeRequest'
 import TeamModule from '../components/dashboardv2/TeamModule'
 import MyReviewsTab from '../components/MyReviewsTab'
@@ -128,6 +129,10 @@ const DashboardV2 = ({ userEmail, userFirstName, userLastName, userId, userType,
 
           {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'coupons' && hasAccess('coupons') && (
             <CouponsModule userId={userId} userType={userType} />
+          )}
+
+          {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'business-sales' && (!userPermissions || !userPermissions.isSubUser) && (
+            <BusinessSalesModule userId={userId} />
           )}
 
           {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'team' && (!userPermissions || !userPermissions.isSubUser) && (
