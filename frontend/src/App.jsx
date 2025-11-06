@@ -22,7 +22,7 @@ import FavoritesModal from './components/FavoritesModal'
 import { useAffiliateTracking } from './hooks/useAffiliateTracking'
 
 // Wrapper pour ProductDetail qui utilise les paramètres d'URL
-function ProductDetailWrapper({ onAddToCart, isAuthenticated, onLogin }) {
+function ProductDetailWrapper({ onAddToCart, isAuthenticated, onLogin, userId }) {
   const navigate = useNavigate()
   const { productId } = useParams()
 
@@ -37,6 +37,7 @@ function ProductDetailWrapper({ onAddToCart, isAuthenticated, onLogin }) {
       onAddToCart={onAddToCart}
       isAuthenticated={isAuthenticated}
       onLogin={onLogin}
+      userId={userId}
     />
   )
 }
@@ -285,6 +286,7 @@ function AppContent() {
                 onAddToCart={handleAddToCart}
                 isAuthenticated={isAuthenticated}
                 onLogin={handleLogin}
+                userId={userId}
               />
             } 
           />

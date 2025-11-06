@@ -15,7 +15,9 @@ import {
   Home,
   X,
   UserCheck,
-  LogOut
+  LogOut,
+  Mail,
+  Activity
 } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { useNavigate } from 'react-router-dom'
@@ -42,6 +44,8 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onMobileClose, hasAcce
     { id: 'blog', label: 'Blog', icon: FileText },
     { id: 'coupons', label: 'Coupons', icon: Ticket },
     { id: 'reviews', label: 'Avis', icon: FileText },
+    { id: 'newsletter', label: 'Newsletter', icon: Mail },
+    { id: 'analytics', label: 'Analytics', icon: Activity },
     { id: 'support', label: 'Support', icon: Headphones },
     { id: 'stats', label: 'Statistiques', icon: BarChart3 },
     { id: 'settings', label: 'Paramètres', icon: Settings },

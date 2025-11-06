@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
 import ProductDetailImages from '../components/ProductDetailImages'
+import { useActivityTracking } from '../hooks/useActivityTracking'
 import './ProductDetail.css'
 import './ProductDetailMobileSimple.css'
 
-const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogin }) => {
+const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogin, userId }) => {
   const navigate = useNavigate()
   const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
@@ -34,6 +35,20 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
   const productReviews = useQuery(api.orderReviews.getProductReviews, 
     productId ? { productId, limit: 10 } : "skip"
   )
+
+  // Debug : Vérifier le userId
+  useEffect(() => {
+    console.log('🔍 ProductDetail - userId:', userId, 'isAuthenticated:', isAuthenticated)
+  }, [userId, isAuthenticated])
+
+  // Tracker l'activité sur ce produit
+  useActivityTracking({
+    activityType: 'product_view',
+    resourceId: productId,
+    resourceName: product?.name,
+    userId: userId,
+    enabled: !!productId && !!product
+  })
   
   if (!product) {
     return (

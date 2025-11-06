@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useQuery } from 'convex/react'
+import { useQuery, useMutation } from 'convex/react'
 import { api } from '../lib/convex'
 import Carousel from '../components/Carousel'
 import ProductCard from '../components/ProductCard'
@@ -25,6 +25,10 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [storesCarouselIndex, setStoresCarouselIndex] = useState(0)
   const [showMapModal, setShowMapModal] = useState(false)
+  const [newsletterEmail, setNewsletterEmail] = useState('')
+  const [newsletterLoading, setNewsletterLoading] = useState(false)
+  const [newsletterMessage, setNewsletterMessage] = useState('')
+  const [newsletterSuccess, setNewsletterSuccess] = useState(false)
 
   // Get real data from Convex with visibility filtering
   const categoriesData = useQuery(api.products.getCategories)
@@ -51,6 +55,9 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
     api.functions.queries.adminUsers.getUserPermissions,
     userId ? { userId } : "skip"
   )
+
+  // Mutation pour s'abonner à la newsletter
+  const subscribeToNewsletter = useMutation(api.functions.mutations.newsletter.subscribeToNewsletter)
 
   // Redirection automatique pour les superadmins
   useEffect(() => {
@@ -235,6 +242,50 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
       setIsSearching(false)
     }
   }, [selectedCategory])
+
+  // Gérer l'abonnement à la newsletter
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault()
+    
+    // Réinitialiser les messages
+    setNewsletterMessage('')
+    setNewsletterSuccess(false)
+    
+    // Validation de l'email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!newsletterEmail || !emailRegex.test(newsletterEmail)) {
+      setNewsletterMessage('Veuillez entrer une adresse email valide')
+      return
+    }
+    
+    setNewsletterLoading(true)
+    
+    try {
+      const result = await subscribeToNewsletter({
+        email: newsletterEmail,
+        source: 'homepage'
+      })
+      
+      if (result.success) {
+        setNewsletterSuccess(true)
+        setNewsletterMessage(result.message)
+        setNewsletterEmail('') // Réinitialiser le champ
+      } else {
+        setNewsletterMessage(result.message)
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'abonnement:', error)
+      setNewsletterMessage('Une erreur est survenue. Veuillez réessayer.')
+    } finally {
+      setNewsletterLoading(false)
+      
+      // Effacer le message après 5 secondes
+      setTimeout(() => {
+        setNewsletterMessage('')
+        setNewsletterSuccess(false)
+      }, 5000)
+    }
+  }
 
   return (
     <div className={styles.homeContainer}>
@@ -740,7 +791,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
             </div>
             
             <div className={styles.newsletterRight}>
-              <div className={styles.newsletterForm}>
+              <form className={styles.newsletterForm} onSubmit={handleNewsletterSubmit}>
                 <div className={styles.newsletterInputWrapper}>
                   <span className={styles.newsletterInputIcon}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -752,17 +803,43 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
                     type="email" 
                     placeholder="votre@email.com"
                     className={styles.newsletterInput}
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    disabled={newsletterLoading}
+                    required
                   />
                 </div>
-                <button className={styles.newsletterBtn}>
-                  <span className={styles.newsletterBtnText}>S'abonner</span>
+                <button 
+                  type="submit" 
+                  className={styles.newsletterBtn}
+                  disabled={newsletterLoading}
+                  style={{ opacity: newsletterLoading ? 0.7 : 1 }}
+                >
+                  <span className={styles.newsletterBtnText}>
+                    {newsletterLoading ? 'Envoi...' : 'S\'abonner'}
+                  </span>
                   <span className={styles.newsletterBtnIcon}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
                   </span>
                 </button>
-              </div>
+              </form>
+              {newsletterMessage && (
+                <p 
+                  className={styles.newsletterNote}
+                  style={{ 
+                    color: newsletterSuccess ? '#10b981' : '#ef4444',
+                    fontWeight: '500',
+                    marginTop: '8px'
+                  }}
+                >
+                  <span className={styles.newsletterNoteIcon}>
+                    {newsletterSuccess ? '✅' : '⚠️'}
+                  </span>
+                  {newsletterMessage}
+                </p>
+              )}
               <p className={styles.newsletterNote}>
                 <span className={styles.newsletterNoteIcon}>🔒</span>
                 Vos données sont sécurisées et ne seront jamais partagées

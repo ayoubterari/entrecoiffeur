@@ -15,6 +15,8 @@ import PaymentModule from '../components/adminv2/PaymentModule'
 import BlogModule from '../components/adminv2/BlogModule'
 import CouponsModule from '../components/adminv2/CouponsModule'
 import ReviewsModule from '../components/adminv2/ReviewsModule'
+import NewsletterModule from '../components/adminv2/NewsletterModule'
+import AnalyticsModule from '../components/adminv2/AnalyticsModule'
 import SupportModule from '../components/adminv2/SupportModule'
 import StatisticsModule from '../components/adminv2/StatisticsModule'
 import SettingsModule from '../components/adminv2/SettingsModule'
@@ -126,7 +128,7 @@ const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, user
   useEffect(() => {
     if (userPermissions && !hasAccess(activeTab)) {
       // Trouver le premier module accessible
-      const modules = ['dashboard', 'users', 'products', 'categories', 'orders', 'commissions', 'netvendeur', 'paiement', 'blog', 'coupons', 'support', 'stats', 'settings']
+      const modules = ['dashboard', 'users', 'products', 'categories', 'orders', 'commissions', 'netvendeur', 'paiement', 'blog', 'coupons', 'reviews', 'newsletter', 'analytics', 'support', 'stats', 'settings']
       const firstAccessibleModule = modules.find(module => hasAccess(module))
       
       if (firstAccessibleModule) {
@@ -243,6 +245,14 @@ const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, user
 
           {activeTab === 'reviews' && hasAccess('reviews') && (
             <ReviewsModule userId={userId} />
+          )}
+
+          {activeTab === 'newsletter' && hasAccess('newsletter') && (
+            <NewsletterModule />
+          )}
+
+          {activeTab === 'analytics' && hasAccess('analytics') && (
+            <AnalyticsModule />
           )}
 
           {activeTab === 'support' && hasAccess('support') && (

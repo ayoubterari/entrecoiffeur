@@ -594,6 +594,8 @@ export default defineSchema({
       blog: v.boolean(), // Gestion du blog
       coupons: v.boolean(), // Gestion des coupons
       reviews: v.optional(v.boolean()), // Gestion des avis
+      newsletter: v.optional(v.boolean()), // Gestion de la newsletter
+      analytics: v.optional(v.boolean()), // Accès aux analytics et traçabilité
       support: v.boolean(), // Gestion du support
       stats: v.boolean(), // Accès aux statistiques
       settings: v.boolean(), // Accès aux paramètres
@@ -715,4 +717,44 @@ export default defineSchema({
     .index("by_status", ["status"])
     .index("by_activity_type", ["activityType"])
     .index("by_created_at", ["createdAt"]),
+
+  // Newsletter Subscribers - Abonnés à la newsletter
+  newsletterSubscribers: defineTable({
+    email: v.string(), // Email de l'abonné
+    subscribedAt: v.number(), // Date d'abonnement
+    isActive: v.boolean(), // Statut actif/désactivé
+    source: v.optional(v.string()), // Source d'inscription (homepage, checkout, etc.)
+  }).index("by_email", ["email"])
+    .index("by_active", ["isActive"])
+    .index("by_subscribed_date", ["subscribedAt"]),
+
+  // User Activity Tracking - Traçabilité du temps passé par les utilisateurs
+  userActivityTracking: defineTable({
+    userId: v.optional(v.id("users")), // Utilisateur (optionnel pour les non-connectés)
+    sessionId: v.string(), // ID de session unique (pour les non-connectés)
+    activityType: v.union(
+      v.literal("product_view"), // Vue d'un produit
+      v.literal("page_view"), // Vue d'une page
+      v.literal("category_browse"), // Navigation dans une catégorie
+      v.literal("search"), // Recherche
+      v.literal("store_visit") // Visite d'une boutique
+    ),
+    resourceId: v.optional(v.string()), // ID de la ressource (productId, pageUrl, etc.)
+    resourceName: v.optional(v.string()), // Nom de la ressource (nom du produit, titre de la page)
+    timeSpent: v.number(), // Temps passé en secondes
+    startTime: v.number(), // Timestamp de début
+    endTime: v.number(), // Timestamp de fin
+    pageUrl: v.string(), // URL de la page
+    referrer: v.optional(v.string()), // Page de provenance
+    deviceType: v.optional(v.string()), // Type d'appareil (mobile, desktop, tablet)
+    userAgent: v.optional(v.string()), // User agent du navigateur
+    metadata: v.optional(v.any()), // Données additionnelles (JSON)
+    createdAt: v.number(),
+  }).index("by_user", ["userId"])
+    .index("by_session", ["sessionId"])
+    .index("by_activity_type", ["activityType"])
+    .index("by_resource", ["resourceId"])
+    .index("by_date", ["createdAt"])
+    .index("by_user_activity", ["userId", "activityType"])
+    .index("by_resource_date", ["resourceId", "createdAt"]),
 });

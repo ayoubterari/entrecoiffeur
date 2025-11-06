@@ -252,6 +252,8 @@ const SettingsModule = ({ currentUserId }) => {
     { key: 'blog', label: 'Blog', icon: '📝' },
     { key: 'coupons', label: 'Coupons', icon: '🎟️' },
     { key: 'reviews', label: 'Avis', icon: '💬' },
+    { key: 'newsletter', label: 'Newsletter', icon: '📧' },
+    { key: 'analytics', label: 'Analytics', icon: '📊' },
     { key: 'support', label: 'Support', icon: '🎧' },
     { key: 'stats', label: 'Statistiques', icon: '📈' },
     { key: 'settings', label: 'Paramètres', icon: '⚙️' }
