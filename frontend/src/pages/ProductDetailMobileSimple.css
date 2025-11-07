@@ -14,6 +14,9 @@
     transform: scale(0.85) !important;
     transform-origin: top left !important;
     width: 117.65% !important; /* Compense le scale pour garder la largeur complète */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
   }
   
   /* Suppression de tous les pseudo-éléments qui pourraient créer des barres */
@@ -58,7 +61,7 @@
     position: relative !important;
     width: 100% !important;
     max-width: 100% !important;
-    margin: 0 !important;
+    margin: auto !important;
     padding: 0 0.85rem !important; /* Réduit de 15% */
     background: transparent !important;
     border: none !important;
@@ -87,7 +90,7 @@
   .image-container {
     position: relative !important;
     width: 100% !important;
-    height: 340px !important; /* Réduit de 15% (400px -> 340px) */
+    height: 250px !important; /* Réduit encore plus pour moins d'espace en haut */
     margin: 0 0 0.85rem 0 !important; /* Réduit de 15% */
     padding: 0 !important;
     background: #ffffff !important;
@@ -121,26 +124,28 @@
   /* Miniatures responsive - RÉDUIT */
   .image-thumbnails {
     display: flex !important;
-    gap: 0.425rem !important; /* Réduit de 15% */
-    margin-top: 0.85rem !important; /* Réduit de 15% */
+    gap: 0.6rem !important;
+    margin-top: 0.85rem !important;
     overflow-x: auto !important;
-    padding: 0.425rem 0 !important; /* Réduit de 15% */
+    padding: 0.6rem 0 !important;
     justify-content: center !important;
+    -webkit-overflow-scrolling: touch !important;
   }
 
   .thumbnail {
     flex-shrink: 0 !important;
-    width: 51px !important; /* Réduit de 15% (60px -> 51px) */
-    height: 51px !important; /* Réduit de 15% */
+    width: 70px !important;
+    height: 70px !important;
     border: 2px solid #dee2e6 !important;
-    border-radius: 6.8px !important; /* Réduit de 15% */
+    border-radius: 8px !important;
     overflow: hidden !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
-    background: #f8f9fa !important;
+    background: #ffffff !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
   }
 
   .thumbnail:hover {
@@ -150,7 +155,8 @@
 
   .thumbnail.active {
     border-color: #C0B4A5 !important;
-    box-shadow: 0 0 0 2px rgba(192, 180, 165, 0.3) !important;
+    border-width: 3px !important;
+    box-shadow: 0 0 0 2px rgba(192, 180, 165, 0.3), 0 2px 8px rgba(192, 180, 165, 0.4) !important;
   }
 
   .thumbnail-image {
@@ -196,14 +202,19 @@
 
   /* Image container pour très petits écrans - RÉDUIT */
   .image-container {
-    height: 297.5px !important; /* Réduit de 15% (350px -> 297.5px) */
+    height: 220px !important; /* Réduit encore plus pour très petits écrans */
     margin: 0 0 0.425rem 0 !important; /* Réduit de 15% */
   }
 
   /* Miniatures plus petites - RÉDUIT */
   .thumbnail {
-    width: 42.5px !important; /* Réduit de 15% (50px -> 42.5px) */
-    height: 42.5px !important; /* Réduit de 15% */
+    width: 60px !important;
+    height: 60px !important;
+  }
+  
+  .image-thumbnails {
+    gap: 0.5rem !important;
+    padding: 0.5rem 0 !important;
   }
 
   /* Placeholder plus petit - RÉDUIT */

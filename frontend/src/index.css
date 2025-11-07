@@ -15884,8 +15884,8 @@ body.community-body #root {
   margin: 0 auto;
   padding: 2rem;
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 3rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
   align-items: start;
 }
 
@@ -15903,7 +15903,7 @@ body.community-body #root {
 .image-container {
   position: relative;
   width: 100%;
-  height: 600px;
+  height: 500px;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 16px;
@@ -15912,6 +15912,7 @@ body.community-body #root {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1.5rem;
 }
 
 .product-detail-image {
@@ -15919,8 +15920,8 @@ body.community-body #root {
   height: 100%;
   object-fit: contain;
   transition: transform 0.3s ease;
-  max-width: none;
-  max-height: none;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .product-detail-image:hover {
