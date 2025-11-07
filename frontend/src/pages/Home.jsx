@@ -431,6 +431,30 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
 
       {/* User Type Banners */}
       <div className={styles.userTypeBanners}>
+        <div className={`${styles.userTypeBanner} ${styles.professionnel}`}>
+          <span className={styles.bannerIcon}>💇</span>
+          <h3 className={styles.bannerTitle}>Coiffeur</h3>
+          <p className={styles.bannerDescription}>
+            Solutions adaptées aux professionnels de la beauté
+          </p>
+          <button className={styles.bannerCTA} onClick={() => isAuthenticated ? navigate('/dashboard') : handleShowLogin('signup')}>
+            <span>Espace pro</span>
+            <span>→</span>
+          </button>
+        </div>
+
+        <div className={`${styles.userTypeBanner} ${styles.grossiste}`}>
+          <span className={styles.bannerIcon}>📦</span>
+          <h3 className={styles.bannerTitle}>Marque professionnelle</h3>
+          <p className={styles.bannerDescription}>
+            Commandes en gros avec tarifs préférentiels
+          </p>
+          <button className={styles.bannerCTA} onClick={() => isAuthenticated ? navigate('/dashboard') : handleShowLogin('signup')}>
+            <span>Devenir partenaire</span>
+            <span>→</span>
+          </button>
+        </div>
+
         <div className={`${styles.userTypeBanner} ${styles.particulier}`}>
           <span className={styles.bannerIcon}>🛍️</span>
           <h3 className={styles.bannerTitle}>Particulier</h3>
@@ -439,30 +463,6 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
           </p>
           <button className={styles.bannerCTA} onClick={() => navigate('/explore')}>
             <span>Voir les produits</span>
-            <span>→</span>
-          </button>
-        </div>
-
-        <div className={`${styles.userTypeBanner} ${styles.grossiste}`}>
-          <span className={styles.bannerIcon}>📦</span>
-          <h3 className={styles.bannerTitle}>Grossiste</h3>
-          <p className={styles.bannerDescription}>
-            Commandes en gros avec tarifs préférentiels
-          </p>
-          <button className={styles.bannerCTA} onClick={() => isAuthenticated ? navigate('/dashboard') : handleShowLogin('signup')}>
-            <span>Devenir grossiste</span>
-            <span>→</span>
-          </button>
-        </div>
-
-        <div className={`${styles.userTypeBanner} ${styles.professionnel}`}>
-          <span className={styles.bannerIcon}>💼</span>
-          <h3 className={styles.bannerTitle}>Professionnel</h3>
-          <p className={styles.bannerDescription}>
-            Solutions adaptées aux professionnels de la beauté
-          </p>
-          <button className={styles.bannerCTA} onClick={() => isAuthenticated ? navigate('/dashboard') : handleShowLogin('signup')}>
-            <span>Espace pro</span>
             <span>→</span>
           </button>
         </div>
