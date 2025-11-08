@@ -200,7 +200,8 @@ export function generateInvoicePDF(invoice) {
     }
   });
   
-  yPos = doc.previousAutoTable.finalY + 10;
+  // Get the final Y position after the table
+  yPos = doc.lastAutoTable.finalY + 10;
   
   // ========== DÉTAIL TVA ==========
   
