@@ -7,6 +7,7 @@ const StarRating = ({ rating, onRatingChange, readonly = false, size = 'medium' 
   const [hoverRating, setHoverRating] = useState(0)
 
   const handleStarClick = (starValue) => {
+    console.log('Star clicked:', starValue, 'readonly:', readonly, 'onRatingChange:', !!onRatingChange)
     if (!readonly && onRatingChange) {
       onRatingChange(starValue)
     }
@@ -58,6 +59,11 @@ const OrderReviewModal = ({ isOpen, onClose, order }) => {
 
   const createOrderReview = useMutation(api.orderReviews.createOrderReview)
 
+  // Debug: Log rating changes
+  useEffect(() => {
+    console.log('Rating changed:', rating)
+  }, [rating])
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -91,6 +97,16 @@ const OrderReviewModal = ({ isOpen, onClose, order }) => {
     setError('')
 
     try {
+      console.log('Envoi de l\'évaluation...', {
+        orderId: order._id,
+        rating,
+        comment: comment.trim() || undefined,
+        deliveryRating: deliveryRating || undefined,
+        productQualityRating: productQualityRating || undefined,
+        sellerServiceRating: sellerServiceRating || undefined,
+        isRecommended: isRecommended !== null ? isRecommended : undefined,
+      })
+
       await createOrderReview({
         orderId: order._id,
         rating,
@@ -98,14 +114,16 @@ const OrderReviewModal = ({ isOpen, onClose, order }) => {
         deliveryRating: deliveryRating || undefined,
         productQualityRating: productQualityRating || undefined,
         sellerServiceRating: sellerServiceRating || undefined,
-        isRecommended: isRecommended,
+        isRecommended: isRecommended !== null ? isRecommended : undefined,
       })
 
+      console.log('Évaluation envoyée avec succès !')
       setSuccess(true)
       setTimeout(() => {
         onClose()
       }, 2000)
     } catch (err) {
+      console.error('Erreur lors de l\'envoi de l\'évaluation:', err)
       setError(err.message || 'Erreur lors de l\'envoi de l\'évaluation')
     } finally {
       setLoading(false)

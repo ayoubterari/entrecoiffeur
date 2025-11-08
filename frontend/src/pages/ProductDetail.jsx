@@ -130,21 +130,15 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
       <div className="product-detail-container" style={{ position: 'relative', width: '100%', background: 'transparent', zIndex: 2 }}>
         {/* Section Images */}
         <div className="product-images-section">
-          <div className="main-image">
-            <ProductDetailImages 
-              images={product.images}
-              productName={product.name}
-              selectedImage={selectedImage}
-              onImageSelect={setSelectedImage}
-            />
-            
-            {/* Badges */}
-            <div className="product-badges">
-              {product.featured && <span className="badge featured">⭐ Vedette</span>}
-              {product.onSale && <span className="badge sale">🔥 Promo</span>}
-              {product.stock < 10 && <span className="badge low-stock">⚠️ Stock limité</span>}
-            </div>
-          </div>
+          <ProductDetailImages 
+            images={product.images}
+            productName={product.name}
+            selectedImage={selectedImage}
+            onImageSelect={setSelectedImage}
+            featured={product.featured}
+            onSale={product.onSale}
+            stock={product.stock}
+          />
         </div>
 
         {/* Section Informations */}

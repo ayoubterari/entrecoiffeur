@@ -588,6 +588,7 @@ export default defineSchema({
       products: v.boolean(), // Gestion des produits
       categories: v.boolean(), // Gestion des catégories
       orders: v.boolean(), // Gestion des commandes
+      invoices: v.optional(v.boolean()), // Gestion des factures
       commissions: v.boolean(), // Gestion des commissions
       netvendeur: v.boolean(), // Gestion du net vendeur
       paiement: v.boolean(), // Gestion des paiements
@@ -757,4 +758,137 @@ export default defineSchema({
     .index("by_date", ["createdAt"])
     .index("by_user_activity", ["userId", "activityType"])
     .index("by_resource_date", ["resourceId", "createdAt"]),
+
+  // Invoices table - Factures conformes aux normes françaises
+  invoices: defineTable({
+    // Numérotation unique et séquentielle (obligatoire)
+    invoiceNumber: v.string(), // Format: FAC-YYYY-XXXXX (ex: FAC-2025-00001)
+    invoiceDate: v.number(), // Date d'émission (timestamp)
+    
+    // Référence à la commande
+    orderId: v.id("orders"),
+    orderNumber: v.string(), // Numéro de commande pour référence
+    
+    // Informations vendeur (émetteur de la facture)
+    seller: v.object({
+      userId: v.id("users"),
+      companyName: v.optional(v.string()), // Raison sociale
+      firstName: v.string(),
+      lastName: v.string(),
+      address: v.string(),
+      city: v.string(),
+      postalCode: v.optional(v.string()),
+      country: v.string(),
+      siret: v.optional(v.string()), // Numéro SIRET (obligatoire pour professionnels français)
+      tvaNumber: v.optional(v.string()), // Numéro TVA intracommunautaire
+      email: v.string(),
+      phone: v.optional(v.string()),
+    }),
+    
+    // Informations acheteur (destinataire de la facture)
+    buyer: v.object({
+      userId: v.id("users"),
+      companyName: v.optional(v.string()), // Si professionnel
+      firstName: v.string(),
+      lastName: v.string(),
+      address: v.string(),
+      city: v.string(),
+      postalCode: v.string(),
+      country: v.string(),
+      email: v.string(),
+      siret: v.optional(v.string()), // Si professionnel
+      tvaNumber: v.optional(v.string()), // Si professionnel avec TVA
+    }),
+    
+    // Lignes de la facture
+    items: v.array(v.object({
+      productId: v.id("products"),
+      productName: v.string(),
+      description: v.optional(v.string()),
+      quantity: v.number(),
+      unitPriceHT: v.number(), // Prix unitaire HT
+      tvaRate: v.number(), // Taux de TVA (ex: 20, 10, 5.5, 2.1)
+      tvaAmount: v.number(), // Montant TVA
+      totalHT: v.number(), // Total HT pour cette ligne
+      totalTTC: v.number(), // Total TTC pour cette ligne
+    })),
+    
+    // Totaux (obligatoires)
+    subtotalHT: v.number(), // Sous-total HT (produits uniquement)
+    shippingHT: v.number(), // Frais de port HT
+    shippingTVA: v.number(), // TVA sur frais de port
+    discountHT: v.optional(v.number()), // Réduction HT
+    discountTVA: v.optional(v.number()), // TVA sur réduction
+    totalHT: v.number(), // Total HT (avec frais de port et réductions)
+    totalTVA: v.number(), // Total TVA
+    totalTTC: v.number(), // Total TTC (montant à payer)
+    
+    // Détail TVA par taux (obligatoire)
+    tvaBreakdown: v.array(v.object({
+      rate: v.number(), // Taux de TVA
+      baseHT: v.number(), // Base HT
+      tvaAmount: v.number(), // Montant TVA
+    })),
+    
+    // Informations de paiement
+    paymentMethod: v.string(), // Mode de paiement
+    paymentDate: v.optional(v.number()), // Date de paiement
+    paymentStatus: v.union(
+      v.literal("paid"), // Payé
+      v.literal("pending"), // En attente
+      v.literal("partial"), // Partiellement payé
+      v.literal("cancelled") // Annulé
+    ),
+    
+    // Conditions de paiement (obligatoire selon loi française)
+    paymentTerms: v.string(), // Ex: "Paiement à réception", "30 jours net"
+    paymentDueDate: v.optional(v.number()), // Date d'échéance
+    
+    // Pénalités de retard (obligatoire selon loi française)
+    latePenaltyRate: v.number(), // Taux de pénalités (ex: 10%)
+    latePenaltyText: v.string(), // Texte légal des pénalités
+    recoveryIndemnity: v.number(), // Indemnité forfaitaire de recouvrement (40€ en France)
+    
+    // Mentions légales obligatoires
+    legalMentions: v.object({
+      noVAT: v.optional(v.boolean()), // Si TVA non applicable (micro-entreprise)
+      noVATReason: v.optional(v.string()), // Raison (ex: "TVA non applicable, art. 293 B du CGI")
+      reverseCharge: v.optional(v.boolean()), // Autoliquidation (pour export UE)
+      escompte: v.optional(v.string()), // Conditions d'escompte si applicable
+    }),
+    
+    // Informations de coupon si applicable
+    couponCode: v.optional(v.string()),
+    couponDescription: v.optional(v.string()),
+    
+    // Statut de la facture
+    status: v.union(
+      v.literal("draft"), // Brouillon
+      v.literal("issued"), // Émise
+      v.literal("sent"), // Envoyée au client
+      v.literal("paid"), // Payée
+      v.literal("cancelled"), // Annulée
+      v.literal("credited") // Avoir émis
+    ),
+    
+    // Avoir (credit note) si applicable
+    creditNoteId: v.optional(v.id("invoices")), // Référence à l'avoir
+    originalInvoiceId: v.optional(v.id("invoices")), // Si c'est un avoir, référence à la facture originale
+    
+    // Métadonnées
+    generatedBy: v.optional(v.id("users")), // Qui a généré la facture (admin ou automatique)
+    sentAt: v.optional(v.number()), // Date d'envoi au client
+    pdfUrl: v.optional(v.union(v.string(), v.id("_storage"))), // URL du PDF généré
+    notes: v.optional(v.string()), // Notes internes
+    
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_invoice_number", ["invoiceNumber"])
+    .index("by_order", ["orderId"])
+    .index("by_seller", ["seller.userId"])
+    .index("by_buyer", ["buyer.userId"])
+    .index("by_status", ["status"])
+    .index("by_payment_status", ["paymentStatus"])
+    .index("by_invoice_date", ["invoiceDate"])
+    .index("by_created_at", ["createdAt"]),
 });

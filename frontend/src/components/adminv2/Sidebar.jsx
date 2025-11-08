@@ -38,6 +38,7 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onMobileClose, hasAcce
     { id: 'products', label: 'Produits', icon: Package },
     { id: 'categories', label: 'Catégories', icon: Tag },
     { id: 'orders', label: 'Commandes', icon: ShoppingCart },
+    { id: 'invoices', label: 'Factures', icon: FileText },
     { id: 'commissions', label: 'Commissions', icon: DollarSign },
     { id: 'netvendeur', label: 'Net Vendeur', icon: DollarSign },
     { id: 'paiement', label: 'Paiement', icon: CreditCard },

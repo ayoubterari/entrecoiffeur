@@ -8,11 +8,14 @@ import { Input } from '../ui/input'
 import { Badge } from '../ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { Search, X, Package, ShoppingCart } from 'lucide-react'
+import OrderReviewModal from '../OrderReviewModal'
 
 const PurchasesModule = ({ userId }) => {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
+  const [showReviewModal, setShowReviewModal] = useState(false)
+  const [selectedOrderForReview, setSelectedOrderForReview] = useState(null)
 
   // Get buyer orders
   const buyerOrders = useQuery(api.orders.getBuyerOrders, 
@@ -87,7 +90,25 @@ const PurchasesModule = ({ userId }) => {
     { id: 'delivered', label: 'Livrées', icon: '🏠' }
   ]
 
+  // Handle review order
+  const handleReviewOrder = (order) => {
+    setSelectedOrderForReview(order)
+    setShowReviewModal(true)
+  }
+
+  // Handle close review modal
+  const handleCloseReviewModal = () => {
+    setShowReviewModal(false)
+    setSelectedOrderForReview(null)
+  }
+
   return (
+    <>
+      <OrderReviewModal 
+        isOpen={showReviewModal}
+        onClose={handleCloseReviewModal}
+        order={selectedOrderForReview}
+      />
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div>
@@ -128,7 +149,11 @@ const PurchasesModule = ({ userId }) => {
                         <p className="text-xs text-muted-foreground">{order.sellerCompany}</p>
                       )}
                     </div>
-                    <Button className="w-full" size="sm">
+                    <Button 
+                      className="w-full" 
+                      size="sm"
+                      onClick={() => handleReviewOrder(order)}
+                    >
                       ⭐ Évaluer
                     </Button>
                   </CardContent>
@@ -257,6 +282,7 @@ const PurchasesModule = ({ userId }) => {
         </CardContent>
       </Card>
     </div>
+    </>
   )
 }
 

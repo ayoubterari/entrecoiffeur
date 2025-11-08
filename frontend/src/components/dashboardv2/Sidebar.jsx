@@ -19,7 +19,8 @@ import {
   UserCheck,
   Users,
   Star,
-  Building2
+  Building2,
+  FileText
 } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { Button } from '../ui/button'
@@ -67,6 +68,8 @@ const Sidebar = ({
       if (!hasAccess || hasAccess('orders')) {
         allItems.push({ id: 'orders', name: 'Mes ventes', icon: ClipboardList })
       }
+      // Factures - pour professionnels et grossistes
+      allItems.push({ id: 'invoices', name: 'Mes Factures', icon: FileText })
       if (!hasAccess || hasAccess('complaints')) {
         allItems.push({ id: 'complaints', name: 'Réclamations', icon: AlertTriangle })
       }

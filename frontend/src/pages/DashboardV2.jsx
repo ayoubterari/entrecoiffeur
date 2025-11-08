@@ -11,6 +11,7 @@ import MessagesModule from '../components/dashboardv2/MessagesModule'
 import SupportModule from '../components/dashboardv2/SupportModule'
 import ComplaintsModule from '../components/dashboardv2/ComplaintsModule'
 import CouponsModule from '../components/dashboardv2/CouponsModule'
+import InvoicesModule from '../components/dashboardv2/InvoicesModule'
 import BusinessSalesModule from '../components/dashboardv2/BusinessSalesModule'
 import AccountChangeRequest from '../components/dashboardv2/AccountChangeRequest'
 import TeamModule from '../components/dashboardv2/TeamModule'
@@ -113,6 +114,10 @@ const DashboardV2 = ({ userEmail, userFirstName, userLastName, userId, userType,
 
           {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'orders' && hasAccess('orders') && (
             <OrdersModule userId={userId} />
+          )}
+
+          {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'invoices' && (
+            <InvoicesModule userId={userId} />
           )}
 
           {activeTab === 'messages' && hasAccess('messages') && (

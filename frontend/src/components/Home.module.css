@@ -762,21 +762,21 @@ body {
 .sellIcon1 {
   position: absolute;
   font-size: 3rem;
-  animation: bounce-icon1 3s ease-in-out infinite;
+  animation: bounce-icon1 6s ease-in-out infinite;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
 .sellIcon2 {
   position: absolute;
   font-size: 3.5rem;
-  animation: bounce-icon2 3s ease-in-out infinite 0.3s;
+  animation: bounce-icon2 6s ease-in-out infinite 0.3s;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
 .sellIcon3 {
   position: absolute;
   font-size: 2.5rem;
-  animation: bounce-icon3 3s ease-in-out infinite 0.6s;
+  animation: bounce-icon3 6s ease-in-out infinite 0.6s;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
@@ -1190,7 +1190,7 @@ body {
   margin-bottom: 0.75rem;
   display: block;
   filter: drop-shadow(0 3px 6px rgba(192, 180, 165, 0.2));
-  animation: bounce-subtle 3s ease-in-out infinite;
+  animation: bounce-subtle 6s ease-in-out infinite;
 }
 
 .bannerTitle {

@@ -1,4 +1,5 @@
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalMutation } from "./_generated/server";
+import { internal } from "./_generated/api";
 import { v } from "convex/values";
 
 // Create a new order
@@ -221,14 +222,40 @@ export const updateOrderStatus = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    // Récupérer la commande
+    const order = await ctx.db.get(args.orderId);
+    if (!order) {
+      throw new Error("Commande introuvable");
+    }
+
     // Mettre à jour le statut de la commande
     await ctx.db.patch(args.orderId, {
       status: args.status,
       updatedAt: Date.now(),
     });
 
-    // Si la commande est livrée, confirmer les gains d'affiliation
+    // Si la commande est livrée, confirmer les gains d'affiliation ET générer la facture
     if (args.status === "delivered") {
+      // Générer la facture automatiquement si elle n'existe pas déjà
+      try {
+        const existingInvoice = await ctx.db
+          .query("invoices")
+          .withIndex("by_order", (q) => q.eq("orderId", args.orderId))
+          .first();
+
+        if (!existingInvoice) {
+          // Générer la facture via runMutation (version interne)
+          await ctx.runMutation(internal.functions.mutations.invoices.generateInvoiceFromOrderInternal, {
+            orderId: args.orderId,
+            tvaRate: 20, // Taux de TVA par défaut
+          });
+          
+          console.log(`Facture générée automatiquement pour la commande ${order.orderNumber}`);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la génération de la facture:", error);
+        // Ne pas faire échouer la mise à jour du statut pour une erreur de facture
+      }
       try {
         // Trouver les gains en attente pour cette commande
         const earnings = await ctx.db

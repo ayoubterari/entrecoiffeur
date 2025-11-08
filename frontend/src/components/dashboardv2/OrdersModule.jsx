@@ -4,7 +4,7 @@ import { api } from '../../lib/convex'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import { Select } from '../ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { Badge } from '../ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { Search, X, ShoppingBag, TrendingUp, Clock, CheckCircle } from 'lucide-react'
@@ -245,14 +245,18 @@ const OrdersModule = ({ userId }) => {
                     <TableCell>
                       <Select
                         value={order.status}
-                        onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
-                        className="w-full"
+                        onValueChange={(newStatus) => handleStatusUpdate(order._id, newStatus)}
                       >
-                        <option value="confirmed">✅ Confirmée</option>
-                        <option value="preparing">📦 Préparation</option>
-                        <option value="shipped">🚚 Expédiée</option>
-                        <option value="delivered">🏠 Livrée</option>
-                        <option value="cancelled">❌ Annulée</option>
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Changer statut" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="confirmed">✅ Confirmée</SelectItem>
+                          <SelectItem value="preparing">📦 Préparation</SelectItem>
+                          <SelectItem value="shipped">🚚 Expédiée</SelectItem>
+                          <SelectItem value="delivered">🏠 Livrée</SelectItem>
+                          <SelectItem value="cancelled">❌ Annulée</SelectItem>
+                        </SelectContent>
                       </Select>
                     </TableCell>
                   </TableRow>

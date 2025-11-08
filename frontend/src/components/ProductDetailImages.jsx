@@ -2,11 +2,20 @@ import React from 'react'
 import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
 
-const ProductDetailImages = ({ images, productName, selectedImage, onImageSelect }) => {
+const ProductDetailImages = ({ images, productName, selectedImage, onImageSelect, featured, onSale, stock }) => {
+  // Debug: Afficher les informations sur les images
+  console.log('ProductDetailImages - Debug:', {
+    imagesCount: images?.length,
+    images: images,
+    shouldShowThumbnails: images && images.length > 1
+  })
+
   if (!images || images.length === 0) {
     return (
-      <div className="image-container">
-        <div className="placeholder-image">🛍️</div>
+      <div className="main-image">
+        <div className="image-container">
+          <div className="placeholder-image">🛍️</div>
+        </div>
       </div>
     )
   }
@@ -14,7 +23,7 @@ const ProductDetailImages = ({ images, productName, selectedImage, onImageSelect
   const currentImage = images[selectedImage] || images[0]
 
   return (
-    <>
+    <div className="main-image">
       {/* Image principale */}
       <div className="image-container">
         <ConvexImageWithFallback 
@@ -22,6 +31,13 @@ const ProductDetailImages = ({ images, productName, selectedImage, onImageSelect
           alt={productName}
           className="product-detail-image"
         />
+        
+        {/* Badges */}
+        <div className="product-badges">
+          {featured && <span className="badge featured">⭐ Vedette</span>}
+          {onSale && <span className="badge sale">🔥 Promo</span>}
+          {stock < 10 && <span className="badge low-stock">⚠️ Stock limité</span>}
+        </div>
       </div>
       
       {/* Miniatures */}
@@ -42,7 +58,7 @@ const ProductDetailImages = ({ images, productName, selectedImage, onImageSelect
           ))}
         </div>
       )}
-    </>
+    </div>
   )
 }
 
@@ -60,13 +76,6 @@ const ConvexImageWithFallback = ({ image, alt, className }) => {
         src={imageUrl} 
         alt={alt}
         className={className}
-        style={{ 
-          width: '100%', 
-          height: '100%', 
-          objectFit: 'cover',
-          maxWidth: 'none',
-          maxHeight: 'none'
-        }}
         onError={(e) => {
           e.target.style.display = 'none'
           if (e.target.nextSibling) {
@@ -84,13 +93,6 @@ const ConvexImageWithFallback = ({ image, alt, className }) => {
         src={image} 
         alt={alt}
         className={className}
-        style={{ 
-          width: '100%', 
-          height: '100%', 
-          objectFit: 'cover',
-          maxWidth: 'none',
-          maxHeight: 'none'
-        }}
         onError={(e) => {
           e.target.style.display = 'none'
           if (e.target.nextSibling) {

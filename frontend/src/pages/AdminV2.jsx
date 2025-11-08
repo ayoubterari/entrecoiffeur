@@ -9,6 +9,7 @@ import UsersModule from '../components/adminv2/UsersModule'
 import ProductsModule from '../components/adminv2/ProductsModule'
 import CategoriesModule from '../components/adminv2/CategoriesModule'
 import OrdersModule from '../components/adminv2/OrdersModule'
+import InvoicesModule from '../components/adminv2/InvoicesModule'
 import CommissionsModule from '../components/adminv2/CommissionsModule'
 import NetVendeurModule from '../components/adminv2/NetVendeurModule'
 import PaymentModule from '../components/adminv2/PaymentModule'
@@ -221,6 +222,10 @@ const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, user
 
           {activeTab === 'orders' && hasAccess('orders') && (
             <OrdersModule />
+          )}
+
+          {activeTab === 'invoices' && hasAccess('invoices') && (
+            <InvoicesModule />
           )}
 
           {activeTab === 'commissions' && hasAccess('commissions') && (
