@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../lib/convex'
 import Carousel from '../components/Carousel'
@@ -8,10 +8,12 @@ import GroupWelcomeModal from '../components/GroupWelcomeModal'
 import SupportModal from '../components/SupportModal'
 import MobileMenu from '../components/MobileMenu'
 import FranceMapModalLeaflet from '../components/FranceMapModalLeaflet'
+import AdvancedSearchModal from '../components/AdvancedSearchModal'
 import styles from '../components/Home.module.css'
 
 const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName, onAddToCart, cart, onOpenCart, onShowLogin, onToggleFavorite, favoritesCount, userId, onOpenFavorites, userType }) => {
   const navigate = useNavigate()
+  const location = useLocation()
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [isSearching, setIsSearching] = useState(false)
@@ -29,6 +31,9 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
   const [newsletterLoading, setNewsletterLoading] = useState(false)
   const [newsletterMessage, setNewsletterMessage] = useState('')
   const [newsletterSuccess, setNewsletterSuccess] = useState(false)
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false)
+  const [advancedSearchResults, setAdvancedSearchResults] = useState(null)
+  const [categoryCarouselIndexes, setCategoryCarouselIndexes] = useState({})
 
   // Get real data from Convex with visibility filtering
   const categoriesData = useQuery(api.products.getCategories)
@@ -94,6 +99,28 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
       }
     }
   }, [isAuthenticated, currentUser, userId])
+
+  // Déclencher le popup de connexion si demandé via localStorage
+  useEffect(() => {
+    const shouldShowLogin = localStorage.getItem('showLoginPopup')
+    
+    console.log('🔍 Home - Checking login state:', {
+      shouldShowLogin,
+      isAuthenticated,
+      hasOnShowLogin: !!onShowLogin
+    })
+    
+    if (shouldShowLogin === 'true' && !isAuthenticated && onShowLogin) {
+      console.log('✅ Home - Triggering login popup NOW')
+      // Nettoyer immédiatement pour éviter les boucles
+      localStorage.removeItem('showLoginPopup')
+      
+      // Déclencher le popup après un court délai pour s'assurer que la page est chargée
+      setTimeout(() => {
+        onShowLogin('signin')
+      }, 300)
+    }
+  }, [isAuthenticated, onShowLogin])
   const featuredProductsData = useQuery(api.products.getFeaturedProducts)
   const saleProductsData = useQuery(api.products.getSaleProducts)
 
@@ -142,6 +169,32 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
     ...p,
     type: 'product'
   }))
+
+  // Obtenir les top 5 produits par catégorie
+  const productsByCategory = React.useMemo(() => {
+    if (!allProducts || !categoriesData) return []
+    
+    return categoriesData.map(category => {
+      // Filtrer les produits de cette catégorie
+      const categoryProducts = allProducts.filter(product => 
+        product.categoryId === category._id || product.category === category.name
+      )
+      
+      // Trier par featured, puis par rating, puis par date
+      const sortedProducts = categoryProducts.sort((a, b) => {
+        if (a.featured && !b.featured) return -1
+        if (!a.featured && b.featured) return 1
+        if ((a.rating || 0) !== (b.rating || 0)) return (b.rating || 0) - (a.rating || 0)
+        return (b.createdAt || 0) - (a.createdAt || 0)
+      })
+      
+      // Prendre les 5 premiers
+      return {
+        category,
+        products: sortedProducts.slice(0, 5)
+      }
+    }).filter(item => item.products.length > 0) // Ne garder que les catégories avec des produits
+  }, [allProducts, categoriesData])
 
   const handleAddToCart = (product) => {
     if (!isAuthenticated) {
@@ -287,6 +340,46 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
     }
   }
 
+  // Gérer la recherche avancée
+  const handleAdvancedSearch = (searchParams) => {
+    console.log('🔍 Advanced Search Params:', searchParams)
+    // Rediriger vers la page Explore avec les paramètres de recherche
+    const params = new URLSearchParams()
+    
+    if (searchParams.searchTerm) params.append('q', searchParams.searchTerm)
+    if (searchParams.categoryId) params.append('category', searchParams.categoryId)
+    if (searchParams.minPrice) params.append('minPrice', searchParams.minPrice)
+    if (searchParams.maxPrice) params.append('maxPrice', searchParams.maxPrice)
+    if (searchParams.location) params.append('location', searchParams.location)
+    if (searchParams.marque) params.append('marque', searchParams.marque)
+    if (searchParams.typeProduit) params.append('typeProduit', searchParams.typeProduit)
+    if (searchParams.typePublic) params.append('typePublic', searchParams.typePublic)
+    if (searchParams.genre) params.append('genre', searchParams.genre)
+    if (searchParams.onSale) params.append('onSale', 'true')
+    if (searchParams.featured) params.append('featured', 'true')
+    if (searchParams.inStock) params.append('inStock', 'true')
+    
+    navigate(`/explore?${params.toString()}`)
+  }
+
+  // Gérer la navigation du carousel de catégorie
+  const handleCategoryCarouselNav = (categoryId, direction) => {
+    setCategoryCarouselIndexes(prev => {
+      const currentIndex = prev[categoryId] || 0
+      const categoryData = productsByCategory.find(item => item.category._id === categoryId)
+      const maxIndex = categoryData ? categoryData.products.length - 2 : 0
+      
+      let newIndex = currentIndex
+      if (direction === 'prev') {
+        newIndex = Math.max(0, currentIndex - 1)
+      } else {
+        newIndex = Math.min(maxIndex, currentIndex + 1)
+      }
+      
+      return { ...prev, [categoryId]: newIndex }
+    })
+  }
+
   return (
     <div className={styles.homeContainer}>
       {/* Header Mobile-First */}
@@ -305,7 +398,11 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
 
           {/* Desktop: Actions à gauche (Search, Favoris, Panier) */}
           <div className={styles.headerActionsLeft}>
-            <button className={styles.searchBtn} title="Rechercher">
+            <button 
+              className={styles.searchBtn} 
+              title="Recherche avancée"
+              onClick={() => setShowAdvancedSearch(true)}
+            >
               ⚲
             </button>
             <button 
@@ -749,6 +846,88 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         </div>
       </section>
 
+      {/* Products by Category */}
+      {productsByCategory.length > 0 && productsByCategory.map((categoryData) => {
+        const carouselIndex = categoryCarouselIndexes[categoryData.category._id] || 0
+        
+        return (
+          <section key={categoryData.category._id} className={styles.productsSection}>
+            <div className={styles.container}>
+              <div className={styles.categoryHeader}>
+                <div className={styles.categoryHeaderContent}>
+                  <div className={styles.categoryIconWrapper}>
+                    <span className={styles.categoryIconLarge}>{categoryData.category.icon}</span>
+                  </div>
+                  <div className={styles.categoryText}>
+                    <h3 className={styles.categoryTitle}>{categoryData.category.name}</h3>
+                    <p className={styles.categorySubtitle}>
+                      Découvrez notre sélection de {categoryData.category.name.toLowerCase()}
+                    </p>
+                  </div>
+                  <button 
+                    className={styles.categoryViewAllBtn}
+                    onClick={() => navigate(`/explore?category=${categoryData.category._id}`)}
+                  >
+                    <span>Voir tout</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              
+              <div className={styles.featuredCarousel}>
+                <div className={styles.featuredCarouselWrapper}>
+                  <div 
+                    className={styles.featuredCarouselContent}
+                    style={{
+                      transform: `translateX(-${carouselIndex * (160 + 12)}px)`
+                    }}
+                  >
+                    {categoryData.products.map((product) => (
+                      <div key={product._id} className={styles.featuredProductCard}>
+                        <ProductCard
+                          product={product}
+                          onAddToCart={handleAddToCart}
+                          onToggleFavorite={onToggleFavorite}
+                          onViewDetails={() => navigate(`/product/${product._id}`)}
+                          isFavorite={isProductFavorite(product._id)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {categoryData.products.length > 2 && (
+                  <>
+                    <button
+                      className={`${styles.carouselNavBtn} ${styles.carouselNavBtnPrev}`}
+                      onClick={() => handleCategoryCarouselNav(categoryData.category._id, 'prev')}
+                      disabled={carouselIndex === 0}
+                      style={{ opacity: carouselIndex === 0 ? 0.3 : 1 }}
+                    >
+                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <button
+                      className={`${styles.carouselNavBtn} ${styles.carouselNavBtnNext}`}
+                      onClick={() => handleCategoryCarouselNav(categoryData.category._id, 'next')}
+                      disabled={carouselIndex >= categoryData.products.length - 2}
+                      style={{ opacity: carouselIndex >= categoryData.products.length - 2 ? 0.3 : 1 }}
+                    >
+                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </section>
+        )
+      })}
+
       {/* Newsletter Section - Creative Design */}
       <section className={styles.newsletterSection}>
         <div className={styles.newsletterContainer}>
@@ -1067,6 +1246,14 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         isOpen={showMapModal}
         onClose={() => setShowMapModal(false)}
         products={allProducts}
+      />
+
+      {/* Modal Recherche Avancée */}
+      <AdvancedSearchModal
+        isOpen={showAdvancedSearch}
+        onClose={() => setShowAdvancedSearch(false)}
+        onSearch={handleAdvancedSearch}
+        userType={userType}
       />
     </div>
   )

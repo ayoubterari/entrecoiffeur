@@ -63,6 +63,9 @@ const ProductsModule = ({ userId, userType }) => {
   const userProducts = useQuery(api.products.getProductsBySeller, 
     userId ? { sellerId: userId } : "skip"
   )
+  
+  // Get product limits from system settings
+  const productLimits = useQuery(api.functions.queries.systemSettings.getProductLimits)
 
   // Mutations
   const createProduct = useMutation(api.products.createProduct)
@@ -71,31 +74,37 @@ const ProductsModule = ({ userId, userType }) => {
 
   // Check permissions
   const canAddProduct = () => {
-    if (!userType) return false
+    if (!userType || !productLimits) return false
     if (userType === 'particulier') return false
-    if (userType === 'professionnel') {
-      const currentProductCount = userProducts?.length || 0
-      return currentProductCount < 2
-    }
-    if (userType === 'grossiste') return true
-    return false
+    
+    const currentProductCount = userProducts?.length || 0
+    const limit = productLimits[userType]
+    
+    // -1 = illimité
+    if (limit === -1) return true
+    
+    return currentProductCount < limit
   }
 
   const getLimitationMessage = () => {
     if (userType === 'particulier') {
       return "Les particuliers ne peuvent pas vendre de produits. Vous pouvez uniquement acheter."
     }
-    if (userType === 'professionnel') {
-      const currentProductCount = userProducts?.length || 0
-      if (currentProductCount >= 2) {
-        return "Limite atteinte : Les professionnels peuvent ajouter maximum 2 produits."
-      }
-      return `Vous pouvez ajouter ${2 - currentProductCount} produit(s) supplémentaire(s).`
+    
+    if (!productLimits) return "Chargement des limites..."
+    
+    const currentProductCount = userProducts?.length || 0
+    const limit = productLimits[userType]
+    
+    if (limit === -1) {
+      return `En tant que ${userType}, vous pouvez ajouter un nombre illimité de produits.`
     }
-    if (userType === 'grossiste') {
-      return "En tant que grossiste, vous pouvez ajouter un nombre illimité de produits."
+    
+    if (currentProductCount >= limit) {
+      return `Limite atteinte : Les ${userType}s peuvent ajouter maximum ${limit} produit(s).`
     }
-    return ""
+    
+    return `Vous pouvez ajouter ${limit - currentProductCount} produit(s) supplémentaire(s).`
   }
 
   // Filter products

@@ -891,4 +891,35 @@ export default defineSchema({
     .index("by_payment_status", ["paymentStatus"])
     .index("by_invoice_date", ["invoiceDate"])
     .index("by_created_at", ["createdAt"]),
+  
+  // System settings - Configuration globale du système
+  systemSettings: defineTable({
+    key: v.string(), // Clé unique du paramètre (ex: "product_limits")
+    value: v.any(), // Valeur du paramètre (peut être un objet, nombre, string, etc.)
+    description: v.optional(v.string()), // Description du paramètre
+    updatedBy: v.optional(v.id("users")), // Dernier admin qui a modifié
+    updatedAt: v.number(),
+    createdAt: v.number(),
+  }).index("by_key", ["key"]),
+
+  // Home Carousel Banners - Bannières du carrousel de la page d'accueil
+  homeCarouselBanners: defineTable({
+    title: v.string(), // Titre de la bannière
+    subtitle: v.optional(v.string()), // Sous-titre
+    description: v.optional(v.string()), // Description
+    imageUrl: v.optional(v.string()), // URL de l'image (si externe)
+    imageStorageId: v.optional(v.string()), // ID de stockage Convex (si uploadée)
+    buttonText: v.optional(v.string()), // Texte du bouton CTA
+    buttonLink: v.optional(v.string()), // Lien du bouton
+    backgroundColor: v.optional(v.string()), // Couleur de fond
+    textColor: v.optional(v.string()), // Couleur du texte
+    order: v.number(), // Ordre d'affichage (1-5)
+    isActive: v.boolean(), // Si la bannière est active
+    createdBy: v.id("users"), // Admin qui a créé
+    updatedBy: v.optional(v.id("users")), // Dernier admin qui a modifié
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_order", ["order"])
+    .index("by_active", ["isActive"])
+    .index("by_active_order", ["isActive", "order"]),
 });

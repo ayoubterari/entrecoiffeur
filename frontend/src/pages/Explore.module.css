@@ -4,7 +4,7 @@
   background: #f8f9fa;
 }
 
-/* Header */
+/* Header - Fixed container for both header and search */
 .header {
   display: flex;
   align-items: center;
@@ -67,7 +67,7 @@
   transform: scale(1.05);
 }
 
-/* Search Section */
+/* Search Section - Also fixed */
 .searchSection {
   background: white;
   padding: 1.2rem 1.6rem;
@@ -75,6 +75,10 @@
   display: flex;
   gap: 0.8rem;
   align-items: center;
+  position: sticky;
+  top: 56px;
+  z-index: 99;
+  box-shadow: 0 2px 4px rgba(192, 180, 165, 0.1);
 }
 
 .searchContainer {

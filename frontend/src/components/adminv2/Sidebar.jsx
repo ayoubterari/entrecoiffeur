@@ -17,7 +17,10 @@ import {
   UserCheck,
   LogOut,
   Mail,
-  Activity
+  Activity,
+  Store,
+  Sliders,
+  Image
 } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { useNavigate } from 'react-router-dom'
@@ -49,6 +52,8 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onMobileClose, hasAcce
     { id: 'analytics', label: 'Analytics', icon: Activity },
     { id: 'support', label: 'Support', icon: Headphones },
     { id: 'stats', label: 'Statistiques', icon: BarChart3 },
+    { id: 'home-carousel', label: 'Carrousel Accueil', icon: Image },
+    { id: 'system-settings', label: 'Paramètres Système', icon: Sliders },
     { id: 'settings', label: 'Paramètres', icon: Settings },
     { id: 'account-change-requests', label: 'Demandes de compte', icon: UserCheck },
   ]
@@ -72,7 +77,13 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onMobileClose, hasAcce
         <div className="flex h-full flex-col gap-2">
           {/* Logo */}
           <div className="flex h-16 items-center justify-between border-b px-6">
-            <h2 className="text-xl font-bold">EntreCoiffeur</h2>
+            <button
+              onClick={() => navigate('/marketplace')}
+              className="flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-semibold"
+            >
+              <Store className="h-5 w-5" />
+              <span>Marketplace</span>
+            </button>
             {/* Bouton fermer pour mobile */}
             <button
               onClick={onMobileClose}

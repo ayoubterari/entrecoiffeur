@@ -13,18 +13,17 @@ import {
   Settings, 
   Wrench,
   Ticket,
-  Home,
   X,
   AlertTriangle,
   UserCheck,
   Users,
   Star,
   Building2,
-  FileText
+  FileText,
+  Megaphone
 } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { Button } from '../ui/button'
-import { Separator } from '../ui/separator'
 import { Avatar, AvatarFallback } from '../ui/avatar'
 
 const Sidebar = ({ 
@@ -62,8 +61,9 @@ const Sidebar = ({
     
     // Onglets pour professionnels et grossistes
     if (userType === 'professionnel' || userType === 'grossiste') {
-      if (!hasAccess || hasAccess('products')) {
-        allItems.push({ id: 'products', name: 'Mes Produits', icon: Package })
+      // Mes annonces - regroupe produits et fonds de commerce
+      if (!hasAccess || hasAccess('announcements')) {
+        allItems.push({ id: 'announcements', name: 'Mes Annonces', icon: Megaphone })
       }
       if (!hasAccess || hasAccess('orders')) {
         allItems.push({ id: 'orders', name: 'Mes ventes', icon: ClipboardList })
@@ -73,15 +73,12 @@ const Sidebar = ({
       if (!hasAccess || hasAccess('complaints')) {
         allItems.push({ id: 'complaints', name: 'Réclamations', icon: AlertTriangle })
       }
-      if (!hasAccess || hasAccess('coupons')) {
+      // Mes Coupons - uniquement pour les grossistes
+      if (userType === 'grossiste' && (!hasAccess || hasAccess('coupons'))) {
         allItems.push({ id: 'coupons', name: 'Mes Coupons', icon: Ticket })
       }
-      // Fonds de Commerce - uniquement pour le compte principal
-      if (!userPermissions || !userPermissions.isSubUser) {
-        allItems.push({ id: 'business-sales', name: 'Fonds de Commerce', icon: Building2 })
-      }
-      // Team - uniquement pour le compte principal (pas pour les sous-utilisateurs)
-      if (!userPermissions || !userPermissions.isSubUser) {
+      // Team - uniquement pour les grossistes et le compte principal (pas pour les professionnels ni les sous-utilisateurs)
+      if (userType === 'grossiste' && (!userPermissions || !userPermissions.isSubUser)) {
         allItems.push({ id: 'team', name: 'Mon équipe', icon: Users })
       }
     }
@@ -207,19 +204,6 @@ const Sidebar = ({
         })}
       </nav>
 
-      <Separator />
-
-      {/* Footer Actions */}
-      <div className="p-4">
-        <Button
-          variant="outline"
-          className="w-full justify-start"
-          onClick={() => navigate('/')}
-        >
-          <Home className="mr-2 h-4 w-4" />
-          Marketplace
-        </Button>
-      </div>
     </aside>
     </>
   )

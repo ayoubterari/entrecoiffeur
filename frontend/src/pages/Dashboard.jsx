@@ -54,23 +54,21 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+  // Get product limits from system settings
+  const productLimits = useQuery(api.functions.queries.systemSettings.getProductLimits)
+
   // Fonction pour vérifier les permissions d'ajout de produit
   const canAddProduct = () => {
-    if (!userType) return false
-    
-    // Particulier : ne peut pas ajouter de produits
+    if (!userType || !productLimits) return false
     if (userType === 'particulier') return false
     
-    // Professionnel : limité à 2 produits
-    if (userType === 'professionnel') {
-      const currentProductCount = userProducts?.length || 0
-      return currentProductCount < 2
-    }
+    const currentProductCount = userProducts?.length || 0
+    const limit = productLimits[userType]
     
-    // Grossiste : aucune limite
-    if (userType === 'grossiste') return true
+    // -1 = illimité
+    if (limit === -1) return true
     
-    return false
+    return currentProductCount < limit
   }
 
   // Fonction pour obtenir le message de limitation
@@ -79,19 +77,20 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
       return "Les particuliers ne peuvent pas vendre de produits. Vous pouvez uniquement acheter."
     }
     
-    if (userType === 'professionnel') {
-      const currentProductCount = userProducts?.length || 0
-      if (currentProductCount >= 2) {
-        return "Limite atteinte : Les professionnels peuvent ajouter maximum 2 produits."
-      }
-      return `Vous pouvez ajouter ${2 - currentProductCount} produit(s) supplémentaire(s).`
+    if (!productLimits) return "Chargement des limites..."
+    
+    const currentProductCount = userProducts?.length || 0
+    const limit = productLimits[userType]
+    
+    if (limit === -1) {
+      return `En tant que ${userType}, vous pouvez ajouter un nombre illimité de produits.`
     }
     
-    if (userType === 'grossiste') {
-      return "En tant que grossiste, vous pouvez ajouter un nombre illimité de produits."
+    if (currentProductCount >= limit) {
+      return `Limite atteinte : Les ${userType}s peuvent ajouter maximum ${limit} produit(s).`
     }
     
-    return ""
+    return `Vous pouvez ajouter ${limit - currentProductCount} produit(s) supplémentaire(s).`
   }
 
   // Get categories and user products
@@ -208,8 +207,8 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
       { id: 'dev', name: 'Dev Tools', icon: '🛠️' }
     )
     
-    // Ajouter l'onglet Coupons uniquement pour les membres de groupe
-    if (currentUser?.isGroupMember) {
+    // Ajouter l'onglet Coupons uniquement pour les membres de groupe qui ne sont pas professionnels
+    if (currentUser?.isGroupMember && userType !== 'professionnel') {
       baseTabs.push({ id: 'coupons', name: 'Mes Coupons', icon: '🎫' })
     }
     

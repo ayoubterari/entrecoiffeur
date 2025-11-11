@@ -102,6 +102,19 @@ function AppContent() {
     handleLogin(newUserId)
     setShowLoginModal(false)
     
+    // Vérifier s'il y a une redirection après connexion (depuis ProductDetail)
+    const redirectAfterLogin = localStorage.getItem('redirectAfterLogin')
+    console.log('✅ App - Login success, checking redirect:', redirectAfterLogin)
+    
+    if (redirectAfterLogin) {
+      console.log('🔄 App - Redirecting to:', redirectAfterLogin)
+      localStorage.removeItem('redirectAfterLogin')
+      setTimeout(() => {
+        navigate(redirectAfterLogin)
+      }, 100)
+      return
+    }
+    
     // Restaurer le code d'affiliation après connexion
     const affiliateRestored = restoreAffiliateAfterAuth()
     const returnUrl = getAffiliateReturnUrl()

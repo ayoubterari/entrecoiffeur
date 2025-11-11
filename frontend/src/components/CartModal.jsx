@@ -51,7 +51,7 @@ const CartModal = ({ isOpen, onClose, cart, onUpdateQuantity, onRemoveItem, isAu
   }
 
   return (
-    <div className="cart-modal-overlay" onClick={onClose}>
+    <div className="cart-modal-overlay">
       <div className="cart-modal" onClick={(e) => e.stopPropagation()}>
         <div className="cart-header">
           <h2>Mon Panier ({cart.reduce((sum, item) => sum + item.quantity, 0)})</h2>

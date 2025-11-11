@@ -86,7 +86,17 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
 
   const handleBuyNow = () => {
     if (!isAuthenticated) {
-      onLogin()
+      // Sauvegarder l'URL actuelle pour rediriger après connexion
+      const currentProductUrl = `/product/${productId}`
+      console.log('🔐 ProductDetail - User not authenticated, saving redirect URL:', currentProductUrl)
+      localStorage.setItem('redirectAfterLogin', currentProductUrl)
+      
+      // Marquer qu'on doit afficher le popup de connexion
+      localStorage.setItem('showLoginPopup', 'true')
+      
+      // Rediriger vers la page d'accueil
+      console.log('🔄 ProductDetail - Redirecting to home')
+      navigate('/')
       return
     }
 
@@ -664,7 +674,7 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
 
             <button 
               onClick={handleBuyNow}
-              disabled={!isAuthenticated || product.stock === 0}
+              disabled={product.stock === 0}
               style={{
                 width: '100%',
                 background: 'linear-gradient(135deg, #2d2d2d 0%, #2d2d2d 50%, #2d2d2d 100%)',

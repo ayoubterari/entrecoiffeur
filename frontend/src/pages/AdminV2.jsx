@@ -22,6 +22,8 @@ import SupportModule from '../components/adminv2/SupportModule'
 import StatisticsModule from '../components/adminv2/StatisticsModule'
 import SettingsModule from '../components/adminv2/SettingsModule'
 import AccountChangeRequestsModule from '../components/adminv2/AccountChangeRequestsModule'
+import SystemSettingsModule from '../components/dashboardv2/SystemSettingsModule'
+import HomeCarouselModule from '../components/dashboardv2/HomeCarouselModule'
 import '../styles/adminv2.css'
 
 const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, userType, userId, onLogout }) => {
@@ -129,7 +131,7 @@ const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, user
   useEffect(() => {
     if (userPermissions && !hasAccess(activeTab)) {
       // Trouver le premier module accessible
-      const modules = ['dashboard', 'users', 'products', 'categories', 'orders', 'commissions', 'netvendeur', 'paiement', 'blog', 'coupons', 'reviews', 'newsletter', 'analytics', 'support', 'stats', 'settings']
+      const modules = ['dashboard', 'users', 'products', 'categories', 'orders', 'commissions', 'netvendeur', 'paiement', 'blog', 'coupons', 'reviews', 'newsletter', 'analytics', 'support', 'stats', 'system-settings', 'settings']
       const firstAccessibleModule = modules.find(module => hasAccess(module))
       
       if (firstAccessibleModule) {
@@ -266,6 +268,14 @@ const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, user
 
           {activeTab === 'stats' && hasAccess('stats') && (
             <StatisticsModule />
+          )}
+
+          {activeTab === 'system-settings' && hasAccess('system-settings') && (
+            <SystemSettingsModule userId={userId} />
+          )}
+
+          {activeTab === 'home-carousel' && hasAccess('home-carousel') && (
+            <HomeCarouselModule userId={userId} />
           )}
 
           {activeTab === 'settings' && hasAccess('settings') && (

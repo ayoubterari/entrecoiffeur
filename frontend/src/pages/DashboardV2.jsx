@@ -15,6 +15,7 @@ import InvoicesModule from '../components/dashboardv2/InvoicesModule'
 import BusinessSalesModule from '../components/dashboardv2/BusinessSalesModule'
 import AccountChangeRequest from '../components/dashboardv2/AccountChangeRequest'
 import TeamModule from '../components/dashboardv2/TeamModule'
+import AnnoncesModule from '../components/dashboardv2/AnnoncesModule'
 import MyReviewsTab from '../components/MyReviewsTab'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import '../styles/dashboardv2.css'
@@ -108,8 +109,11 @@ const DashboardV2 = ({ userEmail, userFirstName, userLastName, userId, userType,
             <MyReviewsTab buyerReviews={buyerReviews} />
           )}
 
-          {activeTab === 'products' && hasAccess('products') && (
-            <ProductsModule userId={userId} userType={userType} />
+          {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'announcements' && hasAccess('announcements') && (
+            <AnnoncesModule 
+              userId={userId} 
+              userType={userType}
+            />
           )}
 
           {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'orders' && hasAccess('orders') && (
@@ -136,9 +140,6 @@ const DashboardV2 = ({ userEmail, userFirstName, userLastName, userId, userType,
             <CouponsModule userId={userId} userType={userType} />
           )}
 
-          {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'business-sales' && (!userPermissions || !userPermissions.isSubUser) && (
-            <BusinessSalesModule userId={userId} />
-          )}
 
           {(userType === 'professionnel' || userType === 'grossiste') && activeTab === 'team' && (!userPermissions || !userPermissions.isSubUser) && (
             <TeamModule userId={userId} userType={userType} />

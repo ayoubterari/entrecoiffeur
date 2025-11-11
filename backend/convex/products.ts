@@ -216,19 +216,41 @@ export const createProduct = mutation({
       throw new ConvexError("Les particuliers ne peuvent pas vendre de produits");
     }
 
-    // For professionals, check the 2-product limit
-    if (seller.userType === "professionnel") {
+    // Récupérer les limites configurables depuis systemSettings
+    const productLimitsSetting = await ctx.db
+      .query("systemSettings")
+      .withIndex("by_key", (q) => q.eq("key", "product_limits"))
+      .first();
+    
+    // Valeurs par défaut si non configurées
+    const productLimits = productLimitsSetting?.value || {
+      professionnel: 2,
+      grossiste: -1, // -1 = illimité
+    };
+
+    // Vérifier la limite pour les professionnels
+    if (seller.userType === "professionnel" && productLimits.professionnel !== -1) {
       const existingProducts = await ctx.db
         .query("products")
         .filter((q) => q.eq(q.field("sellerId"), args.sellerId))
         .collect();
       
-      if (existingProducts.length >= 2) {
-        throw new ConvexError("Limite atteinte : Les professionnels peuvent ajouter maximum 2 produits");
+      if (existingProducts.length >= productLimits.professionnel) {
+        throw new ConvexError(`Limite atteinte : Les professionnels peuvent ajouter maximum ${productLimits.professionnel} produit(s)`);
       }
     }
 
-    // Grossistes have no limits, so we continue normally
+    // Vérifier la limite pour les grossistes
+    if (seller.userType === "grossiste" && productLimits.grossiste !== -1) {
+      const existingProducts = await ctx.db
+        .query("products")
+        .filter((q) => q.eq(q.field("sellerId"), args.sellerId))
+        .collect();
+      
+      if (existingProducts.length >= productLimits.grossiste) {
+        throw new ConvexError(`Limite atteinte : Les grossistes peuvent ajouter maximum ${productLimits.grossiste} produit(s)`);
+      }
+    }
 
     // Get the category name from categoryId
     const category = await ctx.db.get(args.categoryId);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useQuery } from 'convex/react'
 import { api } from '../lib/convex'
 import ProductCard from '../components/ProductCard'
@@ -10,18 +10,31 @@ import styles from './Explore.module.css'
 
 const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onShowLogin, userType }) => {
   const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [searchParams] = useSearchParams()
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '')
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all')
   const [sortBy, setSortBy] = useState('featured')
-  const [priceRange, setPriceRange] = useState([0, 1000])
+  const [priceRange, setPriceRange] = useState([
+    parseInt(searchParams.get('minPrice')) || 0,
+    parseInt(searchParams.get('maxPrice')) || 1000
+  ])
   const [showFilters, setShowFilters] = useState(false)
   const [expandedCategories, setExpandedCategories] = useState(new Set())
   const [selectedPriceRange, setSelectedPriceRange] = useState('all')
   const [isSliderActive, setIsSliderActive] = useState(false)
   const [showStores, setShowStores] = useState(false)
-  const [selectedLocation, setSelectedLocation] = useState('all')
+  const [selectedLocation, setSelectedLocation] = useState(searchParams.get('location') || 'all')
   const [showMapModal, setShowMapModal] = useState(false)
   const [viewMode, setViewMode] = useState('products') // 'products' ou 'business-sales'
+  const [advancedFilters, setAdvancedFilters] = useState({
+    marque: searchParams.get('marque') || '',
+    typeProduit: searchParams.get('typeProduit') || '',
+    typePublic: searchParams.get('typePublic') || '',
+    genre: searchParams.get('genre') || '',
+    onSale: searchParams.get('onSale') === 'true',
+    featured: searchParams.get('featured') === 'true',
+    inStock: searchParams.get('inStock') === 'true'
+  })
 
   // Debug: Log userType
   console.log('🔍 Explore - userType reçu:', userType)
@@ -120,13 +133,25 @@ const Explore = ({ onAddToCart, onToggleFavorite, userId, isAuthenticated, onSho
   // Filter and sort products
   const filteredProducts = allProducts?.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.description?.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory
+                         product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         product.marque?.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory || product.categoryId === selectedCategory
     const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1]
     const matchesStore = !showStores || product.sellerId === showStores
     const matchesLocation = selectedLocation === 'all' || product.location === selectedLocation
     
-    return matchesSearch && matchesCategory && matchesPrice && matchesStore && matchesLocation
+    // Filtres avancés
+    const matchesMarque = !advancedFilters.marque || product.marque === advancedFilters.marque
+    const matchesTypeProduit = !advancedFilters.typeProduit || product.typeProduit === advancedFilters.typeProduit
+    const matchesTypePublic = !advancedFilters.typePublic || product.typePublic === advancedFilters.typePublic
+    const matchesGenre = !advancedFilters.genre || product.genre === advancedFilters.genre
+    const matchesOnSale = !advancedFilters.onSale || product.onSale === true
+    const matchesFeatured = !advancedFilters.featured || product.featured === true
+    const matchesInStock = !advancedFilters.inStock || product.stock > 0
+    
+    return matchesSearch && matchesCategory && matchesPrice && matchesStore && matchesLocation &&
+           matchesMarque && matchesTypeProduit && matchesTypePublic && matchesGenre &&
+           matchesOnSale && matchesFeatured && matchesInStock
   }) || []
 
   // Sort products
