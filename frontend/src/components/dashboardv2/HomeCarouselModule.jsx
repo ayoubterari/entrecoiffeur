@@ -14,7 +14,9 @@ import {
   Image as ImageIcon,
   Link as LinkIcon,
   Palette,
-  X
+  X,
+  Upload,
+  Loader2
 } from 'lucide-react'
 
 const HomeCarouselModule = ({ userId }) => {
@@ -170,6 +172,12 @@ const HomeCarouselModule = ({ userId }) => {
 
 // Composant carte de bannière
 const BannerCard = ({ banner, onEdit, onDelete, onToggleStatus }) => {
+  // Récupérer l'URL de l'image depuis Convex storage si imageStorageId existe
+  const imageUrl = useQuery(
+    banner.imageStorageId ? api.files.getFileUrl : 'skip',
+    banner.imageStorageId ? { storageId: banner.imageStorageId } : 'skip'
+  )
+
   return (
     <Card className={`${!banner.isActive ? 'opacity-60' : ''}`}>
       <CardContent className="p-4">
@@ -184,13 +192,15 @@ const BannerCard = ({ banner, onEdit, onDelete, onToggleStatus }) => {
 
           {/* Aperçu image */}
           <div 
-            className="w-32 h-20 rounded-md flex items-center justify-center flex-shrink-0"
+            className="w-32 h-20 rounded-md flex items-center justify-center flex-shrink-0 overflow-hidden"
             style={{ backgroundColor: banner.backgroundColor }}
           >
-            {banner.imageStorageId || banner.imageUrl ? (
-              <div className="text-xs text-center" style={{ color: banner.textColor }}>
-                Image
-              </div>
+            {(imageUrl || banner.imageUrl) ? (
+              <img 
+                src={imageUrl || banner.imageUrl} 
+                alt={banner.title}
+                className="w-full h-full object-cover"
+              />
             ) : (
               <ImageIcon className="h-8 w-8 text-muted-foreground" />
             )}
@@ -272,6 +282,7 @@ const BannerFormModal = ({ banner, userId, onClose, existingBanners }) => {
     subtitle: banner?.subtitle || '',
     description: banner?.description || '',
     imageUrl: banner?.imageUrl || '',
+    imageStorageId: banner?.imageStorageId || '',
     buttonText: banner?.buttonText || 'Commander',
     buttonLink: banner?.buttonLink || '/marketplace',
     backgroundColor: banner?.backgroundColor || '#f3f4f6',
@@ -282,7 +293,80 @@ const BannerFormModal = ({ banner, userId, onClose, existingBanners }) => {
 
   const createBanner = useMutation(api.functions.mutations.homeCarousel.createBanner)
   const updateBanner = useMutation(api.functions.mutations.homeCarousel.updateBanner)
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl)
+  
+  // Récupérer l'URL de l'image existante depuis Convex storage
+  const existingImageUrl = useQuery(
+    banner?.imageStorageId ? api.files.getFileUrl : 'skip',
+    banner?.imageStorageId ? { storageId: banner.imageStorageId } : 'skip'
+  )
+  
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
+  const [imagePreview, setImagePreview] = useState(existingImageUrl || banner?.imageUrl || '')
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Vérifier le type de fichier
+    if (!file.type.startsWith('image/')) {
+      alert('Veuillez sélectionner une image valide')
+      return
+    }
+
+    // Vérifier la taille (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('L\'image ne doit pas dépasser 5 MB')
+      return
+    }
+
+    setIsUploading(true)
+
+    try {
+      // Générer l'URL d'upload
+      const uploadUrl = await generateUploadUrl()
+
+      // Upload le fichier
+      const result = await fetch(uploadUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': file.type },
+        body: file,
+      })
+
+      const { storageId } = await result.json()
+
+      // Créer un aperçu local
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result)
+      }
+      reader.readAsDataURL(file)
+
+      // Mettre à jour le formData
+      setFormData(prev => ({
+        ...prev,
+        imageStorageId: storageId,
+        imageUrl: '' // Effacer l'URL si une image est uploadée
+      }))
+
+      console.log('Image uploadée avec succès:', storageId)
+    } catch (error) {
+      console.error('Erreur lors de l\'upload:', error)
+      alert('Erreur lors de l\'upload de l\'image')
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
+  const handleRemoveImage = () => {
+    setFormData(prev => ({
+      ...prev,
+      imageStorageId: '',
+      imageUrl: ''
+    }))
+    setImagePreview('')
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -339,14 +423,13 @@ const BannerFormModal = ({ banner, userId, onClose, existingBanners }) => {
             {/* Titre */}
             <div>
               <label className="block text-sm font-medium mb-2">
-                Titre *
+                Titre <span className="text-gray-400 text-xs">(optionnel)</span>
               </label>
               <input
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary"
-                required
                 placeholder="Ex: Livraison Gratuite"
               />
             </div>
@@ -379,20 +462,72 @@ const BannerFormModal = ({ banner, userId, onClose, existingBanners }) => {
               />
             </div>
 
-            {/* URL Image */}
+            {/* Upload Image */}
             <div>
               <label className="block text-sm font-medium mb-2">
-                URL de l'image
+                Image de la bannière <span className="text-gray-400 text-xs">(optionnel)</span>
               </label>
-              <input
-                type="url"
-                value={formData.imageUrl}
-                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary"
-                placeholder="https://example.com/image.jpg"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Laissez vide pour utiliser uniquement la couleur de fond
+              
+              {/* Aperçu de l'image */}
+              {imagePreview && (
+                <div className="mb-3 relative">
+                  <img 
+                    src={imagePreview} 
+                    alt="Aperçu" 
+                    className="w-full h-48 object-cover rounded-md border"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    className="absolute top-2 right-2"
+                    onClick={handleRemoveImage}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+
+              {/* Bouton d'upload */}
+              {!imagePreview && (
+                <div className="border-2 border-dashed border-gray-300 rounded-md p-6 text-center hover:border-primary transition-colors">
+                  <input
+                    type="file"
+                    id="image-upload"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    disabled={isUploading}
+                  />
+                  <label 
+                    htmlFor="image-upload" 
+                    className="cursor-pointer flex flex-col items-center"
+                  >
+                    {isUploading ? (
+                      <>
+                        <Loader2 className="h-12 w-12 text-primary animate-spin mb-3" />
+                        <p className="text-sm text-gray-600">Upload en cours...</p>
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="h-12 w-12 text-gray-400 mb-3" />
+                        <p className="text-sm font-medium text-gray-700 mb-1">
+                          Cliquez pour uploader une image
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          PNG, JPG, WebP jusqu'à 5 MB
+                        </p>
+                      </>
+                    )}
+                  </label>
+                </div>
+              )}
+
+              <p className="text-xs text-muted-foreground mt-2">
+                <strong>Dimensions optimales :</strong> 1920x400px (ratio 4.8:1) • Format : WebP ou JPG • Max : 5 MB
+              </p>
+              <p className="text-xs text-blue-600 mt-1">
+                💡 Tous les champs sont optionnels. Vous pouvez créer une bannière avec uniquement une couleur de fond.
               </p>
             </div>
 
@@ -400,7 +535,7 @@ const BannerFormModal = ({ banner, userId, onClose, existingBanners }) => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Texte du bouton
+                  Texte du bouton <span className="text-gray-400 text-xs">(optionnel)</span>
                 </label>
                 <input
                   type="text"
@@ -412,7 +547,7 @@ const BannerFormModal = ({ banner, userId, onClose, existingBanners }) => {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Lien du bouton
+                  Lien du bouton <span className="text-gray-400 text-xs">(optionnel)</span>
                 </label>
                 <input
                   type="text"

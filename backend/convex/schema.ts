@@ -73,6 +73,25 @@ export default defineSchema({
     textureHygiene: v.optional(v.string()), // Texture - Hygiène
     protectionUV: v.optional(v.string()), // Protection UV
     produitsBio: v.optional(v.string()), // Produits Bio
+    isElectricalDevice: v.optional(v.boolean()), // Indique si c'est un appareil électrique
+    // Champs pour appareils électriques
+    coloris: v.optional(v.string()),
+    natureCheveux: v.optional(v.string()),
+    actionProduit: v.optional(v.string()),
+    specificites: v.optional(v.string()),
+    alimentation: v.optional(v.string()),
+    poids: v.optional(v.string()),
+    puissance: v.optional(v.string()),
+    niveauxTemperature: v.optional(v.string()),
+    longueurCable: v.optional(v.string()),
+    fluxAir: v.optional(v.string()),
+    arretAutomatique: v.optional(v.string()),
+    accessoiresFournis: v.optional(v.string()),
+    technologie: v.optional(v.string()),
+    nombreVitesse: v.optional(v.string()),
+    moteur: v.optional(v.string()),
+    zonesSpecifiques: v.optional(v.string()),
+    origineFabrication: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_seller", ["sellerId"])
     .index("by_category", ["category"])

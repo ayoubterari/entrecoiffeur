@@ -244,7 +244,9 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
     tags: '',
     images: ['🛍️'], // Default emoji
     featured: false,
-    onSale: false
+    onSale: false,
+    isElectricalDevice: false,
+    technicalSpecs: ''
   })
 
   const handleProductSubmit = async (e) => {
@@ -1185,7 +1187,33 @@ const Dashboard = ({ userEmail, userFirstName, userLastName, userId, userType, c
                           En promotion
                         </label>
                       </div>
+                      <div className="form-group">
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={productForm.isElectricalDevice}
+                            onChange={(e) => setProductForm({...productForm, isElectricalDevice: e.target.checked})}
+                          />
+                          ⚡ Appareil électrique
+                        </label>
+                      </div>
                     </div>
+
+                    {productForm.isElectricalDevice && (
+                      <div className="form-group">
+                        <label>Spécifications techniques de l'appareil</label>
+                        <textarea
+                          className="form-textarea"
+                          value={productForm.technicalSpecs}
+                          onChange={(e) => setProductForm({...productForm, technicalSpecs: e.target.value})}
+                          rows="8"
+                          placeholder="Coloris : Noir&#10;Nature de cheveux : Tous types de cheveux&#10;Action produit : Brillance, Anti-frisottis&#10;Spécificités : Bouton d'air froid&#10;Alimentation : Secteur (Type E)&#10;Poids : 520g&#10;Puissance : 2200W&#10;Niveaux température : 3&#10;Longueur du câble : 3m&#10;Flux d'air : 120 km/h&#10;Arrêt automatique : Non&#10;Accessoires fournis : 1 embout concentrateur&#10;Technologie : Aeroprecis™, Ionique&#10;Nombre de vitesse : 2&#10;Moteur : Brushless&#10;Zones spécifiques : Cheveux&#10;Origine de fabrication : Chine"
+                        />
+                        <small style={{color: '#666', fontSize: '12px', marginTop: '5px', display: 'block'}}>
+                          💡 Insérez les caractéristiques techniques ligne par ligne (format : Caractéristique : Valeur)
+                        </small>
+                      </div>
+                    )}
 
                     <button type="submit" className="save-btn">
                       Enregistrer le produit

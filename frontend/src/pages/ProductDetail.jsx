@@ -205,7 +205,7 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
             )}
 
             {/* Informations détaillées - Design créatif avec accordéon */}
-            {(product.marque || product.contenance || product.typeProduit || product.typePublic || 
+            {(product.isElectricalDevice || product.marque || product.contenance || product.typeProduit || product.typePublic || 
               product.genre || product.specificiteHygiene || product.contenanceBeaute || product.pourQui || 
               product.textureHygiene || product.protectionUV || product.produitsBio) && (
               <div style={{ 
@@ -598,6 +598,211 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
                         <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Produits Bio</span>
                       </div>
                       <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.produitsBio}</span>
+                    </div>
+                  )}
+
+                  {/* Champs pour appareils électriques */}
+                  {product.coloris && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>🎨</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Coloris</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.coloris}</span>
+                    </div>
+                  )}
+
+                  {product.natureCheveux && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>💇</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Nature de cheveux</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.natureCheveux}</span>
+                    </div>
+                  )}
+
+                  {product.actionProduit && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>✨</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Action produit</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.actionProduit}</span>
+                    </div>
+                  )}
+
+                  {product.specificites && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>⭐</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Spécificités</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.specificites}</span>
+                    </div>
+                  )}
+
+                  {product.alimentation && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>🔌</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Alimentation</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.alimentation}</span>
+                    </div>
+                  )}
+
+                  {product.poids && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>⚖️</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Poids</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.poids}</span>
+                    </div>
+                  )}
+
+                  {product.puissance && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>⚡</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Puissance</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.puissance}</span>
+                    </div>
+                  )}
+
+                  {product.niveauxTemperature && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>🌡️</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Niveaux température</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.niveauxTemperature}</span>
+                    </div>
+                  )}
+
+                  {product.longueurCable && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>📏</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Longueur du câble</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.longueurCable}</span>
+                    </div>
+                  )}
+
+                  {product.fluxAir && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>💨</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Flux d'air</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.fluxAir}</span>
+                    </div>
+                  )}
+
+                  {product.arretAutomatique && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>⏱️</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Arrêt automatique</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.arretAutomatique}</span>
+                    </div>
+                  )}
+
+                  {product.accessoiresFournis && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>📦</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Accessoires fournis</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.accessoiresFournis}</span>
+                    </div>
+                  )}
+
+                  {product.technologie && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>🔬</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Technologie</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.technologie}</span>
+                    </div>
+                  )}
+
+                  {product.nombreVitesse && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>🔢</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Nombre de vitesse</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.nombreVitesse}</span>
+                    </div>
+                  )}
+
+                  {product.moteur && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>🔧</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Moteur</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.moteur}</span>
+                    </div>
+                  )}
+
+                  {product.zonesSpecifiques && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>🎯</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Zones spécifiques</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.zonesSpecifiques}</span>
+                    </div>
+                  )}
+
+                  {product.origineFabrication && (
+                    <div style={{background: 'white',padding: '1rem',borderRadius: '12px',border: '1px solid #e9e4df',transition: 'all 0.3s ease'}}
+                    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 6px 20px rgba(192, 180, 165, 0.2)';e.currentTarget.style.borderColor = '#C0B4A5';}}
+                    onMouseLeave={(e) => {e.currentTarget.style.transform = 'translateY(0)';e.currentTarget.style.boxShadow = 'none';e.currentTarget.style.borderColor = '#e9e4df';}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>🌍</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#C0B4A5', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Origine de fabrication</span>
+                      </div>
+                      <span style={{ fontSize: '0.95rem', color: '#2d2d2d', fontWeight: '600', display: 'block' }}>{product.origineFabrication}</span>
                     </div>
                   )}
                 </div>

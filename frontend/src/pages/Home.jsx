@@ -61,6 +61,17 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
     userId ? { userId } : "skip"
   )
 
+  // Récupérer les bannières actives du carrousel
+  const homeCarouselBanners = useQuery(api.functions.queries.homeCarousel.getActiveBanners)
+  
+  // Debug: Log des bannières récupérées
+  useEffect(() => {
+    if (homeCarouselBanners) {
+      console.log('🎠 Bannières du carrousel récupérées:', homeCarouselBanners)
+      console.log('🎠 Nombre de bannières actives:', homeCarouselBanners.length)
+    }
+  }, [homeCarouselBanners])
+
   // Mutation pour s'abonner à la newsletter
   const subscribeToNewsletter = useMutation(api.functions.mutations.newsletter.subscribeToNewsletter)
 
@@ -135,32 +146,55 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
     })) || [])
   ]
 
-  const bannerSlides = [
-    {
-      type: 'banner',
-      title: 'Soldes d\'Hiver',
-      description: 'Jusqu\'à -50% sur une sélection de produits',
-      buttonText: 'Découvrir',
-      image: '❄️',
-      color: 'linear-gradient(135deg, #4E4A43 0%, #A2988B 50%, #C0B4A5 100%)'
-    },
-    {
-      type: 'banner',
-      title: 'Nouveautés 2025',
-      description: 'Les dernières tendances coiffure',
-      buttonText: 'Voir tout',
-      image: '✨',
-      color: 'linear-gradient(135deg, #A2988B 0%, #C0B4A5 50%, #DACCBB 100%)'
-    },
-    {
-      type: 'banner',
-      title: 'Livraison Gratuite',
-      description: 'Dès 50€ d\'achat partout en France',
-      buttonText: 'Commander',
-      image: '🚚',
-      color: 'linear-gradient(135deg, #C0B4A5 0%, #DACCBB 50%, #A2988B 100%)'
+  // Bannières du carrousel - utiliser les bannières de Convex ou fallback sur des bannières par défaut
+  const bannerSlides = React.useMemo(() => {
+    if (homeCarouselBanners && homeCarouselBanners.length > 0) {
+      return homeCarouselBanners.map(banner => ({
+        type: 'banner',
+        title: banner.title,
+        description: banner.subtitle || banner.description || '',
+        buttonText: banner.buttonText || 'Découvrir',
+        buttonLink: banner.buttonLink || '/marketplace',
+        image: banner.imageUrl || '',
+        color: banner.backgroundColor || '#f3f4f6',
+        textColor: banner.textColor || '#1f2937'
+      }))
     }
-  ]
+    
+    // Bannières par défaut si aucune bannière n'est configurée
+    return [
+      {
+        type: 'banner',
+        title: 'Soldes d\'Hiver',
+        description: 'Jusqu\'à -50% sur une sélection de produits',
+        buttonText: 'Découvrir',
+        buttonLink: '/marketplace',
+        image: '❄️',
+        color: 'linear-gradient(135deg, #4E4A43 0%, #A2988B 50%, #C0B4A5 100%)',
+        textColor: '#ffffff'
+      },
+      {
+        type: 'banner',
+        title: 'Nouveautés 2025',
+        description: 'Les dernières tendances coiffure',
+        buttonText: 'Voir tout',
+        buttonLink: '/marketplace',
+        image: '✨',
+        color: 'linear-gradient(135deg, #A2988B 0%, #C0B4A5 50%, #DACCBB 100%)',
+        textColor: '#1f2937'
+      },
+      {
+        type: 'banner',
+        title: 'Livraison Gratuite',
+        description: 'Dès 50€ d\'achat partout en France',
+        buttonText: 'Commander',
+        buttonLink: '/marketplace',
+        image: '🚚',
+        color: 'linear-gradient(135deg, #C0B4A5 0%, #DACCBB 50%, #A2988B 100%)',
+        textColor: '#1f2937'
+      }
+    ]
+  }, [homeCarouselBanners])
 
   // Use real products data or fallback to empty array
   const displayProducts = allProducts || []
@@ -497,18 +531,61 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
               {bannerSlides.map((slide, index) => (
-                <div key={index} className={styles.bannerSlide}>
-                  <div className={styles.bannerContent}>
-                    <h2 className={styles.bannerContentH2}>{slide.title}</h2>
-                    <p className={styles.bannerContentP}>{slide.description}</p>
-                    <button 
-                      className={styles.signupBtn}
-                      onClick={() => navigate('/explore')}
-                    >
-                      {slide.buttonText}
-                    </button>
-                  </div>
-                  <div className={styles.bannerImage}>{slide.image}</div>
+                <div 
+                  key={index} 
+                  className={styles.bannerSlide}
+                  style={{ 
+                    background: slide.color,
+                    color: slide.textColor
+                  }}
+                >
+                  {/* Si l'image existe, l'afficher en arrière-plan ou en contenu principal */}
+                  {slide.image && slide.image.startsWith('http') && (
+                    <img 
+                      src={slide.image} 
+                      alt={slide.title || 'Bannière'} 
+                      style={{ 
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%', 
+                        height: '100%', 
+                        objectFit: 'cover',
+                        zIndex: 0
+                      }} 
+                    />
+                  )}
+                  
+                  {/* Contenu textuel (optionnel) */}
+                  {(slide.title || slide.description || slide.buttonText) && (
+                    <div className={styles.bannerContent} style={{ position: 'relative', zIndex: 1 }}>
+                      {slide.title && (
+                        <h2 className={styles.bannerContentH2} style={{ color: slide.textColor }}>
+                          {slide.title}
+                        </h2>
+                      )}
+                      {slide.description && (
+                        <p className={styles.bannerContentP} style={{ color: slide.textColor }}>
+                          {slide.description}
+                        </p>
+                      )}
+                      {slide.buttonText && (
+                        <button 
+                          className={styles.signupBtn}
+                          onClick={() => navigate(slide.buttonLink || '/marketplace')}
+                        >
+                          {slide.buttonText}
+                        </button>
+                      )}
+                    </div>
+                  )}
+                  
+                  {/* Emoji ou icône (si pas d'URL http) */}
+                  {slide.image && !slide.image.startsWith('http') && (
+                    <div className={styles.bannerImage}>
+                      {slide.image}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -526,7 +603,8 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
         </div>
       </section>
 
-      {/* User Type Banners */}
+      {/* User Type Banners - Masqué si authentifié */}
+      {!isAuthenticated && (
       <div className={styles.userTypeBanners}>
         <div className={`${styles.userTypeBanner} ${styles.professionnel}`}>
           <span className={styles.bannerIcon}>💇</span>
@@ -554,7 +632,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
 
         <div className={`${styles.userTypeBanner} ${styles.particulier}`}>
           <span className={styles.bannerIcon}>🛍️</span>
-          <h3 className={styles.bannerTitle}>Particulier</h3>
+          <h3 className={styles.bannerTitle}>Marketplace</h3>
           <p className={styles.bannerDescription}>
             Découvrez nos produits de qualité à prix attractifs
           </p>
@@ -564,6 +642,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
           </button>
         </div>
       </div>
+      )}
 
       {/* Banner Carte Interactive */}
       <div className={styles.mapBannerContainer}>

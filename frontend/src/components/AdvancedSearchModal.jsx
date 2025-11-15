@@ -241,8 +241,8 @@ const AdvancedSearchModal = ({ isOpen, onClose, onSearch, userType }) => {
               <p className="search-modal-subtitle">Trouvez exactement ce que vous cherchez</p>
             </div>
           </div>
-          <button className="close-btn" onClick={onClose}>
-            <X size={24} />
+          <button className="close-btn" onClick={onClose} aria-label="Fermer">
+            <X size={24} strokeWidth={2.5} />
           </button>
         </div>
 

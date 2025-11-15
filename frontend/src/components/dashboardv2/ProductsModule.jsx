@@ -55,7 +55,26 @@ const ProductsModule = ({ userId, userType }) => {
     pourQui: '',
     textureHygiene: '',
     protectionUV: '',
-    produitsBio: ''
+    produitsBio: '',
+    isElectricalDevice: false,
+    // Champs pour appareils électriques
+    coloris: '',
+    natureCheveux: '',
+    actionProduit: '',
+    specificites: '',
+    alimentation: '',
+    poids: '',
+    puissance: '',
+    niveauxTemperature: '',
+    longueurCable: '',
+    fluxAir: '',
+    arretAutomatique: '',
+    accessoiresFournis: '',
+    technologie: '',
+    nombreVitesse: '',
+    moteur: '',
+    zonesSpecifiques: '',
+    origineFabrication: ''
   })
 
   // Get categories and user products
@@ -150,7 +169,26 @@ const ProductsModule = ({ userId, userType }) => {
       pourQui: '',
       textureHygiene: '',
       protectionUV: '',
-      produitsBio: ''
+      produitsBio: '',
+      isElectricalDevice: false,
+      // Champs pour appareils électriques
+      coloris: '',
+      natureCheveux: '',
+      actionProduit: '',
+      specificites: '',
+      alimentation: '',
+      poids: '',
+      puissance: '',
+      niveauxTemperature: '',
+      longueurCable: '',
+      fluxAir: '',
+      arretAutomatique: '',
+      accessoiresFournis: '',
+      technologie: '',
+      nombreVitesse: '',
+      moteur: '',
+      zonesSpecifiques: '',
+      origineFabrication: ''
     })
     setProductImages([])
   }
@@ -198,7 +236,26 @@ const ProductsModule = ({ userId, userType }) => {
         pourQui: productForm.pourQui || undefined,
         textureHygiene: productForm.textureHygiene || undefined,
         protectionUV: productForm.protectionUV || undefined,
-        produitsBio: productForm.produitsBio || undefined
+        produitsBio: productForm.produitsBio || undefined,
+        isElectricalDevice: productForm.isElectricalDevice || undefined,
+        // Champs pour appareils électriques
+        coloris: productForm.coloris || undefined,
+        natureCheveux: productForm.natureCheveux || undefined,
+        actionProduit: productForm.actionProduit || undefined,
+        specificites: productForm.specificites || undefined,
+        alimentation: productForm.alimentation || undefined,
+        poids: productForm.poids || undefined,
+        puissance: productForm.puissance || undefined,
+        niveauxTemperature: productForm.niveauxTemperature || undefined,
+        longueurCable: productForm.longueurCable || undefined,
+        fluxAir: productForm.fluxAir || undefined,
+        arretAutomatique: productForm.arretAutomatique || undefined,
+        accessoiresFournis: productForm.accessoiresFournis || undefined,
+        technologie: productForm.technologie || undefined,
+        nombreVitesse: productForm.nombreVitesse || undefined,
+        moteur: productForm.moteur || undefined,
+        zonesSpecifiques: productForm.zonesSpecifiques || undefined,
+        origineFabrication: productForm.origineFabrication || undefined
       })
       
       resetForm()
@@ -211,6 +268,14 @@ const ProductsModule = ({ userId, userType }) => {
 
   // Handle edit product
   const handleEditClick = (product) => {
+    console.log('🔍 Produit à éditer:', product)
+    console.log('⚡ isElectricalDevice:', product.isElectricalDevice)
+    console.log('📋 Champs électriques:', {
+      coloris: product.coloris,
+      puissance: product.puissance,
+      technologie: product.technologie
+    })
+    
     setEditingProduct(product)
     
     // Trouver la catégorie du produit pour déterminer si c'est une sous-catégorie
@@ -243,7 +308,26 @@ const ProductsModule = ({ userId, userType }) => {
       pourQui: product.pourQui || '',
       textureHygiene: product.textureHygiene || '',
       protectionUV: product.protectionUV || '',
-      produitsBio: product.produitsBio || ''
+      produitsBio: product.produitsBio || '',
+      isElectricalDevice: product.isElectricalDevice === true,
+      // Champs pour appareils électriques
+      coloris: product.coloris || '',
+      natureCheveux: product.natureCheveux || '',
+      actionProduit: product.actionProduit || '',
+      specificites: product.specificites || '',
+      alimentation: product.alimentation || '',
+      poids: product.poids || '',
+      puissance: product.puissance || '',
+      niveauxTemperature: product.niveauxTemperature || '',
+      longueurCable: product.longueurCable || '',
+      fluxAir: product.fluxAir || '',
+      arretAutomatique: product.arretAutomatique || '',
+      accessoiresFournis: product.accessoiresFournis || '',
+      technologie: product.technologie || '',
+      nombreVitesse: product.nombreVitesse || '',
+      moteur: product.moteur || '',
+      zonesSpecifiques: product.zonesSpecifiques || '',
+      origineFabrication: product.origineFabrication || ''
     })
     
     const existingImages = product.images?.map((imageId, index) => ({
@@ -296,7 +380,26 @@ const ProductsModule = ({ userId, userType }) => {
         pourQui: productForm.pourQui || undefined,
         textureHygiene: productForm.textureHygiene || undefined,
         protectionUV: productForm.protectionUV || undefined,
-        produitsBio: productForm.produitsBio || undefined
+        produitsBio: productForm.produitsBio || undefined,
+        isElectricalDevice: productForm.isElectricalDevice || undefined,
+        // Champs pour appareils électriques
+        coloris: productForm.coloris || undefined,
+        natureCheveux: productForm.natureCheveux || undefined,
+        actionProduit: productForm.actionProduit || undefined,
+        specificites: productForm.specificites || undefined,
+        alimentation: productForm.alimentation || undefined,
+        poids: productForm.poids || undefined,
+        puissance: productForm.puissance || undefined,
+        niveauxTemperature: productForm.niveauxTemperature || undefined,
+        longueurCable: productForm.longueurCable || undefined,
+        fluxAir: productForm.fluxAir || undefined,
+        arretAutomatique: productForm.arretAutomatique || undefined,
+        accessoiresFournis: productForm.accessoiresFournis || undefined,
+        technologie: productForm.technologie || undefined,
+        nombreVitesse: productForm.nombreVitesse || undefined,
+        moteur: productForm.moteur || undefined,
+        zonesSpecifiques: productForm.zonesSpecifiques || undefined,
+        origineFabrication: productForm.origineFabrication || undefined
       })
       
       resetForm()
@@ -496,7 +599,12 @@ const ProductsModule = ({ userId, userType }) => {
                         </TableCell>
                         <TableCell>{getStockBadge(product.stock)}</TableCell>
                         <TableCell>
-                          <Badge variant="outline">{product.categoryName || 'Non catégorisé'}</Badge>
+                          <Badge variant="outline">
+                            {(() => {
+                              const category = categories?.find(cat => cat._id === product.categoryId);
+                              return category ? `${category.icon} ${category.name}` : 'Non catégorisé';
+                            })()}
+                          </Badge>
                         </TableCell>
                         <TableCell>
                           <div className="flex gap-1">
@@ -621,6 +729,18 @@ const ProductsModule = ({ userId, userType }) => {
               )}
             </div>
 
+            {/* Checkbox Appareil électrique en haut */}
+            <div className="flex items-center space-x-2 p-3 border rounded-lg bg-amber-50">
+              <Checkbox
+                id="isElectricalDevice-top"
+                checked={productForm.isElectricalDevice}
+                onCheckedChange={(checked) => setProductForm({...productForm, isElectricalDevice: checked})}
+              />
+              <Label htmlFor="isElectricalDevice-top" className="text-base font-semibold cursor-pointer">
+                ⚡ Appareil électrique
+              </Label>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="description">Description *</Label>
               <Textarea
@@ -684,113 +804,276 @@ const ProductsModule = ({ userId, userType }) => {
               />
             </div>
 
-            {/* Champs détaillés optionnels */}
-            <div className="space-y-3 p-4 border rounded-lg bg-muted/50">
-              <Label className="text-base font-semibold">📋 Informations détaillées (optionnelles)</Label>
-              <p className="text-sm text-muted-foreground">Ces informations seront affichées dans la description du produit</p>
-              
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="marque">Marque</Label>
-                  <Input
-                    id="marque"
-                    value={productForm.marque}
-                    onChange={(e) => setProductForm({...productForm, marque: e.target.value})}
-                    placeholder="Ex: L'Oréal, Schwarzkopf..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="contenance">Contenance</Label>
-                  <Input
-                    id="contenance"
-                    value={productForm.contenance}
-                    onChange={(e) => setProductForm({...productForm, contenance: e.target.value})}
-                    placeholder="Ex: 500ml, 1L..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="typeProduit">Type de Produit</Label>
-                  <Input
-                    id="typeProduit"
-                    value={productForm.typeProduit}
-                    onChange={(e) => setProductForm({...productForm, typeProduit: e.target.value})}
-                    placeholder="Ex: Shampoing, Masque..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="typePublic">Type de public</Label>
-                  <Input
-                    id="typePublic"
-                    value={productForm.typePublic}
-                    onChange={(e) => setProductForm({...productForm, typePublic: e.target.value})}
-                    placeholder="Ex: Homme, Femme, Mixte..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="genre">Genre</Label>
-                  <Input
-                    id="genre"
-                    value={productForm.genre}
-                    onChange={(e) => setProductForm({...productForm, genre: e.target.value})}
-                    placeholder="Ex: Capillaire, Visage..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="specificiteHygiene">Spécificités - Hygiène</Label>
-                  <Input
-                    id="specificiteHygiene"
-                    value={productForm.specificiteHygiene}
-                    onChange={(e) => setProductForm({...productForm, specificiteHygiene: e.target.value})}
-                    placeholder="Ex: Anti-pelliculaire..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="contenanceBeaute">Contenance - Beauté</Label>
-                  <Input
-                    id="contenanceBeaute"
-                    value={productForm.contenanceBeaute}
-                    onChange={(e) => setProductForm({...productForm, contenanceBeaute: e.target.value})}
-                    placeholder="Ex: 50ml, 100ml..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="pourQui">Pour qui ?</Label>
-                  <Input
-                    id="pourQui"
-                    value={productForm.pourQui}
-                    onChange={(e) => setProductForm({...productForm, pourQui: e.target.value})}
-                    placeholder="Ex: Cheveux secs, gras..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="textureHygiene">Texture - Hygiène</Label>
-                  <Input
-                    id="textureHygiene"
-                    value={productForm.textureHygiene}
-                    onChange={(e) => setProductForm({...productForm, textureHygiene: e.target.value})}
-                    placeholder="Ex: Crème, Gel, Liquide..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="protectionUV">Protection UV</Label>
-                  <Input
-                    id="protectionUV"
-                    value={productForm.protectionUV}
-                    onChange={(e) => setProductForm({...productForm, protectionUV: e.target.value})}
-                    placeholder="Ex: SPF 30, SPF 50..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="produitsBio">Produits Bio</Label>
-                  <Input
-                    id="produitsBio"
-                    value={productForm.produitsBio}
-                    onChange={(e) => setProductForm({...productForm, produitsBio: e.target.value})}
-                    placeholder="Ex: Bio, Naturel, Vegan..."
-                  />
+            {/* Informations détaillées OU Spécifications techniques */}
+            {productForm.isElectricalDevice ? (
+              <div className="space-y-3 p-4 border rounded-lg bg-muted/50">
+                <Label className="text-base font-semibold">⚡ Spécifications techniques de l'appareil</Label>
+                <p className="text-sm text-muted-foreground">Remplissez les caractéristiques techniques de l'appareil</p>
+                
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="coloris">Coloris</Label>
+                    <Input
+                      id="coloris"
+                      value={productForm.coloris}
+                      onChange={(e) => setProductForm({...productForm, coloris: e.target.value})}
+                      placeholder="Ex: Noir, Blanc, Rouge..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="natureCheveux">Nature de cheveux</Label>
+                    <Input
+                      id="natureCheveux"
+                      value={productForm.natureCheveux}
+                      onChange={(e) => setProductForm({...productForm, natureCheveux: e.target.value})}
+                      placeholder="Ex: Tous types de cheveux..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="actionProduit">Action produit</Label>
+                    <Input
+                      id="actionProduit"
+                      value={productForm.actionProduit}
+                      onChange={(e) => setProductForm({...productForm, actionProduit: e.target.value})}
+                      placeholder="Ex: Brillance, Anti-frisottis..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="specificites">Spécificités</Label>
+                    <Input
+                      id="specificites"
+                      value={productForm.specificites}
+                      onChange={(e) => setProductForm({...productForm, specificites: e.target.value})}
+                      placeholder="Ex: Bouton d'air froid..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="alimentation">Alimentation</Label>
+                    <Input
+                      id="alimentation"
+                      value={productForm.alimentation}
+                      onChange={(e) => setProductForm({...productForm, alimentation: e.target.value})}
+                      placeholder="Ex: Secteur (Type E)..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="poids">Poids</Label>
+                    <Input
+                      id="poids"
+                      value={productForm.poids}
+                      onChange={(e) => setProductForm({...productForm, poids: e.target.value})}
+                      placeholder="Ex: 520g..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="puissance">Puissance</Label>
+                    <Input
+                      id="puissance"
+                      value={productForm.puissance}
+                      onChange={(e) => setProductForm({...productForm, puissance: e.target.value})}
+                      placeholder="Ex: 2200W..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="niveauxTemperature">Niveaux température</Label>
+                    <Input
+                      id="niveauxTemperature"
+                      value={productForm.niveauxTemperature}
+                      onChange={(e) => setProductForm({...productForm, niveauxTemperature: e.target.value})}
+                      placeholder="Ex: 3..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="longueurCable">Longueur du câble</Label>
+                    <Input
+                      id="longueurCable"
+                      value={productForm.longueurCable}
+                      onChange={(e) => setProductForm({...productForm, longueurCable: e.target.value})}
+                      placeholder="Ex: 3m..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="fluxAir">Flux d'air</Label>
+                    <Input
+                      id="fluxAir"
+                      value={productForm.fluxAir}
+                      onChange={(e) => setProductForm({...productForm, fluxAir: e.target.value})}
+                      placeholder="Ex: 120 km/h..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="arretAutomatique">Arrêt automatique</Label>
+                    <Input
+                      id="arretAutomatique"
+                      value={productForm.arretAutomatique}
+                      onChange={(e) => setProductForm({...productForm, arretAutomatique: e.target.value})}
+                      placeholder="Ex: Oui, Non..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="accessoiresFournis">Accessoires fournis</Label>
+                    <Input
+                      id="accessoiresFournis"
+                      value={productForm.accessoiresFournis}
+                      onChange={(e) => setProductForm({...productForm, accessoiresFournis: e.target.value})}
+                      placeholder="Ex: 1 embout concentrateur..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="technologie">Technologie</Label>
+                    <Input
+                      id="technologie"
+                      value={productForm.technologie}
+                      onChange={(e) => setProductForm({...productForm, technologie: e.target.value})}
+                      placeholder="Ex: Aeroprecis™, Ionique..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="nombreVitesse">Nombre de vitesse</Label>
+                    <Input
+                      id="nombreVitesse"
+                      value={productForm.nombreVitesse}
+                      onChange={(e) => setProductForm({...productForm, nombreVitesse: e.target.value})}
+                      placeholder="Ex: 2..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="moteur">Moteur</Label>
+                    <Input
+                      id="moteur"
+                      value={productForm.moteur}
+                      onChange={(e) => setProductForm({...productForm, moteur: e.target.value})}
+                      placeholder="Ex: Brushless..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="zonesSpecifiques">Zones spécifiques</Label>
+                    <Input
+                      id="zonesSpecifiques"
+                      value={productForm.zonesSpecifiques}
+                      onChange={(e) => setProductForm({...productForm, zonesSpecifiques: e.target.value})}
+                      placeholder="Ex: Cheveux..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="origineFabrication">Origine de fabrication</Label>
+                    <Input
+                      id="origineFabrication"
+                      value={productForm.origineFabrication}
+                      onChange={(e) => setProductForm({...productForm, origineFabrication: e.target.value})}
+                      placeholder="Ex: Chine, France..."
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-3 p-4 border rounded-lg bg-muted/50">
+                <Label className="text-base font-semibold">📋 Informations détaillées (optionnelles)</Label>
+                <p className="text-sm text-muted-foreground">Ces informations seront affichées dans la description du produit</p>
+                
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="marque">Marque</Label>
+                    <Input
+                      id="marque"
+                      value={productForm.marque}
+                      onChange={(e) => setProductForm({...productForm, marque: e.target.value})}
+                      placeholder="Ex: L'Oréal, Schwarzkopf..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="contenance">Contenance</Label>
+                    <Input
+                      id="contenance"
+                      value={productForm.contenance}
+                      onChange={(e) => setProductForm({...productForm, contenance: e.target.value})}
+                      placeholder="Ex: 500ml, 1L..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="typeProduit">Type de Produit</Label>
+                    <Input
+                      id="typeProduit"
+                      value={productForm.typeProduit}
+                      onChange={(e) => setProductForm({...productForm, typeProduit: e.target.value})}
+                      placeholder="Ex: Shampoing, Masque..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="typePublic">Type de public</Label>
+                    <Input
+                      id="typePublic"
+                      value={productForm.typePublic}
+                      onChange={(e) => setProductForm({...productForm, typePublic: e.target.value})}
+                      placeholder="Ex: Homme, Femme, Mixte..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="genre">Genre</Label>
+                    <Input
+                      id="genre"
+                      value={productForm.genre}
+                      onChange={(e) => setProductForm({...productForm, genre: e.target.value})}
+                      placeholder="Ex: Homme, Femme, Mixte..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="specificiteHygiene">Spécificités - Hygiène</Label>
+                    <Input
+                      id="specificiteHygiene"
+                      value={productForm.specificiteHygiene}
+                      onChange={(e) => setProductForm({...productForm, specificiteHygiene: e.target.value})}
+                      placeholder="Ex: Antibactérien, Hydratant..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="contenanceBeaute">Contenance - Beauté</Label>
+                    <Input
+                      id="contenanceBeaute"
+                      value={productForm.contenanceBeaute}
+                      onChange={(e) => setProductForm({...productForm, contenanceBeaute: e.target.value})}
+                      placeholder="Ex: 50ml, 100ml..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="pourQui">Pour qui ?</Label>
+                    <Input
+                      id="pourQui"
+                      value={productForm.pourQui}
+                      onChange={(e) => setProductForm({...productForm, pourQui: e.target.value})}
+                      placeholder="Ex: Adultes, Enfants..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="textureHygiene">Texture - Hygiène</Label>
+                    <Input
+                      id="textureHygiene"
+                      value={productForm.textureHygiene}
+                      onChange={(e) => setProductForm({...productForm, textureHygiene: e.target.value})}
+                      placeholder="Ex: Crème, Gel, Liquide..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="protectionUV">Protection UV</Label>
+                    <Input
+                      id="protectionUV"
+                      value={productForm.protectionUV}
+                      onChange={(e) => setProductForm({...productForm, protectionUV: e.target.value})}
+                      placeholder="Ex: SPF 30, SPF 50..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="produitsBio">Produits Bio</Label>
+                    <Input
+                      id="produitsBio"
+                      value={productForm.produitsBio}
+                      onChange={(e) => setProductForm({...productForm, produitsBio: e.target.value})}
+                      placeholder="Ex: Bio, Naturel, Vegan..."
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label>Images du produit *</Label>
@@ -911,6 +1194,18 @@ const ProductsModule = ({ userId, userType }) => {
               )}
             </div>
 
+            {/* Checkbox Appareil électrique en haut */}
+            <div className="flex items-center space-x-2 p-3 border rounded-lg bg-amber-50">
+              <Checkbox
+                id="edit-isElectricalDevice"
+                checked={productForm.isElectricalDevice}
+                onCheckedChange={(checked) => setProductForm({...productForm, isElectricalDevice: checked})}
+              />
+              <Label htmlFor="edit-isElectricalDevice" className="text-base font-semibold cursor-pointer">
+                ⚡ Appareil électrique
+              </Label>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="edit-description">Description *</Label>
               <Textarea
@@ -974,113 +1269,276 @@ const ProductsModule = ({ userId, userType }) => {
               />
             </div>
 
-            {/* Champs détaillés optionnels */}
-            <div className="space-y-3 p-4 border rounded-lg bg-muted/50">
-              <Label className="text-base font-semibold">📋 Informations détaillées (optionnelles)</Label>
-              <p className="text-sm text-muted-foreground">Ces informations seront affichées dans la description du produit</p>
-              
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-marque">Marque</Label>
-                  <Input
-                    id="edit-marque"
-                    value={productForm.marque}
-                    onChange={(e) => setProductForm({...productForm, marque: e.target.value})}
-                    placeholder="Ex: L'Oréal, Schwarzkopf..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-contenance">Contenance</Label>
-                  <Input
-                    id="edit-contenance"
-                    value={productForm.contenance}
-                    onChange={(e) => setProductForm({...productForm, contenance: e.target.value})}
-                    placeholder="Ex: 500ml, 1L..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-typeProduit">Type de Produit</Label>
-                  <Input
-                    id="edit-typeProduit"
-                    value={productForm.typeProduit}
-                    onChange={(e) => setProductForm({...productForm, typeProduit: e.target.value})}
-                    placeholder="Ex: Shampoing, Masque..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-typePublic">Type de public</Label>
-                  <Input
-                    id="edit-typePublic"
-                    value={productForm.typePublic}
-                    onChange={(e) => setProductForm({...productForm, typePublic: e.target.value})}
-                    placeholder="Ex: Homme, Femme, Mixte..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-genre">Genre</Label>
-                  <Input
-                    id="edit-genre"
-                    value={productForm.genre}
-                    onChange={(e) => setProductForm({...productForm, genre: e.target.value})}
-                    placeholder="Ex: Capillaire, Visage..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-specificiteHygiene">Spécificités - Hygiène</Label>
-                  <Input
-                    id="edit-specificiteHygiene"
-                    value={productForm.specificiteHygiene}
-                    onChange={(e) => setProductForm({...productForm, specificiteHygiene: e.target.value})}
-                    placeholder="Ex: Anti-pelliculaire..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-contenanceBeaute">Contenance - Beauté</Label>
-                  <Input
-                    id="edit-contenanceBeaute"
-                    value={productForm.contenanceBeaute}
-                    onChange={(e) => setProductForm({...productForm, contenanceBeaute: e.target.value})}
-                    placeholder="Ex: 50ml, 100ml..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-pourQui">Pour qui ?</Label>
-                  <Input
-                    id="edit-pourQui"
-                    value={productForm.pourQui}
-                    onChange={(e) => setProductForm({...productForm, pourQui: e.target.value})}
-                    placeholder="Ex: Cheveux secs, gras..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-textureHygiene">Texture - Hygiène</Label>
-                  <Input
-                    id="edit-textureHygiene"
-                    value={productForm.textureHygiene}
-                    onChange={(e) => setProductForm({...productForm, textureHygiene: e.target.value})}
-                    placeholder="Ex: Crème, Gel, Liquide..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-protectionUV">Protection UV</Label>
-                  <Input
-                    id="edit-protectionUV"
-                    value={productForm.protectionUV}
-                    onChange={(e) => setProductForm({...productForm, protectionUV: e.target.value})}
-                    placeholder="Ex: SPF 30, SPF 50..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-produitsBio">Produits Bio</Label>
-                  <Input
-                    id="edit-produitsBio"
-                    value={productForm.produitsBio}
-                    onChange={(e) => setProductForm({...productForm, produitsBio: e.target.value})}
-                    placeholder="Ex: Bio, Naturel, Vegan..."
-                  />
+            {/* Informations détaillées OU Spécifications techniques */}
+            {productForm.isElectricalDevice ? (
+              <div className="space-y-3 p-4 border rounded-lg bg-muted/50">
+                <Label className="text-base font-semibold">⚡ Spécifications techniques de l'appareil</Label>
+                <p className="text-sm text-muted-foreground">Remplissez les caractéristiques techniques de l'appareil</p>
+                
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-coloris">Coloris</Label>
+                    <Input
+                      id="edit-coloris"
+                      value={productForm.coloris}
+                      onChange={(e) => setProductForm({...productForm, coloris: e.target.value})}
+                      placeholder="Ex: Noir, Blanc, Rouge..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-natureCheveux">Nature de cheveux</Label>
+                    <Input
+                      id="edit-natureCheveux"
+                      value={productForm.natureCheveux}
+                      onChange={(e) => setProductForm({...productForm, natureCheveux: e.target.value})}
+                      placeholder="Ex: Tous types de cheveux..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-actionProduit">Action produit</Label>
+                    <Input
+                      id="edit-actionProduit"
+                      value={productForm.actionProduit}
+                      onChange={(e) => setProductForm({...productForm, actionProduit: e.target.value})}
+                      placeholder="Ex: Brillance, Anti-frisottis..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-specificites">Spécificités</Label>
+                    <Input
+                      id="edit-specificites"
+                      value={productForm.specificites}
+                      onChange={(e) => setProductForm({...productForm, specificites: e.target.value})}
+                      placeholder="Ex: Bouton d'air froid..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-alimentation">Alimentation</Label>
+                    <Input
+                      id="edit-alimentation"
+                      value={productForm.alimentation}
+                      onChange={(e) => setProductForm({...productForm, alimentation: e.target.value})}
+                      placeholder="Ex: Secteur (Type E)..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-poids">Poids</Label>
+                    <Input
+                      id="edit-poids"
+                      value={productForm.poids}
+                      onChange={(e) => setProductForm({...productForm, poids: e.target.value})}
+                      placeholder="Ex: 520g..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-puissance">Puissance</Label>
+                    <Input
+                      id="edit-puissance"
+                      value={productForm.puissance}
+                      onChange={(e) => setProductForm({...productForm, puissance: e.target.value})}
+                      placeholder="Ex: 2200W..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-niveauxTemperature">Niveaux température</Label>
+                    <Input
+                      id="edit-niveauxTemperature"
+                      value={productForm.niveauxTemperature}
+                      onChange={(e) => setProductForm({...productForm, niveauxTemperature: e.target.value})}
+                      placeholder="Ex: 3..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-longueurCable">Longueur du câble</Label>
+                    <Input
+                      id="edit-longueurCable"
+                      value={productForm.longueurCable}
+                      onChange={(e) => setProductForm({...productForm, longueurCable: e.target.value})}
+                      placeholder="Ex: 3m..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-fluxAir">Flux d'air</Label>
+                    <Input
+                      id="edit-fluxAir"
+                      value={productForm.fluxAir}
+                      onChange={(e) => setProductForm({...productForm, fluxAir: e.target.value})}
+                      placeholder="Ex: 120 km/h..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-arretAutomatique">Arrêt automatique</Label>
+                    <Input
+                      id="edit-arretAutomatique"
+                      value={productForm.arretAutomatique}
+                      onChange={(e) => setProductForm({...productForm, arretAutomatique: e.target.value})}
+                      placeholder="Ex: Oui, Non..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-accessoiresFournis">Accessoires fournis</Label>
+                    <Input
+                      id="edit-accessoiresFournis"
+                      value={productForm.accessoiresFournis}
+                      onChange={(e) => setProductForm({...productForm, accessoiresFournis: e.target.value})}
+                      placeholder="Ex: 1 embout concentrateur..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-technologie">Technologie</Label>
+                    <Input
+                      id="edit-technologie"
+                      value={productForm.technologie}
+                      onChange={(e) => setProductForm({...productForm, technologie: e.target.value})}
+                      placeholder="Ex: Aeroprecis™, Ionique..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-nombreVitesse">Nombre de vitesse</Label>
+                    <Input
+                      id="edit-nombreVitesse"
+                      value={productForm.nombreVitesse}
+                      onChange={(e) => setProductForm({...productForm, nombreVitesse: e.target.value})}
+                      placeholder="Ex: 2..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-moteur">Moteur</Label>
+                    <Input
+                      id="edit-moteur"
+                      value={productForm.moteur}
+                      onChange={(e) => setProductForm({...productForm, moteur: e.target.value})}
+                      placeholder="Ex: Brushless..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-zonesSpecifiques">Zones spécifiques</Label>
+                    <Input
+                      id="edit-zonesSpecifiques"
+                      value={productForm.zonesSpecifiques}
+                      onChange={(e) => setProductForm({...productForm, zonesSpecifiques: e.target.value})}
+                      placeholder="Ex: Cheveux..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-origineFabrication">Origine de fabrication</Label>
+                    <Input
+                      id="edit-origineFabrication"
+                      value={productForm.origineFabrication}
+                      onChange={(e) => setProductForm({...productForm, origineFabrication: e.target.value})}
+                      placeholder="Ex: Chine, France..."
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-3 p-4 border rounded-lg bg-muted/50">
+                <Label className="text-base font-semibold">📋 Informations détaillées (optionnelles)</Label>
+                <p className="text-sm text-muted-foreground">Ces informations seront affichées dans la description du produit</p>
+                
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-marque">Marque</Label>
+                    <Input
+                      id="edit-marque"
+                      value={productForm.marque}
+                      onChange={(e) => setProductForm({...productForm, marque: e.target.value})}
+                      placeholder="Ex: L'Oréal, Schwarzkopf..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-contenance">Contenance</Label>
+                    <Input
+                      id="edit-contenance"
+                      value={productForm.contenance}
+                      onChange={(e) => setProductForm({...productForm, contenance: e.target.value})}
+                      placeholder="Ex: 500ml, 1L..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-typeProduit">Type de Produit</Label>
+                    <Input
+                      id="edit-typeProduit"
+                      value={productForm.typeProduit}
+                      onChange={(e) => setProductForm({...productForm, typeProduit: e.target.value})}
+                      placeholder="Ex: Shampoing, Masque..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-typePublic">Type de public</Label>
+                    <Input
+                      id="edit-typePublic"
+                      value={productForm.typePublic}
+                      onChange={(e) => setProductForm({...productForm, typePublic: e.target.value})}
+                      placeholder="Ex: Homme, Femme, Mixte..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-genre">Genre</Label>
+                    <Input
+                      id="edit-genre"
+                      value={productForm.genre}
+                      onChange={(e) => setProductForm({...productForm, genre: e.target.value})}
+                      placeholder="Ex: Homme, Femme, Mixte..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-specificiteHygiene">Spécificités - Hygiène</Label>
+                    <Input
+                      id="edit-specificiteHygiene"
+                      value={productForm.specificiteHygiene}
+                      onChange={(e) => setProductForm({...productForm, specificiteHygiene: e.target.value})}
+                      placeholder="Ex: Antibactérien, Hydratant..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-contenanceBeaute">Contenance - Beauté</Label>
+                    <Input
+                      id="edit-contenanceBeaute"
+                      value={productForm.contenanceBeaute}
+                      onChange={(e) => setProductForm({...productForm, contenanceBeaute: e.target.value})}
+                      placeholder="Ex: 50ml, 100ml..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-pourQui">Pour qui ?</Label>
+                    <Input
+                      id="edit-pourQui"
+                      value={productForm.pourQui}
+                      onChange={(e) => setProductForm({...productForm, pourQui: e.target.value})}
+                      placeholder="Ex: Adultes, Enfants..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-textureHygiene">Texture - Hygiène</Label>
+                    <Input
+                      id="edit-textureHygiene"
+                      value={productForm.textureHygiene}
+                      onChange={(e) => setProductForm({...productForm, textureHygiene: e.target.value})}
+                      placeholder="Ex: Crème, Gel, Liquide..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-protectionUV">Protection UV</Label>
+                    <Input
+                      id="edit-protectionUV"
+                      value={productForm.protectionUV}
+                      onChange={(e) => setProductForm({...productForm, protectionUV: e.target.value})}
+                      placeholder="Ex: SPF 30, SPF 50..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-produitsBio">Produits Bio</Label>
+                    <Input
+                      id="edit-produitsBio"
+                      value={productForm.produitsBio}
+                      onChange={(e) => setProductForm({...productForm, produitsBio: e.target.value})}
+                      placeholder="Ex: Bio, Naturel, Vegan..."
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label>Images du produit *</Label>

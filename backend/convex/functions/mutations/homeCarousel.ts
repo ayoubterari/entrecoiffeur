@@ -4,7 +4,7 @@ import { v } from "convex/values";
 // Créer une nouvelle bannière
 export const createBanner = mutation({
   args: {
-    title: v.string(),
+    title: v.optional(v.string()), // Titre optionnel
     subtitle: v.optional(v.string()),
     description: v.optional(v.string()),
     imageUrl: v.optional(v.string()),
@@ -42,7 +42,7 @@ export const createBanner = mutation({
     const now = Date.now();
 
     const bannerId = await ctx.db.insert("homeCarouselBanners", {
-      title: args.title,
+      title: args.title || "", // Titre vide par défaut
       subtitle: args.subtitle,
       description: args.description,
       imageUrl: args.imageUrl,

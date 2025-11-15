@@ -11,7 +11,28 @@ export const getActiveBanners = query({
       .order("asc")
       .take(5); // Maximum 5 bannières
 
-    return banners;
+    // Enrichir avec les URLs des images depuis Convex storage
+    const bannersWithUrls = await Promise.all(
+      banners.map(async (banner) => {
+        let imageUrl = banner.imageUrl;
+        
+        // Si une image est stockée dans Convex, récupérer son URL
+        if (banner.imageStorageId) {
+          try {
+            imageUrl = await ctx.storage.getUrl(banner.imageStorageId as any);
+          } catch (error) {
+            console.error('Erreur lors de la récupération de l\'URL de l\'image:', error);
+          }
+        }
+        
+        return {
+          ...banner,
+          imageUrl, // Remplacer ou ajouter l'URL de l'image
+        };
+      })
+    );
+
+    return bannersWithUrls;
   },
 });
 
