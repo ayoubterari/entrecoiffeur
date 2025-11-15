@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '../../lib/convex'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
@@ -19,6 +19,7 @@ import { frenchCities } from '../../data/frenchCities'
 
 const ProductsModule = ({ userId, userType }) => {
   const navigate = useNavigate()
+  const location = useLocation()
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [showAddDialog, setShowAddDialog] = useState(false)
@@ -90,6 +91,15 @@ const ProductsModule = ({ userId, userType }) => {
   const createProduct = useMutation(api.products.createProduct)
   const updateProduct = useMutation(api.products.updateProduct)
   const deleteProduct = useMutation(api.products.deleteProduct)
+
+  // Ouvrir le dialogue d'ajout si demandé depuis la navigation
+  useEffect(() => {
+    if (location.state?.openAddDialog) {
+      setShowAddDialog(true)
+      // Nettoyer l'état pour éviter de rouvrir à chaque render
+      navigate(location.pathname, { replace: true, state: {} })
+    }
+  }, [location.state, navigate, location.pathname])
 
   // Check permissions
   const canAddProduct = () => {

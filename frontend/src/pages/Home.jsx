@@ -590,15 +590,6 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
               ))}
             </div>
           </div>
-          
-          {/* Navigation Buttons */}
-          <button className={`${styles.carouselBtn} ${styles.carouselBtnPrev}`} onClick={prevSlide}>
-            ‹
-          </button>
-          <button className={`${styles.carouselBtn} ${styles.carouselBtnNext}`} onClick={nextSlide}>
-            ›
-          </button>
-          
 
         </div>
       </section>
@@ -724,52 +715,33 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
                 </div>
               </div>
             </div>
-            <div className={styles.featuredCarousel}>
-              <div className={styles.featuredCarouselWrapper}>
-                <div 
-                  className={styles.featuredCarouselContent}
-                  style={{
-                    transform: `translateX(-${flashSaleCarouselIndex * (160 + 12)}px)`
-                  }}
-                >
-                  {displaySaleProducts.slice(0, 10).map((product) => (
-                    <div key={product._id} className={styles.featuredProductCard}>
-                      <ProductCard
-                        product={product}
-                        onAddToCart={handleAddToCart}
-                        onToggleFavorite={onToggleFavorite}
-                        onViewDetails={() => navigate(`/product/${product._id}`)}
-                        isFavorite={isProductFavorite(product._id)}
-                      />
-                    </div>
-                  ))}
+            <div className="products-grid-leboncoin">
+              {displaySaleProducts.slice(0, 10).map((product) => (
+                <div key={product._id} style={{
+                  background: 'white',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                }}>
+                  <ProductCard
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    onToggleFavorite={onToggleFavorite}
+                    onViewDetails={() => navigate(`/product/${product._id}`)}
+                    isFavorite={isProductFavorite(product._id)}
+                  />
                 </div>
-              </div>
-              
-              {displaySaleProducts.length > 2 && (
-                <>
-                  <button
-                    className={`${styles.carouselNavBtn} ${styles.carouselNavBtnPrev}`}
-                    onClick={() => setFlashSaleCarouselIndex(Math.max(0, flashSaleCarouselIndex - 1))}
-                    disabled={flashSaleCarouselIndex === 0}
-                    style={{ opacity: flashSaleCarouselIndex === 0 ? 0.3 : 1 }}
-                  >
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <button
-                    className={`${styles.carouselNavBtn} ${styles.carouselNavBtnNext}`}
-                    onClick={() => setFlashSaleCarouselIndex(Math.min(displaySaleProducts.length - 2, flashSaleCarouselIndex + 1))}
-                    disabled={flashSaleCarouselIndex >= displaySaleProducts.length - 2}
-                    style={{ opacity: flashSaleCarouselIndex >= displaySaleProducts.length - 2 ? 0.3 : 1 }}
-                  >
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </>
-              )}
+              ))}
             </div>
           </div>
         </section>
@@ -821,7 +793,7 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
                 className={styles.sellBannerButton} 
                 onClick={() => {
                   if (isAuthenticated) {
-                    navigate('/dashboard', { state: { activeTab: 'products' } })
+                    navigate('/dashboard', { state: { activeTab: 'products', openAddDialog: true } })
                   } else {
                     onShowLogin()
                   }
@@ -867,52 +839,39 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
           </div>
           
           {displayFeaturedProducts.length > 0 ? (
-            <div className={styles.featuredCarousel}>
-              <div className={styles.featuredCarouselWrapper}>
-                <div 
-                  className={styles.featuredCarouselContent}
-                  style={{
-                    transform: `translateX(-${featuredCarouselIndex * (160 + 12)}px)`
-                  }}
-                >
-                  {displayFeaturedProducts.map((product) => (
-                    <div key={product._id} className={styles.featuredProductCard}>
-                      <ProductCard
-                        product={product}
-                        onAddToCart={handleAddToCart}
-                        onToggleFavorite={onToggleFavorite}
-                        onViewDetails={() => navigate(`/product/${product._id}`)}
-                        isFavorite={isProductFavorite(product._id)}
-                      />
-                    </div>
-                  ))}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+              gap: '20px',
+              marginTop: '2rem'
+            }}
+            className="products-grid-leboncoin">
+              {displayFeaturedProducts.slice(0, 10).map((product) => (
+                <div key={product._id} style={{
+                  background: 'white',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                }}>
+                  <ProductCard
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    onToggleFavorite={onToggleFavorite}
+                    onViewDetails={() => navigate(`/product/${product._id}`)}
+                    isFavorite={isProductFavorite(product._id)}
+                  />
                 </div>
-              </div>
-              
-              {displayFeaturedProducts.length > 2 && (
-                <>
-                  <button
-                    className={`${styles.carouselNavBtn} ${styles.carouselNavBtnPrev}`}
-                    onClick={() => setFeaturedCarouselIndex(Math.max(0, featuredCarouselIndex - 1))}
-                    disabled={featuredCarouselIndex === 0}
-                    style={{ opacity: featuredCarouselIndex === 0 ? 0.3 : 1 }}
-                  >
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <button
-                    className={`${styles.carouselNavBtn} ${styles.carouselNavBtnNext}`}
-                    onClick={() => setFeaturedCarouselIndex(Math.min(displayFeaturedProducts.length - 2, featuredCarouselIndex + 1))}
-                    disabled={featuredCarouselIndex >= displayFeaturedProducts.length - 2}
-                    style={{ opacity: featuredCarouselIndex >= displayFeaturedProducts.length - 2 ? 0.3 : 1 }}
-                  >
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </>
-              )}
+              ))}
             </div>
           ) : (
             <div style={{ textAlign: 'center', padding: '3rem 1.5rem' }}>
@@ -955,52 +914,33 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
                 </div>
               </div>
               
-              <div className={styles.featuredCarousel}>
-                <div className={styles.featuredCarouselWrapper}>
-                  <div 
-                    className={styles.featuredCarouselContent}
-                    style={{
-                      transform: `translateX(-${carouselIndex * (160 + 12)}px)`
-                    }}
-                  >
-                    {categoryData.products.map((product) => (
-                      <div key={product._id} className={styles.featuredProductCard}>
-                        <ProductCard
-                          product={product}
-                          onAddToCart={handleAddToCart}
-                          onToggleFavorite={onToggleFavorite}
-                          onViewDetails={() => navigate(`/product/${product._id}`)}
-                          isFavorite={isProductFavorite(product._id)}
-                        />
-                      </div>
-                    ))}
+              <div className="products-grid-leboncoin">
+                {categoryData.products.slice(0, 10).map((product) => (
+                  <div key={product._id} style={{
+                    background: 'white',
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                  }}>
+                    <ProductCard
+                      product={product}
+                      onAddToCart={handleAddToCart}
+                      onToggleFavorite={onToggleFavorite}
+                      onViewDetails={() => navigate(`/product/${product._id}`)}
+                      isFavorite={isProductFavorite(product._id)}
+                    />
                   </div>
-                </div>
-                
-                {categoryData.products.length > 2 && (
-                  <>
-                    <button
-                      className={`${styles.carouselNavBtn} ${styles.carouselNavBtnPrev}`}
-                      onClick={() => handleCategoryCarouselNav(categoryData.category._id, 'prev')}
-                      disabled={carouselIndex === 0}
-                      style={{ opacity: carouselIndex === 0 ? 0.3 : 1 }}
-                    >
-                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                      </svg>
-                    </button>
-                    <button
-                      className={`${styles.carouselNavBtn} ${styles.carouselNavBtnNext}`}
-                      onClick={() => handleCategoryCarouselNav(categoryData.category._id, 'next')}
-                      disabled={carouselIndex >= categoryData.products.length - 2}
-                      style={{ opacity: carouselIndex >= categoryData.products.length - 2 ? 0.3 : 1 }}
-                    >
-                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </button>
-                  </>
-                )}
+                ))}
               </div>
             </div>
           </section>

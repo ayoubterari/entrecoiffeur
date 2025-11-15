@@ -3955,3 +3955,41 @@ body {
   }
 }
 
+/* ============================================
+   GRILLE PRODUITS STYLE LEBONCOIN
+   ============================================ */
+:global(.products-grid-leboncoin) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 2rem;
+}
+
+/* Sur grands écrans, forcer 5 colonnes */
+@media (min-width: 1400px) {
+  :global(.products-grid-leboncoin) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* Sur écrans moyens, 4 colonnes */
+@media (min-width: 1024px) and (max-width: 1399px) {
+  :global(.products-grid-leboncoin) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Sur tablettes, 3 colonnes */
+@media (min-width: 768px) and (max-width: 1023px) {
+  :global(.products-grid-leboncoin) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Sur mobile, 2 colonnes */
+@media (max-width: 767px) {
+  :global(.products-grid-leboncoin) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
