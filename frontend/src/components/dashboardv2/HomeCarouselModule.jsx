@@ -16,7 +16,8 @@ import {
   Palette,
   X,
   Upload,
-  Loader2
+  Loader2,
+  Copy
 } from 'lucide-react'
 
 const HomeCarouselModule = ({ userId }) => {
@@ -46,6 +47,35 @@ const HomeCarouselModule = ({ userId }) => {
 
     try {
       await deleteBanner({ bannerId, userId })
+    } catch (error) {
+      alert(error.message)
+    }
+  }
+
+  const handleDuplicate = async (banner) => {
+    if (banners && banners.length >= 5) {
+      alert('Vous avez atteint le maximum de 5 bannières')
+      return
+    }
+
+    try {
+      // Calculer le prochain ordre (dernier ordre + 1)
+      const maxOrder = banners.reduce((max, b) => Math.max(max, b.order || 0), 0)
+      
+      await createBanner({
+        title: `${banner.title} (Copie)`,
+        subtitle: banner.subtitle,
+        buttonText: banner.buttonText,
+        buttonLink: banner.buttonLink,
+        backgroundColor: banner.backgroundColor,
+        textColor: banner.textColor,
+        image: banner.image,
+        imageStorageId: banner.imageStorageId,
+        isActive: false, // Désactivé par défaut
+        order: maxOrder + 1, // Ajouter à la fin
+        userId
+      })
+      alert('Bannière dupliquée avec succès !')
     } catch (error) {
       alert(error.message)
     }
@@ -147,6 +177,7 @@ const HomeCarouselModule = ({ userId }) => {
                   onEdit={() => setEditingBanner(banner)}
                   onDelete={() => handleDelete(banner._id)}
                   onToggleStatus={() => handleToggleStatus(banner._id)}
+                  onDuplicate={() => handleDuplicate(banner)}
                 />
               ))}
             </div>
@@ -171,7 +202,7 @@ const HomeCarouselModule = ({ userId }) => {
 }
 
 // Composant carte de bannière
-const BannerCard = ({ banner, onEdit, onDelete, onToggleStatus }) => {
+const BannerCard = ({ banner, onEdit, onDelete, onToggleStatus, onDuplicate }) => {
   // Récupérer l'URL de l'image depuis Convex storage si imageStorageId existe
   const imageUrl = useQuery(
     banner.imageStorageId ? api.files.getFileUrl : 'skip',
@@ -256,6 +287,15 @@ const BannerCard = ({ banner, onEdit, onDelete, onToggleStatus }) => {
                   title="Modifier"
                 >
                   <Edit className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onDuplicate}
+                  title="Dupliquer"
+                  className="text-blue-600 hover:text-blue-700"
+                >
+                  <Copy className="h-4 w-4" />
                 </Button>
                 <Button
                   variant="ghost"

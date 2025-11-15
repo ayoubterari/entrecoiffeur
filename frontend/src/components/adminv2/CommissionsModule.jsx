@@ -12,8 +12,11 @@ import {
   ShoppingCart,
   User,
   Store,
-  Calendar
+  Calendar,
+  FileText
 } from 'lucide-react'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
@@ -145,6 +148,189 @@ const CommissionsModule = () => {
   const viewCommissionDetails = (order) => {
     setSelectedOrder(order)
     setShowCommissionDetails(true)
+  }
+
+  // Générer une facture de commission pour le vendeur
+  const generateCommissionInvoice = (order) => {
+    const doc = new jsPDF()
+    const pageWidth = doc.internal.pageSize.width
+    const pageHeight = doc.internal.pageSize.height
+    
+    const orderTotal = calculateOrderTotal(order)
+    const commission = calculateCommission(orderTotal)
+    const netAmount = orderTotal - commission
+    
+    // Couleurs modernes
+    const primaryColor = [192, 180, 165]
+    const accentColor = [34, 197, 94]
+    const darkColor = [30, 30, 30]
+    const lightGray = [248, 250, 252]
+    const mediumGray = [148, 163, 184]
+    
+    // ========== EN-TÊTE MODERNE ==========
+    doc.setFillColor(...primaryColor)
+    doc.rect(0, 0, pageWidth, 50, 'F')
+    
+    doc.setTextColor(255, 255, 255)
+    doc.setFontSize(28)
+    doc.setFont('helvetica', 'bold')
+    doc.text('ENTRECOIFFEUR', 20, 22)
+    
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'normal')
+    doc.text('Marketplace Professionnelle de Coiffure', 20, 30)
+    doc.setFontSize(9)
+    doc.text('www.entrecoiffeur.com', 20, 37)
+    
+    // Informations légales dans un encadré à droite
+    const infoBoxX = pageWidth - 75
+    doc.setFillColor(255, 255, 255)
+    doc.roundedRect(infoBoxX, 10, 65, 30, 2, 2, 'F')
+    
+    doc.setTextColor(...darkColor)
+    doc.setFontSize(8)
+    doc.setFont('helvetica', 'bold')
+    doc.text('SIRET:', infoBoxX + 3, 16)
+    doc.setFont('helvetica', 'normal')
+    doc.text('123 456 789 00012', infoBoxX + 3, 20)
+    
+    doc.setFont('helvetica', 'bold')
+    doc.text('TVA:', infoBoxX + 3, 25)
+    doc.setFont('helvetica', 'normal')
+    doc.text('FR12345678901', infoBoxX + 3, 29)
+    
+    doc.setFont('helvetica', 'normal')
+    doc.text('123 Avenue des Coiffeurs', infoBoxX + 3, 34)
+    doc.text('75001 Paris, France', infoBoxX + 3, 38)
+    
+    // ========== TITRE ET INFORMATIONS FACTURE ==========
+    doc.setTextColor(...darkColor)
+    doc.setFontSize(24)
+    doc.setFont('helvetica', 'bold')
+    doc.text('FACTURE DE COMMISSION', 20, 65)
+    
+    // Ligne décorative sous le titre
+    doc.setDrawColor(...accentColor)
+    doc.setLineWidth(2)
+    doc.line(20, 68, 110, 68)
+    
+    // Informations de la facture dans un encadré moderne
+    const invoiceDate = new Date(order.createdAt)
+    doc.setFillColor(...lightGray)
+    doc.roundedRect(20, 75, 90, 35, 3, 3, 'F')
+    
+    doc.setTextColor(...darkColor)
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'bold')
+    doc.text('N° Facture:', 25, 82)
+    doc.setFont('helvetica', 'normal')
+    doc.text(`COMM-${order.orderNumber}`, 25, 88)
+    
+    doc.setFont('helvetica', 'bold')
+    doc.text('Date d\'émission:', 25, 94)
+    doc.setFont('helvetica', 'normal')
+    doc.text(invoiceDate.toLocaleDateString('fr-FR'), 25, 100)
+    
+    doc.setFont('helvetica', 'bold')
+    doc.text('Commande:', 25, 106)
+    doc.setFont('helvetica', 'normal')
+    doc.text(`#${order.orderNumber}`, 25, 112)
+    
+    // ========== INFORMATIONS VENDEUR ==========
+    doc.setDrawColor(...primaryColor)
+    doc.setLineWidth(1.5)
+    doc.setFillColor(255, 255, 255)
+    doc.roundedRect(120, 75, 70, 45, 3, 3, 'FD')
+    
+    // Barre de couleur sur le côté
+    doc.setFillColor(...accentColor)
+    doc.rect(120, 75, 3, 45, 'F')
+    
+    doc.setTextColor(...darkColor)
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'bold')
+    doc.text('FACTURÉ À', 127, 82)
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Vendeur:', 127, 90)
+    
+    doc.setFontSize(9)
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(...mediumGray)
+    doc.text(order.sellerEmail, 127, 96)
+    
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(...darkColor)
+    doc.text('Produit vendu:', 127, 104)
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(...mediumGray)
+    const productName = order.productName.length > 25 ? order.productName.substring(0, 25) + '...' : order.productName
+    doc.text(productName, 127, 110)
+    
+    // ========== DESCRIPTION DES SERVICES ==========
+    doc.setFillColor(...lightGray)
+    doc.roundedRect(20, 130, pageWidth - 40, 25, 3, 3, 'F')
+    
+    doc.setTextColor(...darkColor)
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'bold')
+    doc.text('DESCRIPTION DES SERVICES', 25, 138)
+    
+    doc.setFontSize(9)
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(...mediumGray)
+    doc.text('Commission de la marketplace pour la vente du produit', 25, 145)
+    doc.text(`Taux de commission appliqué: ${COMMISSION_RATE}%`, 25, 151)
+    
+    // ========== TABLEAU DES MONTANTS ==========
+    const tableStartY = 165
+    
+    autoTable(doc, {
+      startY: tableStartY,
+      head: [['Description', 'Montant']],
+      body: [
+        ['Montant total de la vente TTC', `${formatPrice(orderTotal)}`],
+        [`Commission marketplace (${COMMISSION_RATE}%)`, `${formatPrice(commission)}`],
+        ['Montant net vendeur', `${formatPrice(netAmount)}`]
+      ],
+      headStyles: {
+        fillColor: primaryColor,
+        textColor: [255, 255, 255],
+        fontSize: 11,
+        fontStyle: 'bold',
+        halign: 'center',
+        cellPadding: 6
+      },
+      bodyStyles: {
+        fontSize: 10,
+        cellPadding: 8,
+        textColor: darkColor
+      },
+      columnStyles: {
+        0: { cellWidth: 130, halign: 'left' },
+        1: { cellWidth: 50, halign: 'right', fontStyle: 'bold', fontSize: 11 }
+      },
+      alternateRowStyles: {
+        fillColor: lightGray
+      },
+      margin: { left: 20, right: 20 }
+    })
+    
+    // ========== TOTAL COMMISSION (MIS EN ÉVIDENCE) ==========
+    const totalY = doc.lastAutoTable.finalY + 5
+    
+    doc.setFillColor(...accentColor)
+    doc.roundedRect(20, totalY, pageWidth - 40, 15, 3, 3, 'F')
+    
+    doc.setTextColor(255, 255, 255)
+    doc.setFontSize(13)
+    doc.setFont('helvetica', 'bold')
+    doc.text('COMMISSION DUE À LA MARKETPLACE', 25, totalY + 10)
+    doc.text(`${formatPrice(commission)}`, pageWidth - 25, totalY + 10, { align: 'right' })
+    
+    // Télécharger
+    doc.save(`Facture_Commission_${order.orderNumber}.pdf`)
   }
 
   return (
@@ -346,13 +532,26 @@ const CommissionsModule = () => {
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => viewCommissionDetails(order)}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => viewCommissionDetails(order)}
+                              title="Voir détails"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => generateCommissionInvoice(order)}
+                              className="gap-2"
+                              title="Facture de commission"
+                            >
+                              <FileText className="h-4 w-4" />
+                              Facture
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     )
