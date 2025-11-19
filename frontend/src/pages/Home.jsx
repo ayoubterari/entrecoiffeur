@@ -715,16 +715,9 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
                 </div>
               </div>
             </div>
-            <div className="products-grid-leboncoin">
+            <div className={styles.mobileProductsScroll}>
               {displaySaleProducts.slice(0, 10).map((product) => (
-                <div key={product._id} style={{
-                  background: 'white',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer'
-                }}
+                <div key={product._id} className={styles.mobileProductCard}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-4px)';
                   e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
@@ -839,22 +832,9 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
           </div>
           
           {displayFeaturedProducts.length > 0 ? (
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-              gap: '20px',
-              marginTop: '2rem'
-            }}
-            className="products-grid-leboncoin">
+            <div className={styles.mobileProductsScroll}>
               {displayFeaturedProducts.slice(0, 10).map((product) => (
-                <div key={product._id} style={{
-                  background: 'white',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer'
-                }}
+                <div key={product._id} className={styles.mobileProductCard}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-4px)';
                   e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
@@ -914,16 +894,9 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
                 </div>
               </div>
               
-              <div className="products-grid-leboncoin">
+              <div className={styles.mobileProductsScroll}>
                 {categoryData.products.slice(0, 10).map((product) => (
-                  <div key={product._id} style={{
-                    background: 'white',
-                    borderRadius: '12px',
-                    overflow: 'hidden',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer'
-                  }}
+                  <div key={product._id} className={styles.mobileProductCard}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-4px)';
                     e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
