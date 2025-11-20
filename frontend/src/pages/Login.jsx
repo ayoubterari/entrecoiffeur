@@ -93,7 +93,7 @@ const Login = ({ onLogin, onBack }) => {
             <div className="input-group">
               <input
                 type="text"
-                placeholder="Prénom"
+                placeholder="👤 Prénom"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 className="form-input"
@@ -105,7 +105,7 @@ const Login = ({ onLogin, onBack }) => {
             <div className="input-group">
               <input
                 type="text"
-                placeholder="Nom de famille"
+                placeholder="👥 Nom de famille"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 className="form-input"
@@ -150,7 +150,7 @@ const Login = ({ onLogin, onBack }) => {
         <div className="input-group">
           <input
             type="email"
-            placeholder="Adresse email"
+            placeholder="✉️ Adresse email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="form-input"
@@ -162,7 +162,7 @@ const Login = ({ onLogin, onBack }) => {
         <div className="input-group">
           <input
             type="password"
-            placeholder="Mot de passe"
+            placeholder="🔒 Mot de passe"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="form-input"

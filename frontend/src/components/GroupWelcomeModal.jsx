@@ -8,7 +8,18 @@ const GroupWelcomeModal = ({ isOpen, onClose, userId }) => {
   const [couponCopied, setCouponCopied] = useState(false)
 
   const markGroupWelcomeSeen = useMutation(api.auth.markGroupWelcomeSeen)
-  const fbGroupCoupon = useQuery(api.functions.queries.coupons.getCouponByCode, { code: "FBGROUP" })
+  const fbGroupCoupon = useQuery(api.functions.queries.coupons.getCouponByCode, { code: "FBGROUP20" })
+  
+  // Coupon par défaut si FBGROUP20 n'existe pas
+  const defaultCoupon = {
+    code: "FBGROUP20",
+    discountType: "percentage",
+    discountValue: 20,
+    description: "Réduction exclusive pour les membres du groupe Facebook",
+    minimumAmount: 50
+  }
+  
+  const displayCoupon = fbGroupCoupon || defaultCoupon
 
   useEffect(() => {
     if (isOpen) {
@@ -47,8 +58,8 @@ const GroupWelcomeModal = ({ isOpen, onClose, userId }) => {
   }
 
   const copyCouponCode = () => {
-    if (fbGroupCoupon?.code) {
-      navigator.clipboard.writeText(fbGroupCoupon.code)
+    if (displayCoupon?.code) {
+      navigator.clipboard.writeText(displayCoupon.code)
       setCouponCopied(true)
       setTimeout(() => setCouponCopied(false), 2000)
     }
@@ -83,53 +94,51 @@ const GroupWelcomeModal = ({ isOpen, onClose, userId }) => {
           </div>
 
           {/* Coupon Section */}
-          {fbGroupCoupon ? (
-            <div className="coupon-section">
-              <div className="coupon-card">
-                <div className="coupon-header">
-                  <span className="coupon-icon">🎫</span>
-                  <h3>Votre cadeau de bienvenue</h3>
+          <div className="coupon-section">
+            <div className="coupon-card">
+              <div className="coupon-header">
+                <span className="coupon-icon">🎫</span>
+                <h3>Votre cadeau de bienvenue</h3>
+              </div>
+              
+              <div className="coupon-details">
+                <div className="coupon-code-container">
+                  <span className="coupon-label">Code promo :</span>
+                  <div className="coupon-code-wrapper">
+                    <span className="coupon-code">{displayCoupon.code}</span>
+                    <button 
+                      className={`copy-button ${couponCopied ? 'copied' : ''}`}
+                      onClick={copyCouponCode}
+                    >
+                      {couponCopied ? '✓' : '📋'}
+                    </button>
+                  </div>
                 </div>
                 
-                <div className="coupon-details">
-                  <div className="coupon-code-container">
-                    <span className="coupon-label">Code promo :</span>
-                    <div className="coupon-code-wrapper">
-                      <span className="coupon-code">{fbGroupCoupon.code}</span>
-                      <button 
-                        className={`copy-button ${couponCopied ? 'copied' : ''}`}
-                        onClick={copyCouponCode}
-                      >
-                        {couponCopied ? '✓' : '📋'}
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="coupon-discount">
-                    <span className="discount-value">{fbGroupCoupon.discountPercentage}%</span>
-                    <span className="discount-label">de réduction</span>
-                  </div>
-                  
-                  {fbGroupCoupon.description && (
-                    <p className="coupon-description">
-                      {fbGroupCoupon.description}
-                    </p>
-                  )}
-                  
-                  {fbGroupCoupon.minimumAmount && (
-                    <p className="coupon-minimum">
-                      Commande minimum : {fbGroupCoupon.minimumAmount}€
-                    </p>
-                  )}
+                <div className="coupon-discount">
+                  <span className="discount-value">
+                    {displayCoupon.discountType === "percentage" 
+                      ? `${displayCoupon.discountValue}%` 
+                      : `${displayCoupon.discountValue}€`
+                    }
+                  </span>
+                  <span className="discount-label">de réduction</span>
                 </div>
+                
+                {displayCoupon.description && (
+                  <p className="coupon-description">
+                    {displayCoupon.description}
+                  </p>
+                )}
+                
+                {displayCoupon.minimumAmount && (
+                  <p className="coupon-minimum">
+                    Commande minimum : {displayCoupon.minimumAmount}€
+                  </p>
+                )}
               </div>
             </div>
-          ) : (
-            <div className="coupon-loading">
-              <div className="loading-spinner"></div>
-              <p>Chargement de votre cadeau...</p>
-            </div>
-          )}
+          </div>
 
           {/* Benefits Section */}
           <div className="benefits-section">

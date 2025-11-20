@@ -201,15 +201,15 @@ const LoginModal = ({ isOpen, onClose, onLogin, initialMode = 'signin' }) => {
               </div>
 
               <div className="input-group">
-                <label className="form-label">Appartenance à un groupe</label>
+                <label className="form-label">Tu appartiens au groupe Facebook ?</label>
                 <select
-                  value={isGroupMember ? 'member' : 'individual'}
-                  onChange={(e) => setIsGroupMember(e.target.value === 'member')}
+                  value={isGroupMember ? 'yes' : 'no'}
+                  onChange={(e) => setIsGroupMember(e.target.value === 'yes')}
                   className="form-select"
                   required
                 >
-                  <option value="individual">👤 Je n'appartiens pas à un groupe</option>
-                  <option value="member">👥 Membre de groupe</option>
+                  <option value="no">Non</option>
+                  <option value="yes">Oui</option>
                 </select>
               </div>
 

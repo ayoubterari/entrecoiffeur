@@ -787,6 +787,10 @@
   background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
   border-radius: 8px;
   border: 1px solid #e9ecef;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .priceValues {
@@ -835,12 +839,17 @@
   position: relative;
   height: 24px;
   margin: 0.6rem 0;
-  padding: 0.2rem;
+  padding: 0 0.5rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
 }
 
 .priceSlider {
   position: absolute;
-  width: 100%;
+  width: calc(100% - 1rem);
+  left: 0.5rem;
   height: 4px;
   background: transparent;
   outline: none;
@@ -848,6 +857,7 @@
   appearance: none;
   pointer-events: none;
   z-index: 2;
+  box-sizing: border-box;
 }
 
 .priceSlider::-webkit-slider-thumb {
@@ -910,13 +920,15 @@
 .sliderTrack {
   position: absolute;
   top: 50%;
-  left: 0;
-  right: 0;
+  left: 0.5rem;
+  right: 0.5rem;
   height: 6px;
   background: linear-gradient(90deg, #e9ecef 0%, #f1f3f5 50%, #e9ecef 100%);
   border-radius: 3px;
   transform: translateY(-50%);
   box-shadow: inset 0 1px 3px rgba(192, 180, 165, 0.2);
+  width: calc(100% - 1rem);
+  box-sizing: border-box;
 }
 
 .sliderRange {
