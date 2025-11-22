@@ -79,3 +79,73 @@ self.addEventListener('message', (event) => {
     self.skipWaiting();
   }
 });
+
+// Gestion des notifications push
+self.addEventListener('push', (event) => {
+  console.log('📬 Service Worker: Notification push reçue');
+  
+  let notificationData = {
+    title: 'EntreCoiffeur',
+    body: 'Vous avez une nouvelle notification',
+    icon: '/logo192.png',
+    badge: '/logo192.png',
+    tag: 'default',
+    requireInteraction: true,
+    data: {}
+  };
+
+  // Parser les données de la notification si disponibles
+  if (event.data) {
+    try {
+      const data = event.data.json();
+      notificationData = {
+        ...notificationData,
+        ...data,
+      };
+    } catch (e) {
+      notificationData.body = event.data.text();
+    }
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(notificationData.title, {
+      body: notificationData.body,
+      icon: notificationData.icon,
+      badge: notificationData.badge,
+      tag: notificationData.tag,
+      requireInteraction: notificationData.requireInteraction,
+      data: notificationData.data,
+      vibrate: [200, 100, 200], // Vibration pattern
+      actions: notificationData.actions || []
+    })
+  );
+});
+
+// Gestion du clic sur la notification
+self.addEventListener('notificationclick', (event) => {
+  console.log('👆 Service Worker: Clic sur notification');
+  
+  event.notification.close();
+
+  // Récupérer l'URL de redirection depuis les données de la notification
+  const urlToOpen = event.notification.data?.url || '/dashboard';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        // Vérifier si une fenêtre est déjà ouverte
+        for (let i = 0; i < clientList.length; i++) {
+          const client = clientList[i];
+          if (client.url.includes(self.location.origin) && 'focus' in client) {
+            // Naviguer vers l'URL et focus
+            client.navigate(urlToOpen);
+            return client.focus();
+          }
+        }
+        // Sinon, ouvrir une nouvelle fenêtre
+        if (clients.openWindow) {
+          return clients.openWindow(urlToOpen);
+        }
+      })
+  );
+});

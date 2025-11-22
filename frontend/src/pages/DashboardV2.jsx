@@ -16,6 +16,7 @@ import AccountChangeRequest from '../components/dashboardv2/AccountChangeRequest
 import TeamModule from '../components/dashboardv2/TeamModule'
 import AnnoncesModule from '../components/dashboardv2/AnnoncesModule'
 import MyReviewsTab from '../components/MyReviewsTab'
+import PushNotificationManager from '../components/PushNotificationManager'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import '../styles/dashboardv2.css'
 
@@ -90,14 +91,24 @@ const DashboardV2 = ({ userEmail, userFirstName, userLastName, userId, userType,
         {/* Main content with top padding for fixed header */}
         <main className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 mt-16">
           {activeTab === 'profile' && hasAccess('profile') && (
-            <ProfileModule 
-              userId={userId}
-              userEmail={userEmail}
-              userFirstName={userFirstName}
-              userLastName={userLastName}
-              userType={userType}
-              companyName={companyName}
-            />
+            <>
+              {/* Gestionnaire de notifications push pour vendeurs */}
+              {(userType === 'professionnel' || userType === 'grossiste') && (
+                <PushNotificationManager 
+                  userId={userId} 
+                  userType={userType} 
+                />
+              )}
+              
+              <ProfileModule 
+                userId={userId}
+                userEmail={userEmail}
+                userFirstName={userFirstName}
+                userLastName={userLastName}
+                userType={userType}
+                companyName={companyName}
+              />
+            </>
           )}
 
           {activeTab === 'purchases' && hasAccess('purchases') && (

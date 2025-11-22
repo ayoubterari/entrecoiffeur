@@ -46,9 +46,11 @@ export default function PWAInstallBanner() {
 
   const handleInstall = async () => {
     if (!deferredPrompt) {
-      // Détecter le navigateur
+      // Détecter le navigateur et la plateforme
       const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent)
       const isAndroid = /Android/i.test(navigator.userAgent)
+      const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edge/i.test(navigator.userAgent)
+      const isEdge = /Edge/i.test(navigator.userAgent)
       
       let message = '📱 Pour installer l\'application :\n\n'
       
@@ -64,11 +66,24 @@ export default function PWAInstallBanner() {
         message += '2. Sélectionnez "Installer l\'application"\n'
         message += '3. Confirmez l\'installation\n\n'
         message += '✨ L\'application sera ajoutée à votre écran d\'accueil !'
+      } else if (isChrome) {
+        message += '💻 Sur Chrome Desktop :\n'
+        message += '1. Cliquez sur l\'icône d\'installation (⊕) dans la barre d\'adresse\n'
+        message += '   OU cliquez sur le menu (⋮) → "Installer EntreCoiffeur"\n'
+        message += '2. Confirmez l\'installation\n\n'
+        message += '✨ L\'application sera ajoutée à votre bureau !'
+      } else if (isEdge) {
+        message += '💻 Sur Microsoft Edge :\n'
+        message += '1. Cliquez sur le menu (⋯) en haut à droite\n'
+        message += '2. Sélectionnez "Applications" → "Installer ce site en tant qu\'application"\n'
+        message += '3. Confirmez l\'installation\n\n'
+        message += '✨ L\'application sera ajoutée à votre bureau !'
       } else {
+        message += '💻 Sur votre navigateur :\n'
         message += '1. Cliquez sur le menu de votre navigateur\n'
         message += '2. Cherchez "Installer l\'application" ou "Ajouter à l\'écran d\'accueil"\n'
         message += '3. Confirmez l\'installation\n\n'
-        message += '✨ L\'application sera ajoutée à votre écran d\'accueil !'
+        message += '✨ L\'application sera installée sur votre appareil !'
       }
       
       alert(message)

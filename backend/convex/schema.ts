@@ -20,6 +20,9 @@ export default defineSchema({
     isGroupMember: v.optional(v.boolean()), // Si l'utilisateur appartient à un groupe
     groupAccessCode: v.optional(v.string()), // Code d'accès du groupe utilisé lors de l'inscription
     hasSeenGroupWelcome: v.optional(v.boolean()), // Si l'utilisateur a déjà vu le modal de bienvenue groupe
+    // Champ pour les notifications push
+    pushToken: v.optional(v.string()), // Token pour les notifications push PWA
+    pushNotificationsEnabled: v.optional(v.boolean()), // Si les notifications sont activées
     createdAt: v.number(),
   }).index("by_email", ["email"])
     .index("by_user_type", ["userType"])

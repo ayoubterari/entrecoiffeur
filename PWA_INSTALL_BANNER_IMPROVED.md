@@ -108,6 +108,9 @@ Le banner est affiché en **haut de la page Home** :
 | Safari iOS | ✅ Manuel | Partager → Écran d'accueil |
 | Firefox Android | ✅ Manuel | Menu → Installer |
 | Edge Mobile | ✅ Natif | Prompt automatique |
+| **Chrome Desktop** | ✅ Natif | Icône ⊕ dans barre d'adresse |
+| **Edge Desktop** | ✅ Natif | Menu → Applications → Installer |
+| **Firefox Desktop** | ✅ Manuel | Menu → Installer |
 
 ## 🚀 Avantages
 
@@ -130,12 +133,11 @@ L'utilisateur voit maintenant un **banner attractif** dès l'arrivée sur la pag
 ## 📊 Statistiques d'Affichage
 
 Le banner s'affiche si :
-- ✅ Appareil mobile (iPhone, iPad, Android)
+- ✅ **Tous les appareils** (Mobile + Desktop)
 - ✅ App non installée
 - ✅ Banner non fermé précédemment
 
 Le banner ne s'affiche PAS si :
-- ❌ Desktop
 - ❌ App déjà installée
 - ❌ Banner fermé par l'utilisateur
 
@@ -143,20 +145,27 @@ Le banner ne s'affiche PAS si :
 
 ```mermaid
 graph TD
-    A[Utilisateur arrive sur Home] --> B{Mobile?}
-    B -->|Non| C[Banner masqué]
-    B -->|Oui| D{App installée?}
+    A[Utilisateur arrive sur Home] --> B{App installée?}
+    B -->|Oui| C[Banner masqué]
+    B -->|Non| D{Banner fermé?}
     D -->|Oui| C
-    D -->|Non| E{Banner fermé?}
-    E -->|Oui| C
-    E -->|Non| F[Afficher banner après 1s]
-    F --> G{Clic Installer}
-    G --> H{Prompt disponible?}
-    H -->|Oui| I[Installation native]
-    H -->|Non| J[Instructions manuelles]
-    I --> K[App installée]
-    J --> L[Utilisateur suit les étapes]
-    L --> K
+    D -->|Non| E[Afficher banner après 1s]
+    E --> F{Clic Installer}
+    F --> G{Prompt disponible?}
+    G -->|Oui| H[Installation native en 1 clic]
+    G -->|Non| I{Plateforme?}
+    I -->|iOS| J[Instructions Safari]
+    I -->|Android| K[Instructions Chrome Android]
+    I -->|Chrome Desktop| L[Instructions Chrome Desktop]
+    I -->|Edge Desktop| M[Instructions Edge Desktop]
+    I -->|Autre| N[Instructions génériques]
+    H --> O[App installée]
+    J --> P[Utilisateur suit les étapes]
+    K --> P
+    L --> P
+    M --> P
+    N --> P
+    P --> O
 ```
 
 ## 📝 Code Source
@@ -165,10 +174,11 @@ Fichier : `frontend/src/components/PWAInstallBanner.jsx`
 
 Modifications principales :
 1. Timer réduit à 1 seconde
-2. Affichage systématique (pas seulement si prompt)
-3. Détection plateforme pour instructions
-4. Design sombre avec meilleur contraste
-5. Animation pulse sur l'icône
+2. **Affichage sur tous les appareils** (mobile + desktop)
+3. Affichage systématique (pas seulement si prompt)
+4. Détection plateforme pour instructions (iOS, Android, Chrome Desktop, Edge Desktop)
+5. Design sombre avec meilleur contraste
+6. Animation pulse sur l'icône
 
 ## 🎉 Résultat
 
