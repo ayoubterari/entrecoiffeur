@@ -70,33 +70,35 @@ export default function InstallButton() {
     <button
       onClick={handleClick}
       style={{
+        position: 'fixed',
+        bottom: '20px',
+        right: '20px',
+        zIndex: 9999,
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
-        padding: '10px 16px',
+        padding: '14px 20px',
         background: 'linear-gradient(135deg, #C0B4A5 0%, #D4C9BC 100%)',
         color: '#2d2d2d',
         border: 'none',
-        borderRadius: '12px',
-        fontSize: '14px',
-        fontWeight: '600',
+        borderRadius: '50px',
+        fontSize: '16px',
+        fontWeight: '700',
         cursor: 'pointer',
-        boxShadow: '0 2px 8px rgba(192, 180, 165, 0.3)',
+        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)',
         transition: 'all 0.3s ease',
-        minHeight: '44px', // Touch target iOS
+        minHeight: '56px',
         whiteSpace: 'nowrap'
       }}
-      onMouseEnter={(e) => {
-        e.target.style.transform = 'scale(1.05)'
-        e.target.style.boxShadow = '0 4px 12px rgba(192, 180, 165, 0.4)'
+      onTouchStart={e => {
+        e.currentTarget.style.transform = 'scale(0.95)'
       }}
-      onMouseLeave={(e) => {
-        e.target.style.transform = 'scale(1)'
-        e.target.style.boxShadow = '0 2px 8px rgba(192, 180, 165, 0.3)'
+      onTouchEnd={e => {
+        e.currentTarget.style.transform = 'scale(1)'
       }}
       title="Installer l'application"
     >
-      <Download style={{ width: '18px', height: '18px' }} />
+      <Download style={{ width: '24px', height: '24px' }} />
       <span>Installer l'app</span>
     </button>
   )
