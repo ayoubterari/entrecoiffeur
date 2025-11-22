@@ -25,24 +25,25 @@ export default function InstallButton() {
 
     window.addEventListener('beforeinstallprompt', handler)
 
-    // Pour debug : afficher le bouton après 2 secondes si pas de prompt
-    const debugTimer = setTimeout(() => {
+    // TEMPORAIRE : Forcer l'affichage du bouton pour test
+    // Afficher le bouton après 2 secondes même sans prompt
+    const forceShowTimer = setTimeout(() => {
       if (!deferredPrompt) {
-        console.log('⚠️ beforeinstallprompt non déclenché après 2s')
-        console.log('Vérifiez : Service Worker actif, Manifest valide, Icônes présentes')
+        console.log('⚠️ beforeinstallprompt non déclenché - Affichage forcé pour test')
+        setShowButton(true) // Forcer l'affichage
       }
     }, 2000)
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handler)
-      clearTimeout(debugTimer)
+      clearTimeout(forceShowTimer)
     }
   }, [])
 
   const handleClick = async () => {
     if (!deferredPrompt) {
-      console.log('⚠️ Pas de prompt disponible - Vérifiez la console')
-      alert('Installation PWA non disponible. Vérifiez que vous êtes sur mobile et que le site est en HTTPS.')
+      console.log('⚠️ Pas de prompt disponible - Redirection vers installation manuelle')
+      alert('Installation automatique non disponible.\n\nPour installer l\'application :\n1. Menu Chrome (⋮)\n2. "Installer l\'application"\n\nOu visitez le site 2-3 fois pour activer l\'installation automatique.')
       return
     }
 
