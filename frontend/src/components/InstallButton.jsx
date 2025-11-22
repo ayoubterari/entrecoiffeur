@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 
 export default function InstallButton() {
   const [deferredPrompt, setDeferredPrompt] = useState(null)
-  const [showButton, setShowButton] = useState(false)
 
   useEffect(() => {
     // Vérifier si déjà installé
@@ -19,24 +18,13 @@ export default function InstallButton() {
     const handler = (e) => {
       e.preventDefault()
       setDeferredPrompt(e)
-      setShowButton(true)
-      console.log('📱 PWA installable - Bouton affiché')
+      console.log('📱 PWA installable - Prompt disponible')
     }
 
     window.addEventListener('beforeinstallprompt', handler)
 
-    // TEMPORAIRE : Forcer l'affichage du bouton pour test
-    // Afficher le bouton après 2 secondes même sans prompt
-    const forceShowTimer = setTimeout(() => {
-      if (!deferredPrompt) {
-        console.log('⚠️ beforeinstallprompt non déclenché - Affichage forcé pour test')
-        setShowButton(true) // Forcer l'affichage
-      }
-    }, 2000)
-
     return () => {
       window.removeEventListener('beforeinstallprompt', handler)
-      clearTimeout(forceShowTimer)
     }
   }, [])
 
@@ -61,7 +49,6 @@ export default function InstallButton() {
 
       // Réinitialiser
       setDeferredPrompt(null)
-      setShowButton(false)
     } catch (error) {
       console.error('❌ Erreur lors de l\'installation:', error)
     }
@@ -70,7 +57,12 @@ export default function InstallButton() {
   // Vérifier si mobile
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
   
-  if (!isMobile || !showButton) {
+  // Vérifier si déjà installé
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+  const isIOSStandalone = window.navigator.standalone === true
+  
+  // Ne pas afficher si pas mobile ou déjà installé
+  if (!isMobile || isStandalone || isIOSStandalone) {
     return null
   }
 
