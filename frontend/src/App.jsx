@@ -21,6 +21,7 @@ import LoginModal from './components/LoginModal'
 import FavoritesModal from './components/FavoritesModal'
 import NotificationPrompt from './components/NotificationPrompt'
 import { useAffiliateTracking } from './hooks/useAffiliateTracking'
+import { useOrderNotifications } from './hooks/useOrderNotifications'
 
 // Wrapper pour ProductDetail qui utilise les paramètres d'URL
 function ProductDetailWrapper({ onAddToCart, isAuthenticated, onLogin, userId }) {
@@ -67,6 +68,9 @@ function AppContent() {
   
   // Mutation to toggle favorite
   const toggleFavorite = useMutation(api.favorites.toggleFavorite)
+
+  // Hook pour surveiller les nouvelles commandes et afficher des notifications
+  useOrderNotifications(userId, currentUser?.userType)
 
   useEffect(() => {
     if (currentUser) {
