@@ -323,8 +323,8 @@ body {
   position: absolute;
   top: -0.125rem;
   right: -0.125rem;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
+  background: #C0B4A5 !important;
+  color: white !important;
   border-radius: 50%;
   min-width: 1.125rem;
   height: 1.125rem;
@@ -442,8 +442,8 @@ body {
 }
 
 .signupBtn {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
+  background: #C0B4A5 !important;
+  color: white !important;
   box-shadow: 0 2px 8px rgba(192, 180, 165, 0.3);
 }
 
@@ -1232,7 +1232,7 @@ body {
 }
 
 .userTypeBanner {
-  background: var(--white);
+  background: #ffffff;
   border-radius: var(--radius-xl);
   padding: 1.5rem 1.125rem;
   text-align: center;
@@ -1324,21 +1324,23 @@ body {
   cursor: pointer;
   transition: var(--transition);
   box-shadow: 0 3px 9px rgba(192, 180, 165, 0.3);
+  background: #C0B4A5 !important;
+  color: white !important;
 }
 
 .userTypeBanner.particulier .bannerCTA {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
+  background: #C0B4A5 !important;
+  color: white !important;
 }
 
 .userTypeBanner.grossiste .bannerCTA {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
+  background: #C0B4A5 !important;
+  color: white !important;
 }
 
 .userTypeBanner.professionnel .bannerCTA {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
+  background: #C0B4A5 !important;
+  color: white !important;
 }
 
 .bannerCTA:hover {

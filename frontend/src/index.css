@@ -6,7 +6,7 @@
   font-weight: 400;
 
   /* Modern Color Palette - Blanc/Rose/Noir */
-  --primary-gradient: linear-gradient(135deg, #4E4A43 0%, #4E4A43 100%);
+  --primary-gradient: #C0B4A5;
   --secondary-gradient: linear-gradient(135deg, #808080 0%, #fdcb6e 100%);
   --accent-gradient: linear-gradient(135deg, #4E4A43 0%, #4E4A43 100%);
   --dark-gradient: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
@@ -284,10 +284,10 @@ body::before {
 .submit-button {
   width: 100%;
   padding: 1rem 1.25rem;
-  background: var(--primary-gradient);
+  background: #C0B4A5 !important;
   border: none;
   border-radius: 12px;
-  color: white;
+  color: white !important;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
