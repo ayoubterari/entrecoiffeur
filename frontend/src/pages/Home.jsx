@@ -10,6 +10,7 @@ import MobileMenu from '../components/MobileMenu'
 import FranceMapModalLeaflet from '../components/FranceMapModalLeaflet'
 import AdvancedSearchModal from '../components/AdvancedSearchModal'
 import InstallButton from '../components/InstallButton'
+import PWAInstallBanner from '../components/PWAInstallBanner'
 import styles from '../components/Home.module.css'
 
 const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName, onAddToCart, cart, onOpenCart, onShowLogin, onToggleFavorite, favoritesCount, userId, onOpenFavorites, userType }) => {
@@ -417,6 +418,9 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
 
   return (
     <div className={styles.homeContainer}>
+      {/* PWA Install Banner - Affiché en haut sur mobile */}
+      <PWAInstallBanner />
+      
       {/* Header Mobile-First */}
       <header className={styles.mobileHeader}>
         <div className={styles.headerContent}>
