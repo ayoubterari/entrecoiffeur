@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vider le cache - EntreCoiffeur</title>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #C0B4A5;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #C0B4A5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #A89985;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        .info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            border-left: 4px solid #2196F3;
+        }
+        ul {
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Vider le cache EntreCoiffeur</h1>
+        
+        <div class="info">
+            <strong>ℹ️ Pourquoi vider le cache ?</strong>
+            <p>Le Service Worker PWA met en cache les anciens fichiers CSS. Après avoir corrigé la configuration TailwindCSS, vous devez vider le cache pour voir les changements.</p>
+        </div>
+
+        <h3>Actions disponibles :</h3>
+        <button onclick="unregisterServiceWorker()">1. Désinstaller le Service Worker</button>
+        <button onclick="clearAllCaches()">2. Vider tous les caches</button>
+        <button onclick="clearAndReload()">3. Tout vider et recharger</button>
+
+        <div id="status" class="status"></div>
+
+        <div class="info" style="margin-top: 30px;">
+            <strong>📋 Étapes manuelles (si les boutons ne fonctionnent pas) :</strong>
+            <ul>
+                <li>Appuyez sur <code>F12</code> pour ouvrir DevTools</li>
+                <li>Allez dans l'onglet <strong>Application</strong></li>
+                <li>Cliquez sur <strong>Service Workers</strong> dans le menu de gauche</li>
+                <li>Cliquez sur <strong>Unregister</strong> pour chaque service worker</li>
+                <li>Cliquez sur <strong>Storage</strong> dans le menu de gauche</li>
+                <li>Cliquez sur <strong>Clear site data</strong></li>
+                <li>Rechargez la page avec <code>Ctrl + Shift + R</code></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showStatus(message, isSuccess) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = 'status ' + (isSuccess ? 'success' : 'error');
+        }
+
+        async function unregisterServiceWorker() {
+            try {
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    for (let registration of registrations) {
+                        await registration.unregister();
+                    }
+                    showStatus('✅ Service Worker désinstallé avec succès !', true);
+                } else {
+                    showStatus('⚠️ Service Worker non supporté par ce navigateur', false);
+                }
+            } catch (error) {
+                showStatus('❌ Erreur : ' + error.message, false);
+            }
+        }
+
+        async function clearAllCaches() {
+            try {
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    await Promise.all(cacheNames.map(name => caches.delete(name)));
+                    showStatus('✅ Tous les caches ont été vidés !', true);
+                } else {
+                    showStatus('⚠️ Cache API non supportée', false);
+                }
+            } catch (error) {
+                showStatus('❌ Erreur : ' + error.message, false);
+            }
+        }
+
+        async function clearAndReload() {
+            try {
+                await unregisterServiceWorker();
+                await clearAllCaches();
+                showStatus('✅ Cache vidé ! Redirection vers le dashboard...', true);
+                setTimeout(() => {
+                    window.location.href = 'http://localhost:3000/dashboard';
+                }, 2000);
+            } catch (error) {
+                showStatus('❌ Erreur : ' + error.message, false);
+            }
+        }
+    </script>
+</body>
+</html>

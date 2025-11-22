@@ -1,7 +1,5 @@
-/* Styles Tailwind uniquement pour Dashboard V2 */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Styles personnalisés pour Dashboard V2 */
+/* Les directives @tailwind sont déjà dans globals.css */
 
 /* Scope les styles de base uniquement pour le Dashboard V2 */
 .dashboard-v2-container {

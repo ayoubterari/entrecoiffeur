@@ -50,9 +50,11 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
+  /* Appliquer les styles de base uniquement aux éléments sans classes CSS modules */
+  :where(:not([class*="_"])) {
+    border-color: hsl(var(--border));
   }
+  
   body {
     @apply bg-background text-foreground;
   }

@@ -157,33 +157,6 @@ export const createOrder = mutation({
       }
     }
 
-    // Envoyer une notification push au vendeur
-    try {
-      // Récupérer les infos de l'acheteur et du vendeur
-      const buyer = await ctx.db.get(args.buyerId);
-      const seller = await ctx.db.get(args.sellerId);
-      const buyerName = buyer ? `${buyer.firstName || ''} ${buyer.lastName || ''}`.trim() || buyer.email : 'Un client';
-      
-      // Vérifier si le vendeur a activé les notifications
-      if (seller && seller.pushToken && seller.pushNotificationsEnabled) {
-        console.log(`📬 Notification à envoyer au vendeur ${seller.email}:`, {
-          orderNumber,
-          productName: args.productName,
-          total: args.total,
-          buyerName,
-          pushToken: seller.pushToken.substring(0, 20) + '...'
-        });
-        
-        // TODO: Implémenter l'envoi réel via un service push (FCM, OneSignal, etc.)
-        // Pour l'instant, la notification sera affichée si l'app est ouverte
-      } else {
-        console.log(`⚠️ Vendeur ${args.sellerId} n'a pas activé les notifications push`);
-      }
-    } catch (error) {
-      console.error('❌ Erreur lors de la préparation de la notification:', error);
-      // Ne pas faire échouer la commande pour une erreur de notification
-    }
-
     return {
       orderId,
       orderNumber,
