@@ -7,10 +7,17 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'auto',
       includeAssets: ['favicon.ico', 'icon-192x192.png', 'icon-512x512.png'],
+      devOptions: {
+        enabled: true
+      },
       workbox: {
-        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3 MB
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,json}'],
+        cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -23,6 +30,18 @@ export default defineConfig({
               },
               cacheableResponse: {
                 statuses: [0, 200]
+              }
+            }
+          },
+          {
+            urlPattern: /^https:\/\/.*\.convex\.cloud\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'convex-api-cache',
+              networkTimeoutSeconds: 10,
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 5 // 5 minutes
               }
             }
           }
@@ -38,6 +57,7 @@ export default defineConfig({
         orientation: 'portrait-primary',
         scope: '/',
         start_url: '/',
+        id: '/',
         icons: [
           {
             src: '/icon-192x192.png',
