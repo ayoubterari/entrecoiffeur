@@ -3,50 +3,73 @@ import { useState, useEffect } from 'react'
 
 export default function InstallButton() {
   const [deferredPrompt, setDeferredPrompt] = useState(null)
-  const [isInstallable, setIsInstallable] = useState(false)
+  const [showButton, setShowButton] = useState(false)
 
   useEffect(() => {
+    // Vérifier si déjà installé
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+    const isIOSStandalone = window.navigator.standalone === true
+    
+    if (isStandalone || isIOSStandalone) {
+      console.log('✅ PWA déjà installée')
+      return
+    }
+
     // Écouter l'événement beforeinstallprompt
     const handler = (e) => {
       e.preventDefault()
       setDeferredPrompt(e)
-      setIsInstallable(true)
-      console.log('📱 PWA installable détecté')
+      setShowButton(true)
+      console.log('📱 PWA installable - Bouton affiché')
     }
 
     window.addEventListener('beforeinstallprompt', handler)
 
-    // Vérifier si déjà installé
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      console.log('✅ PWA déjà installée')
-      setIsInstallable(false)
-    }
+    // Pour debug : afficher le bouton après 2 secondes si pas de prompt
+    const debugTimer = setTimeout(() => {
+      if (!deferredPrompt) {
+        console.log('⚠️ beforeinstallprompt non déclenché après 2s')
+        console.log('Vérifiez : Service Worker actif, Manifest valide, Icônes présentes')
+      }
+    }, 2000)
 
-    return () => window.removeEventListener('beforeinstallprompt', handler)
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler)
+      clearTimeout(debugTimer)
+    }
   }, [])
 
   const handleClick = async () => {
     if (!deferredPrompt) {
-      console.log('⚠️ Pas de prompt disponible')
+      console.log('⚠️ Pas de prompt disponible - Vérifiez la console')
+      alert('Installation PWA non disponible. Vérifiez que vous êtes sur mobile et que le site est en HTTPS.')
       return
     }
 
-    // Afficher le prompt d'installation
-    deferredPrompt.prompt()
+    try {
+      // Afficher le prompt d'installation
+      await deferredPrompt.prompt()
 
-    // Attendre le choix de l'utilisateur
-    const { outcome } = await deferredPrompt.userChoice
-    console.log(`👤 Choix utilisateur: ${outcome}`)
+      // Attendre le choix de l'utilisateur
+      const { outcome } = await deferredPrompt.userChoice
+      console.log(`👤 Choix utilisateur: ${outcome}`)
 
-    // Réinitialiser le prompt
-    setDeferredPrompt(null)
-    setIsInstallable(false)
+      if (outcome === 'accepted') {
+        console.log('✅ PWA installée avec succès')
+      }
+
+      // Réinitialiser
+      setDeferredPrompt(null)
+      setShowButton(false)
+    } catch (error) {
+      console.error('❌ Erreur lors de l\'installation:', error)
+    }
   }
 
-  // Ne montrer que sur mobile et si installable
+  // Vérifier si mobile
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
   
-  if (!isMobile || !isInstallable) {
+  if (!isMobile || !showButton) {
     return null
   }
 

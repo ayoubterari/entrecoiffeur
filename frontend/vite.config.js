@@ -29,10 +29,10 @@ export default defineConfig({
         ]
       },
       manifest: {
-        name: 'Entre Coiffeur - Marketplace Professionnel',
-        short_name: 'Entre Coiffeur',
-        description: 'Marketplace pour les professionnels de la coiffure',
-        theme_color: '#000000',
+        name: 'EntreCoiffeur - Marketplace Beauté',
+        short_name: 'EntreCoiffeur',
+        description: 'Marketplace pour les professionnels de la coiffure et de la beauté',
+        theme_color: '#C0B4A5',
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait-primary',
@@ -40,16 +40,28 @@ export default defineConfig({
         start_url: '/',
         icons: [
           {
-            src: 'icon-192x192.png',
+            src: '/icon-192x192.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'maskable any'
+            purpose: 'any'
           },
           {
-            src: 'icon-512x512.png',
+            src: '/icon-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'maskable any'
+            purpose: 'any'
+          },
+          {
+            src: '/icon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'maskable'
+          },
+          {
+            src: '/icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
           }
         ]
       }
