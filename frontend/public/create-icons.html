@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur d'icônes PWA - EntreCoiffeur</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #C0B4A5;
+            text-align: center;
+        }
+        button {
+            background: linear-gradient(135deg, #C0B4A5 0%, #D4C9BC 100%);
+            color: #2d2d2d;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+        }
+        button:hover {
+            transform: scale(1.02);
+        }
+        canvas {
+            display: none;
+        }
+        .info {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #C0B4A5;
+        }
+        .success {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Générateur d'Icônes PWA</h1>
+        
+        <div class="info">
+            <strong>📋 Instructions :</strong>
+            <ol>
+                <li>Cliquez sur les boutons ci-dessous pour générer les icônes</li>
+                <li>Les icônes seront téléchargées automatiquement</li>
+                <li>Placez-les dans le dossier <code>public/</code> de votre projet</li>
+                <li>Les icônes auront le logo "EC" avec la couleur beige d'EntreCoiffeur</li>
+            </ol>
+        </div>
+
+        <button onclick="generateIcon(192)">📥 Télécharger icon-192x192.png</button>
+        <button onclick="generateIcon(512)">📥 Télécharger icon-512x512.png</button>
+
+        <div class="success" id="success">
+            ✅ Icône générée et téléchargée avec succès !
+        </div>
+
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script>
+        function generateIcon(size) {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Définir la taille du canvas
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Fond beige avec gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#C0B4A5');
+            gradient.addColorStop(1, '#D4C9BC');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Ajouter un cercle blanc semi-transparent au centre
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, size * 0.4, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Texte "EC" (EntreCoiffeur)
+            ctx.fillStyle = '#2d2d2d';
+            ctx.font = `bold ${size * 0.35}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('EC', size / 2, size / 2);
+            
+            // Sous-titre
+            ctx.font = `${size * 0.08}px Arial`;
+            ctx.fillText('EntreCoiffeur', size / 2, size * 0.75);
+            
+            // Télécharger l'image
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `icon-${size}x${size}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                // Afficher le message de succès
+                const successDiv = document.getElementById('success');
+                successDiv.style.display = 'block';
+                setTimeout(() => {
+                    successDiv.style.display = 'none';
+                }, 3000);
+            });
+        }
+    </script>
+</body>
+</html>
