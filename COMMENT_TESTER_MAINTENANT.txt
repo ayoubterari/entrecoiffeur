@@ -1,0 +1,100 @@
+═══════════════════════════════════════════════════════════════
+  NOTIFICATIONS MEME APP FERMEE - TEST IMMEDIAT
+═══════════════════════════════════════════════════════════════
+
+SUR VOTRE TELEPHONE (Vendeur)
+------------------------------
+
+1. Ouvrez Chrome et allez sur votre site
+
+2. Connectez-vous en tant que vendeur
+
+3. Ouvrez la console (Menu > Plus d'outils > Console)
+
+4. Copiez-collez ce code et appuyez sur Entrée:
+
+   (Voir le fichier SCRIPT_TEST_IMMEDIAT.js)
+
+5. Vous verrez:
+   ✅ Service Worker actif
+   ✅ Permission accordée
+   ✅ User ID: ...
+   ✅ Vérification périodique démarrée
+   ✅ Notification de test affichée
+
+6. FERMEZ COMPLETEMENT L'APP
+   - Fermez Chrome
+   - Verrouillez l'écran
+   - Posez le téléphone
+
+
+SUR UN AUTRE APPAREIL (Client)
+-------------------------------
+
+1. Allez sur le site
+
+2. Connectez-vous en tant que client
+
+3. Trouvez un produit du vendeur
+
+4. Ajoutez au panier
+
+5. Passez la commande
+
+6. Validez le paiement
+
+
+RESULTAT ATTENDU
+----------------
+
+Dans les 30 SECONDES maximum:
+
+📱 Le téléphone du vendeur VIBRE
+🔔 Une notification s'affiche
+✨ MEME SI L'APP EST FERMEE
+🔒 MEME SI L'ECRAN EST VERROUILLE
+
+La notification montre:
+- "🛍️ Nouvelle commande !"
+- Nom du client
+- Nom du produit
+- Montant
+
+
+COMMENT CA MARCHE
+-----------------
+
+Le Service Worker tourne EN PERMANENCE en arrière-plan
+Il vérifie Convex TOUTES LES 30 SECONDES
+Dès qu'une nouvelle commande arrive
+Il affiche la notification IMMEDIATEMENT
+
+
+SI CA NE MARCHE PAS
+-------------------
+
+1. Vérifiez que vous avez bien exécuté le script
+2. Vérifiez que vous êtes bien vendeur (professionnel/grossiste)
+3. Attendez bien 30 secondes max
+4. Regardez les logs du Service Worker (chrome://inspect)
+
+
+FICHIERS IMPORTANTS
+-------------------
+
+SCRIPT_TEST_IMMEDIAT.js        → Script à exécuter
+TEST_APP_FERMEE.md             → Guide de test détaillé
+NOTIFICATIONS_APP_FERMEE.md    → Documentation complète
+RESUME_FINAL_NOTIFICATIONS.md  → Résumé de tout le système
+
+
+SUPPORT
+-------
+
+Tous les logs sont dans la console du Service Worker
+Pour y accéder: chrome://inspect sur PC avec téléphone connecté
+
+
+═══════════════════════════════════════════════════════════════
+  VERSION 4.0.0 - PRODUCTION READY
+═══════════════════════════════════════════════════════════════

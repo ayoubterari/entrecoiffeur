@@ -350,7 +350,7 @@ const BusinessSalesModule = ({ userId }) => {
                         </span>
                         <span className="flex items-center gap-1">
                           <Euro className="h-4 w-4" />
-                          {business.salePrice.toLocaleString()} DH
+                          {business.salePrice.toLocaleString()} €
                         </span>
                         <span className="flex items-center gap-1">
                           <Eye className="h-4 w-4" />
@@ -561,7 +561,7 @@ const BusinessSaleForm = ({ formData, handleInputChange, handleSubmit, images, s
               id="annualRevenue"
               value={formData.annualRevenue}
               onChange={(e) => handleInputChange('annualRevenue', e.target.value)}
-              placeholder="Ex: 300000 DH"
+              placeholder="Ex: 300000 €"
               required
             />
           </div>
@@ -574,7 +574,7 @@ const BusinessSaleForm = ({ formData, handleInputChange, handleSubmit, images, s
               id="netProfit"
               value={formData.netProfit}
               onChange={(e) => handleInputChange('netProfit', e.target.value)}
-              placeholder="Ex: 80000 DH"
+              placeholder="Ex: 80000 €"
             />
           </div>
 

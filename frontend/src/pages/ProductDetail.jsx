@@ -895,7 +895,7 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
                 <div className="line-item">
                   <span>Livraison:</span>
                   <span className={product.freeShipping ? "free-shipping" : ""}>
-                    {product.freeShipping ? '✅ Gratuite' : `${product.shippingCost?.toFixed(2) || '0.00'} DH`}
+                    {product.freeShipping ? '✅ Gratuite' : `${product.shippingCost?.toFixed(2) || '0.00'} €`}
                   </span>
                 </div>
                 <div className="line-item total">

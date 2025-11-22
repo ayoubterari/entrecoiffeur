@@ -72,7 +72,7 @@ async function showOrderNotification(order) {
       : 'Un client';
 
     await registration.showNotification('🛍️ Nouvelle commande !', {
-      body: `${buyerName.trim()} a commandé "${order.productName}" pour ${order.total.toFixed(2)} DH`,
+      body: `${buyerName.trim()} a commandé "${order.productName}" pour ${order.total.toFixed(2)} €`,
       icon: '/icon-192x192.png',
       badge: '/icon-192x192.png',
       tag: `order-${order.orderNumber}`,

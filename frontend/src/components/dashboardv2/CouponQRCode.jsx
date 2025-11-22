@@ -63,7 +63,7 @@ const CouponQRCode = ({ coupon, isOpen, onClose }) => {
     ctx.font = 'bold 56px Arial'
     const discountText = coupon.discountType === 'percentage' 
       ? `${coupon.discountValue}% DE RÉDUCTION`
-      : `${coupon.discountValue} DH DE RÉDUCTION`
+      : `${coupon.discountValue} € DE RÉDUCTION`
     ctx.fillText(discountText, cardCanvas.width / 2, 260)
     
     // Description si disponible
@@ -204,7 +204,7 @@ const CouponQRCode = ({ coupon, isOpen, onClose }) => {
             <div class="discount">
               ${coupon.discountType === 'percentage' 
                 ? `${coupon.discountValue}% DE RÉDUCTION`
-                : `${coupon.discountValue} DH DE RÉDUCTION`
+                : `${coupon.discountValue} € DE RÉDUCTION`
               }
             </div>
             ${coupon.description ? `<div class="description">${coupon.description}</div>` : ''}
@@ -270,7 +270,7 @@ const CouponQRCode = ({ coupon, isOpen, onClose }) => {
             <div className="text-3xl font-bold text-gray-800 mb-4">
               {coupon.discountType === 'percentage' 
                 ? `${coupon.discountValue}% DE RÉDUCTION`
-                : `${coupon.discountValue} DH DE RÉDUCTION`
+                : `${coupon.discountValue} € DE RÉDUCTION`
               }
             </div>
             {coupon.description && (

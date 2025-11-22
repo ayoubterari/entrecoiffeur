@@ -345,7 +345,7 @@ const CouponsModule = ({ userId, userType }) => {
                 {filteredCoupons.map((coupon) => {
                   const status = getCouponStatus(coupon)
                   const formatDate = (ts) => new Date(ts).toLocaleDateString('fr-FR')
-                  const getDiscount = () => coupon.discountType === 'percentage' ? `${coupon.discountValue}%` : `${coupon.discountValue} DH`
+                  const getDiscount = () => coupon.discountType === 'percentage' ? `${coupon.discountValue}%` : `${coupon.discountValue} €`
 
                   return (
                     <Card key={coupon._id}>

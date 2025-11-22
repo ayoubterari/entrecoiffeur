@@ -226,7 +226,7 @@ const CouponsModule = ({ userId }) => {
               <DollarSign className="h-4 w-4 text-orange-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{Math.round(stats.totalDiscountGiven)} DH</div>
+              <div className="text-2xl font-bold">{Math.round(stats.totalDiscountGiven)} €</div>
               <p className="text-xs text-muted-foreground">Accordées</p>
             </CardContent>
           </Card>
@@ -258,7 +258,7 @@ const CouponsModule = ({ userId }) => {
                   <div className="text-right">
                     <div className="font-bold">{coupon.usageCount} utilisations</div>
                     <div className="text-sm text-muted-foreground">
-                      {coupon.discountType === 'percentage' ? `${coupon.discountValue}%` : `${coupon.discountValue} DH`}
+                      {coupon.discountType === 'percentage' ? `${coupon.discountValue}%` : `${coupon.discountValue} €`}
                     </div>
                   </div>
                 </div>
@@ -371,7 +371,7 @@ const CouponsModule = ({ userId }) => {
                                 ) : (
                                   <>
                                     <DollarSign className="h-3 w-3" />
-                                    {coupon.discountValue} DH
+                                    {coupon.discountValue} €
                                   </>
                                 )}
                               </Badge>

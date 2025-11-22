@@ -627,7 +627,7 @@ const ProductsModule = ({ userId, userType }) => {
                             </Badge>
                           ) : (
                             <div className="text-sm">
-                              {product.shippingCost ? `${product.shippingCost} DH` : 'Non défini'}
+                              {product.shippingCost ? `${product.shippingCost} €` : 'Non défini'}
                             </div>
                           )}
                         </TableCell>

@@ -172,7 +172,7 @@ export const createOrder = mutation({
           userId: args.sellerId,
           payload: {
             title: '🛍️ Nouvelle commande !',
-            body: `${buyerName} a commandé "${args.productName}" pour ${args.total.toFixed(2)} DH`,
+            body: `${buyerName} a commandé "${args.productName}" pour ${args.total.toFixed(2)} €`,
             icon: '/icon-192x192.png',
             badge: '/icon-192x192.png',
             tag: `order-${orderNumber}`,

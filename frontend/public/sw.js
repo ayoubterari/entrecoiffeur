@@ -1,5 +1,5 @@
 // Service Worker pour EntreCoiffeur PWA
-const CACHE_VERSION = '2.0.0'; // Version avec redirection notifications
+const CACHE_VERSION = '4.0.0'; // Version avec notifications app fermée
 const CACHE_NAME = `entrecoiffeur-v${CACHE_VERSION}`;
 const urlsToCache = [
   '/',
@@ -8,9 +8,10 @@ const urlsToCache = [
 ];
 
 console.log(`🚀 Service Worker version ${CACHE_VERSION} chargé`);
+console.log(`📬 Vérification périodique des notifications activée`);
 
 // Configuration pour les notifications en arrière-plan
-const NOTIFICATION_CHECK_INTERVAL = 30000; // 30 secondes
+const NOTIFICATION_CHECK_INTERVAL = 30000; // 30 secondes (modifiable)
 const API_BASE_URL = self.location.origin;
 
 // Installation du Service Worker

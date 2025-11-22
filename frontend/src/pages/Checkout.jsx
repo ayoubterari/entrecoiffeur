@@ -144,7 +144,7 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
             id: 'COD_' + Date.now(),
             status: 'PENDING',
             amount: orderData.total,
-            currency: 'DH',
+            currency: 'EUR',
             method: 'Cash on Delivery'
           },
           orderData,
@@ -357,7 +357,7 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
                 </>
               ) : (
                 <>
-                  💵 Confirmer la commande ({orderData.total.toFixed(2)} DH)
+                  💵 Confirmer la commande ({orderData.total.toFixed(2)} €)
                 </>
               )}
             </button>
