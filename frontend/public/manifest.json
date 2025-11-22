@@ -1,31 +1,39 @@
 {
-  "name": "EntreCoiffeur - Marketplace Professionnelle",
-  "short_name": "EntreCoiffeur",
-  "description": "Marketplace professionnelle pour coiffeurs, salons de coiffure et grossistes",
-  "start_url": "/",
-  "display": "standalone",
+  "name": "Entre Coiffeur - Marketplace Professionnel",
+  "short_name": "Entre Coiffeur",
+  "description": "Marketplace pour les professionnels de la coiffure",
+  "theme_color": "#000000",
   "background_color": "#ffffff",
-  "theme_color": "#C0B4A5",
+  "display": "standalone",
   "orientation": "portrait-primary",
+  "scope": "/",
+  "start_url": "/",
   "icons": [
     {
-      "src": "/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
     },
     {
-      "src": "/icon.svg",
+      "src": "/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "type": "image/png",
+      "purpose": "maskable any"
     }
   ],
   "categories": ["business", "shopping", "lifestyle"],
-  "screenshots": [
+  "screenshots": [],
+  "shortcuts": [
     {
-      "src": "/screenshots/home.png",
-      "sizes": "540x720",
-      "type": "image/png"
+      "name": "Rechercher",
+      "url": "/search",
+      "description": "Rechercher des produits"
+    },
+    {
+      "name": "Mon compte",
+      "url": "/dashboard",
+      "description": "Accéder à mon compte"
     }
   ]
 }

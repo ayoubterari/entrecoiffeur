@@ -19,7 +19,6 @@ import CartToast from './components/CartToast'
 import CartModal from './components/CartModal'
 import LoginModal from './components/LoginModal'
 import FavoritesModal from './components/FavoritesModal'
-import InstallPWA from './components/InstallPWA'
 import { useAffiliateTracking } from './hooks/useAffiliateTracking'
 
 // Wrapper pour ProductDetail qui utilise les paramètres d'URL
@@ -456,9 +455,6 @@ function AppContent() {
           isAuthenticated={isAuthenticated}
           onLogin={handleShowLogin}
         />
-        
-        {/* PWA Install Prompt */}
-        <InstallPWA />
       </div>
   )
 }
