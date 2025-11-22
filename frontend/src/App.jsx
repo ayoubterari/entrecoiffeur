@@ -19,6 +19,7 @@ import CartToast from './components/CartToast'
 import CartModal from './components/CartModal'
 import LoginModal from './components/LoginModal'
 import FavoritesModal from './components/FavoritesModal'
+import NotificationPrompt from './components/NotificationPrompt'
 import { useAffiliateTracking } from './hooks/useAffiliateTracking'
 
 // Wrapper pour ProductDetail qui utilise les paramètres d'URL
@@ -455,6 +456,14 @@ function AppContent() {
           isAuthenticated={isAuthenticated}
           onLogin={handleShowLogin}
         />
+
+        {/* Notification Prompt - Pour les vendeurs uniquement */}
+        {isAuthenticated && userId && (
+          <NotificationPrompt 
+            userId={userId} 
+            userType={currentUser?.userType}
+          />
+        )}
       </div>
   )
 }

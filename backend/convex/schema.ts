@@ -944,4 +944,20 @@ export default defineSchema({
   }).index("by_order", ["order"])
     .index("by_active", ["isActive"])
     .index("by_active_order", ["isActive", "order"]),
+
+  // Table pour les abonnements aux notifications push
+  pushSubscriptions: defineTable({
+    userId: v.id("users"), // Utilisateur abonné
+    endpoint: v.string(), // URL de l'endpoint push
+    keys: v.object({
+      p256dh: v.string(),
+      auth: v.string(),
+    }),
+    userAgent: v.optional(v.string()), // Navigateur/appareil
+    isActive: v.boolean(), // Si l'abonnement est actif
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"])
+    .index("by_active", ["isActive"])
+    .index("by_user_active", ["userId", "isActive"]),
 });

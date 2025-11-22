@@ -21,6 +21,8 @@ import type * as community from "../community.js";
 import type * as favorites from "../favorites.js";
 import type * as files from "../files.js";
 import type * as follows from "../follows.js";
+import type * as functions_actions_sendOrderNotification from "../functions/actions/sendOrderNotification.js";
+import type * as functions_helpers_pushNotificationHelper from "../functions/helpers/pushNotificationHelper.js";
 import type * as functions_mutations_accountChangeRequests from "../functions/mutations/accountChangeRequests.js";
 import type * as functions_mutations_activityTracking from "../functions/mutations/activityTracking.js";
 import type * as functions_mutations_adminUsers from "../functions/mutations/adminUsers.js";
@@ -32,6 +34,7 @@ import type * as functions_mutations_homeCarousel from "../functions/mutations/h
 import type * as functions_mutations_invoices from "../functions/mutations/invoices.js";
 import type * as functions_mutations_newsletter from "../functions/mutations/newsletter.js";
 import type * as functions_mutations_notifications from "../functions/mutations/notifications.js";
+import type * as functions_mutations_pushNotifications from "../functions/mutations/pushNotifications.js";
 import type * as functions_mutations_reviews from "../functions/mutations/reviews.js";
 import type * as functions_mutations_sellerCoupons from "../functions/mutations/sellerCoupons.js";
 import type * as functions_mutations_sellerUsers from "../functions/mutations/sellerUsers.js";
@@ -50,6 +53,7 @@ import type * as functions_queries_homeCarousel from "../functions/queries/homeC
 import type * as functions_queries_invoices from "../functions/queries/invoices.js";
 import type * as functions_queries_newsletter from "../functions/queries/newsletter.js";
 import type * as functions_queries_notifications from "../functions/queries/notifications.js";
+import type * as functions_queries_pushNotifications from "../functions/queries/pushNotifications.js";
 import type * as functions_queries_reviews from "../functions/queries/reviews.js";
 import type * as functions_queries_search from "../functions/queries/search.js";
 import type * as functions_queries_sellerCoupons from "../functions/queries/sellerCoupons.js";
@@ -86,6 +90,8 @@ declare const fullApi: ApiFromModules<{
   favorites: typeof favorites;
   files: typeof files;
   follows: typeof follows;
+  "functions/actions/sendOrderNotification": typeof functions_actions_sendOrderNotification;
+  "functions/helpers/pushNotificationHelper": typeof functions_helpers_pushNotificationHelper;
   "functions/mutations/accountChangeRequests": typeof functions_mutations_accountChangeRequests;
   "functions/mutations/activityTracking": typeof functions_mutations_activityTracking;
   "functions/mutations/adminUsers": typeof functions_mutations_adminUsers;
@@ -97,6 +103,7 @@ declare const fullApi: ApiFromModules<{
   "functions/mutations/invoices": typeof functions_mutations_invoices;
   "functions/mutations/newsletter": typeof functions_mutations_newsletter;
   "functions/mutations/notifications": typeof functions_mutations_notifications;
+  "functions/mutations/pushNotifications": typeof functions_mutations_pushNotifications;
   "functions/mutations/reviews": typeof functions_mutations_reviews;
   "functions/mutations/sellerCoupons": typeof functions_mutations_sellerCoupons;
   "functions/mutations/sellerUsers": typeof functions_mutations_sellerUsers;
@@ -115,6 +122,7 @@ declare const fullApi: ApiFromModules<{
   "functions/queries/invoices": typeof functions_queries_invoices;
   "functions/queries/newsletter": typeof functions_queries_newsletter;
   "functions/queries/notifications": typeof functions_queries_notifications;
+  "functions/queries/pushNotifications": typeof functions_queries_pushNotifications;
   "functions/queries/reviews": typeof functions_queries_reviews;
   "functions/queries/search": typeof functions_queries_search;
   "functions/queries/sellerCoupons": typeof functions_queries_sellerCoupons;

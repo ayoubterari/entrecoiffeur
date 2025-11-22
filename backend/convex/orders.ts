@@ -157,6 +157,21 @@ export const createOrder = mutation({
       }
     }
 
+    // Envoyer une notification push au vendeur pour la nouvelle commande
+    // Note: Les notifications push sont gérées côté client via le Service Worker
+    // L'envoi réel des notifications nécessite une configuration VAPID en production
+    try {
+      const seller = await ctx.db.get(args.sellerId);
+      
+      if (seller && (seller.userType === 'professionnel' || seller.userType === 'grossiste')) {
+        console.log('📬 Nouvelle commande pour le vendeur:', args.sellerId);
+        // En production, vous pouvez déclencher une action Convex ici
+        // pour envoyer une vraie notification push via web-push
+      }
+    } catch (error) {
+      console.error("❌ Erreur lors de la vérification du vendeur:", error);
+    }
+
     return {
       orderId,
       orderNumber,

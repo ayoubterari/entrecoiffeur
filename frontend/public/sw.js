@@ -79,3 +79,68 @@ self.addEventListener('message', (event) => {
     self.skipWaiting();
   }
 });
+
+// Gestion des notifications push
+self.addEventListener('push', (event) => {
+  console.log('📬 Service Worker: Notification push reçue');
+  
+  let notificationData = {
+    title: 'EntreCoiffeur',
+    body: 'Vous avez une nouvelle notification',
+    icon: '/icon-192x192.png',
+    badge: '/icon-192x192.png',
+    tag: 'entrecoiffeur-notification',
+    requireInteraction: true,
+    data: {}
+  };
+
+  if (event.data) {
+    try {
+      const data = event.data.json();
+      notificationData = {
+        ...notificationData,
+        ...data
+      };
+    } catch (e) {
+      console.error('❌ Erreur parsing notification:', e);
+    }
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(notificationData.title, {
+      body: notificationData.body,
+      icon: notificationData.icon,
+      badge: notificationData.badge,
+      tag: notificationData.tag,
+      requireInteraction: notificationData.requireInteraction,
+      data: notificationData.data,
+      vibrate: [200, 100, 200],
+      actions: notificationData.actions || []
+    })
+  );
+});
+
+// Gestion du clic sur la notification
+self.addEventListener('notificationclick', (event) => {
+  console.log('👆 Service Worker: Clic sur notification');
+  
+  event.notification.close();
+
+  const urlToOpen = event.notification.data?.url || '/dashboard';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        // Chercher si une fenêtre est déjà ouverte
+        for (let client of clientList) {
+          if (client.url.includes(urlToOpen) && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        // Sinon, ouvrir une nouvelle fenêtre
+        if (clients.openWindow) {
+          return clients.openWindow(urlToOpen);
+        }
+      })
+  );
+});
