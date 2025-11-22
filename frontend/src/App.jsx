@@ -22,6 +22,7 @@ import FavoritesModal from './components/FavoritesModal'
 import NotificationPrompt from './components/NotificationPrompt'
 import { useAffiliateTracking } from './hooks/useAffiliateTracking'
 import { useOrderNotifications } from './hooks/useOrderNotifications'
+import { usePendingNotifications } from './hooks/usePendingNotifications'
 
 // Wrapper pour ProductDetail qui utilise les paramètres d'URL
 function ProductDetailWrapper({ onAddToCart, isAuthenticated, onLogin, userId }) {
@@ -71,6 +72,9 @@ function AppContent() {
 
   // Hook pour surveiller les nouvelles commandes et afficher des notifications
   useOrderNotifications(userId, currentUser?.userType)
+
+  // Hook pour afficher les notifications en attente (même si l'app était fermée)
+  usePendingNotifications(userId)
 
   useEffect(() => {
     if (currentUser) {

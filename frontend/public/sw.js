@@ -9,6 +9,10 @@ const urlsToCache = [
 
 console.log(`🚀 Service Worker version ${CACHE_VERSION} chargé`);
 
+// Configuration pour les notifications en arrière-plan
+const NOTIFICATION_CHECK_INTERVAL = 30000; // 30 secondes
+const API_BASE_URL = self.location.origin;
+
 // Installation du Service Worker
 self.addEventListener('install', (event) => {
   console.log('🔧 Service Worker: Installation en cours...');
@@ -80,6 +84,104 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
+  }
+  
+  // Démarrer la vérification périodique
+  if (event.data && event.data.type === 'START_NOTIFICATION_CHECK') {
+    const userId = event.data.userId;
+    const convexUrl = event.data.convexUrl;
+    console.log('🔄 Démarrage vérification périodique pour:', userId);
+    startPeriodicCheck(userId, convexUrl);
+  }
+});
+
+// Fonction pour vérifier les notifications en arrière-plan
+async function checkPendingNotifications(userId, convexUrl) {
+  try {
+    console.log('🔍 Vérification des notifications en attente...');
+    
+    // Appeler l'API Convex pour récupérer les notifications
+    const response = await fetch(`${convexUrl}/api/query`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        path: 'functions/queries/pendingNotifications:getPendingNotifications',
+        args: { userId: userId },
+        format: 'json'
+      })
+    });
+
+    if (!response.ok) {
+      console.error('❌ Erreur API:', response.status);
+      return;
+    }
+
+    const data = await response.json();
+    const notifications = data.value || [];
+
+    console.log(`📬 ${notifications.length} notification(s) en attente`);
+
+    // Afficher chaque notification
+    for (const notification of notifications) {
+      await self.registration.showNotification(
+        notification.payload.title || 'EntreCoiffeur',
+        {
+          body: notification.payload.body,
+          icon: notification.payload.icon || '/icon-192x192.png',
+          badge: notification.payload.badge || '/icon-192x192.png',
+          tag: notification.payload.tag || `notification-${notification._id}`,
+          requireInteraction: true,
+          vibrate: [200, 100, 200, 100, 200],
+          data: notification.payload.data || {},
+          actions: notification.payload.actions || []
+        }
+      );
+
+      // Marquer comme livrée
+      await fetch(`${convexUrl}/api/mutation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          path: 'functions/mutations/pendingNotifications:markAsDelivered',
+          args: { notificationId: notification._id },
+          format: 'json'
+        })
+      });
+
+      console.log('✅ Notification affichée et marquée:', notification._id);
+    }
+  } catch (error) {
+    console.error('❌ Erreur vérification notifications:', error);
+  }
+}
+
+// Démarrer la vérification périodique
+function startPeriodicCheck(userId, convexUrl) {
+  // Vérifier immédiatement
+  checkPendingNotifications(userId, convexUrl);
+  
+  // Puis vérifier toutes les 30 secondes
+  setInterval(() => {
+    checkPendingNotifications(userId, convexUrl);
+  }, NOTIFICATION_CHECK_INTERVAL);
+}
+
+// Background Sync pour vérifier quand la connexion revient
+self.addEventListener('sync', (event) => {
+  console.log('🔄 Background Sync déclenché:', event.tag);
+  
+  if (event.tag === 'check-notifications') {
+    event.waitUntil(
+      // Récupérer les infos stockées
+      self.registration.getNotifications().then(() => {
+        // Vérifier les notifications
+        return Promise.resolve();
+      })
+    );
   }
 });
 

@@ -157,19 +157,47 @@ export const createOrder = mutation({
       }
     }
 
-    // Envoyer une notification push au vendeur pour la nouvelle commande
-    // Note: Les notifications push sont gérées côté client via le Service Worker
-    // L'envoi réel des notifications nécessite une configuration VAPID en production
+    // Créer une notification en attente pour le vendeur
     try {
       const seller = await ctx.db.get(args.sellerId);
+      const buyer = await ctx.db.get(args.buyerId);
       
       if (seller && (seller.userType === 'professionnel' || seller.userType === 'grossiste')) {
-        console.log('📬 Nouvelle commande pour le vendeur:', args.sellerId);
-        // En production, vous pouvez déclencher une action Convex ici
-        // pour envoyer une vraie notification push via web-push
+        const buyerName = buyer 
+          ? `${buyer.firstName || ''} ${buyer.lastName || ''}`.trim() || buyer.email
+          : 'Un client';
+
+        // Créer une notification en attente
+        await ctx.db.insert("pendingNotifications", {
+          userId: args.sellerId,
+          payload: {
+            title: '🛍️ Nouvelle commande !',
+            body: `${buyerName} a commandé "${args.productName}" pour ${args.total.toFixed(2)} DH`,
+            icon: '/icon-192x192.png',
+            badge: '/icon-192x192.png',
+            tag: `order-${orderNumber}`,
+            requireInteraction: true,
+            vibrate: [200, 100, 200, 100, 200],
+            data: {
+              url: '/dashboard?tab=orders',
+              orderNumber: orderNumber,
+              type: 'new_order'
+            },
+            actions: [
+              {
+                action: 'view',
+                title: '👁️ Voir la commande'
+              }
+            ]
+          },
+          isDelivered: false,
+          createdAt: Date.now(),
+        });
+
+        console.log('📬 Notification en attente créée pour le vendeur:', args.sellerId);
       }
     } catch (error) {
-      console.error("❌ Erreur lors de la vérification du vendeur:", error);
+      console.error("❌ Erreur lors de la création de la notification:", error);
     }
 
     return {

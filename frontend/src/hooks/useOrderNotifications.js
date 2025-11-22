@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useQuery } from 'convex/react';
+import { useQuery, useMutation } from 'convex/react';
 import { api } from '../lib/convex';
 
 /**
@@ -14,6 +14,9 @@ export const useOrderNotifications = (userId, userType) => {
       ? { sellerId: userId }
       : 'skip'
   );
+
+  // Mutation pour créer une notification en attente
+  const createPendingNotification = useMutation(api.functions.mutations.pendingNotifications.createPendingNotification);
 
   useEffect(() => {
     // Vérifier si c'est un vendeur

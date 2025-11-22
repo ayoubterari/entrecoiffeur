@@ -960,4 +960,15 @@ export default defineSchema({
   }).index("by_user", ["userId"])
     .index("by_active", ["isActive"])
     .index("by_user_active", ["userId", "isActive"]),
+
+  // Table pour les notifications en attente (à afficher au prochain sync)
+  pendingNotifications: defineTable({
+    userId: v.id("users"), // Utilisateur destinataire
+    payload: v.any(), // Contenu de la notification
+    isDelivered: v.boolean(), // Si la notification a été livrée
+    createdAt: v.number(),
+    deliveredAt: v.optional(v.number()),
+  }).index("by_user", ["userId"])
+    .index("by_user_delivered", ["userId", "isDelivered"])
+    .index("by_delivered", ["isDelivered"]),
 });
