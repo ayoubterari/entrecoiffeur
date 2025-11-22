@@ -1,10 +1,13 @@
 // Service Worker pour EntreCoiffeur PWA
-const CACHE_NAME = 'entrecoiffeur-v1';
+const CACHE_VERSION = '2.0.0'; // Version avec redirection notifications
+const CACHE_NAME = `entrecoiffeur-v${CACHE_VERSION}`;
 const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json'
 ];
+
+console.log(`🚀 Service Worker version ${CACHE_VERSION} chargé`);
 
 // Installation du Service Worker
 self.addEventListener('install', (event) => {
@@ -122,25 +125,47 @@ self.addEventListener('push', (event) => {
 
 // Gestion du clic sur la notification
 self.addEventListener('notificationclick', (event) => {
-  console.log('👆 Service Worker: Clic sur notification');
+  console.log('👆 Service Worker: Clic sur notification', event);
   
+  // Fermer la notification
   event.notification.close();
 
-  const urlToOpen = event.notification.data?.url || '/dashboard';
+  // Récupérer l'URL de destination
+  const urlToOpen = event.notification.data?.url || '/dashboard?tab=orders';
+  const fullUrl = new URL(urlToOpen, self.location.origin).href;
+  
+  console.log('🔗 URL à ouvrir:', fullUrl);
 
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true })
-      .then((clientList) => {
-        // Chercher si une fenêtre est déjà ouverte
-        for (let client of clientList) {
-          if (client.url.includes(urlToOpen) && 'focus' in client) {
-            return client.focus();
+    clients.matchAll({ 
+      type: 'window', 
+      includeUncontrolled: true 
+    }).then((clientList) => {
+      console.log('📱 Clients trouvés:', clientList.length);
+      
+      // Chercher si une fenêtre de l'app est déjà ouverte
+      for (let client of clientList) {
+        const clientUrl = new URL(client.url);
+        const targetUrl = new URL(fullUrl);
+        
+        // Si c'est le même domaine, naviguer vers la page
+        if (clientUrl.origin === targetUrl.origin) {
+          console.log('✅ Client trouvé, navigation vers:', fullUrl);
+          if ('focus' in client) {
+            client.focus();
           }
+          // Naviguer vers l'URL cible
+          return client.navigate(fullUrl);
         }
-        // Sinon, ouvrir une nouvelle fenêtre
-        if (clients.openWindow) {
-          return clients.openWindow(urlToOpen);
-        }
-      })
+      }
+      
+      // Sinon, ouvrir une nouvelle fenêtre
+      console.log('🆕 Ouverture nouvelle fenêtre:', fullUrl);
+      if (clients.openWindow) {
+        return clients.openWindow(fullUrl);
+      }
+    }).catch((error) => {
+      console.error('❌ Erreur lors de l\'ouverture:', error);
+    })
   );
 });

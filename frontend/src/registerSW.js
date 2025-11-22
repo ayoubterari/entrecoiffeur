@@ -3,14 +3,17 @@ export function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker
-        .register('/sw.js')
+        .register('/sw.js', { updateViaCache: 'none' })
         .then((registration) => {
           console.log('✅ Service Worker enregistré avec succès:', registration.scope);
           
-          // Vérifier les mises à jour toutes les heures
+          // Forcer la vérification des mises à jour immédiatement
+          registration.update();
+          
+          // Vérifier les mises à jour toutes les 5 minutes
           setInterval(() => {
             registration.update();
-          }, 60 * 60 * 1000);
+          }, 5 * 60 * 1000);
           
           // Écouter les mises à jour
           registration.addEventListener('updatefound', () => {
@@ -19,10 +22,21 @@ export function registerServiceWorker() {
             
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                console.log('✨ Nouvelle version disponible. Rechargez pour mettre à jour.');
-                // Optionnel: Afficher une notification à l'utilisateur
+                console.log('✨ Nouvelle version disponible. Activation automatique...');
+                // Activer immédiatement le nouveau service worker
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+                // Recharger la page pour utiliser le nouveau SW
+                window.location.reload();
               }
             });
+          });
+          
+          // Écouter les messages du Service Worker
+          navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'SW_UPDATED') {
+              console.log('🔄 Service Worker mis à jour, rechargement...');
+              window.location.reload();
+            }
           });
         })
         .catch((error) => {
