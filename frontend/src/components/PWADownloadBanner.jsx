@@ -6,19 +6,24 @@ const PWADownloadBanner = () => {
   const [isInstalled, setIsInstalled] = useState(false)
 
   useEffect(() => {
+    console.log('🔍 PWA Banner: Component mounted')
+    
     // Vérifier si l'app est déjà installée
     if (window.matchMedia('(display-mode: standalone)').matches) {
+      console.log('✅ PWA Banner: App déjà installée')
       setIsInstalled(true)
       return
     }
 
     // Écouter l'événement beforeinstallprompt
     const handler = (e) => {
+      console.log('✅ PWA Banner: beforeinstallprompt event received!')
       e.preventDefault()
       setDeferredPrompt(e)
     }
 
     window.addEventListener('beforeinstallprompt', handler)
+    console.log('👂 PWA Banner: Listening for beforeinstallprompt event...')
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handler)
@@ -26,28 +31,37 @@ const PWADownloadBanner = () => {
   }, [])
 
   const handleInstall = async () => {
+    console.log('🖱️ PWA Banner: Install button clicked')
+    console.log('📦 PWA Banner: deferredPrompt =', deferredPrompt)
+    
     if (!deferredPrompt) {
-      console.log('Prompt d\'installation non disponible')
+      console.log('❌ PWA Banner: Prompt d\'installation non disponible')
+      console.log('💡 PWA Banner: Raisons possibles:')
+      console.log('   - En mode dev (npm run dev) - Faire npm run build + npm run preview')
+      console.log('   - Critères PWA non remplis')
+      console.log('   - App déjà installée')
+      console.log('   - Navigateur ne supporte pas (Safari iOS)')
       return
     }
 
     try {
-      // Lancer le prompt d'installation IMMÉDIATEMENT
+      console.log('🚀 PWA Banner: Lancement du prompt d\'installation...')
       await deferredPrompt.prompt()
       
-      // Attendre la réponse de l'utilisateur
+      console.log('⏳ PWA Banner: Attente de la réponse utilisateur...')
       const { outcome } = await deferredPrompt.userChoice
+      console.log('📊 PWA Banner: Résultat =', outcome)
       
       if (outcome === 'accepted') {
-        console.log('PWA installée avec succès')
+        console.log('✅ PWA Banner: Installation acceptée!')
         setIsInstalled(true)
       } else {
-        console.log('Installation annulée par l\'utilisateur')
+        console.log('❌ PWA Banner: Installation refusée par l\'utilisateur')
       }
       
       setDeferredPrompt(null)
     } catch (error) {
-      console.error('Erreur installation PWA:', error)
+      console.error('❌ PWA Banner: Erreur installation:', error)
     }
   }
 
