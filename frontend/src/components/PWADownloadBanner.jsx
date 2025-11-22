@@ -27,22 +27,28 @@ const PWADownloadBanner = () => {
 
   const handleInstall = async () => {
     if (!deferredPrompt) {
-      // Si pas de prompt natif, afficher les instructions
-      alert('Pour installer l\'application:\n\n' +
-            '📱 Sur Android: Menu > Installer l\'application\n' +
-            '🍎 Sur iOS: Partager > Sur l\'écran d\'accueil')
+      console.log('Prompt d\'installation non disponible')
       return
     }
 
-    deferredPrompt.prompt()
-    const { outcome } = await deferredPrompt.userChoice
-    
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt')
-      setIsInstalled(true)
+    try {
+      // Lancer le prompt d'installation IMMÉDIATEMENT
+      await deferredPrompt.prompt()
+      
+      // Attendre la réponse de l'utilisateur
+      const { outcome } = await deferredPrompt.userChoice
+      
+      if (outcome === 'accepted') {
+        console.log('PWA installée avec succès')
+        setIsInstalled(true)
+      } else {
+        console.log('Installation annulée par l\'utilisateur')
+      }
+      
+      setDeferredPrompt(null)
+    } catch (error) {
+      console.error('Erreur installation PWA:', error)
     }
-    
-    setDeferredPrompt(null)
   }
 
   // Ne pas afficher si installé
