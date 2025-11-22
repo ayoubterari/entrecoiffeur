@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test PWA - EntreCoiffeur</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #C0B4A5;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #C0B4A5;
+            background: #f9f9f9;
+        }
+        .test-section h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .status {
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            margin: 5px 0;
+            font-weight: 600;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-size: 13px;
+        }
+        button {
+            background: linear-gradient(135deg, #C0B4A5 0%, #D4C9BC 100%);
+            color: #2d2d2d;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        .detail {
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Diagnostic PWA - EntreCoiffeur</h1>
+        
+        <div class="test-section">
+            <h2>📱 Informations Appareil</h2>
+            <div id="device-info"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🌐 Environnement</h2>
+            <div id="env-info"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📋 Manifest</h2>
+            <div id="manifest-info"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>⚙️ Service Worker</h2>
+            <div id="sw-info"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📦 Installation PWA</h2>
+            <div id="install-info"></div>
+            <button id="install-btn" style="display:none;">📥 Installer Maintenant</button>
+        </div>
+
+        <div class="test-section">
+            <h2>🔧 Actions</h2>
+            <button onclick="location.reload()">🔄 Recharger</button>
+            <button onclick="clearCache()">🗑️ Vider Cache</button>
+            <button onclick="window.location.href='/'">🏠 Retour Accueil</button>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 Console Logs</h2>
+            <pre id="console-logs"></pre>
+        </div>
+    </div>
+
+    <script>
+        let deferredPrompt = null;
+        const logs = [];
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            logs.push(`[${timestamp}] ${message}`);
+            updateConsole();
+            console.log(message);
+        }
+
+        function updateConsole() {
+            document.getElementById('console-logs').textContent = logs.join('\n');
+        }
+
+        // Device Info
+        function checkDevice() {
+            const info = document.getElementById('device-info');
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            
+            info.innerHTML = `
+                <div class="detail">User Agent: ${navigator.userAgent}</div>
+                <div class="status ${isMobile ? 'success' : 'error'}">
+                    ${isMobile ? '✅' : '❌'} Appareil Mobile: ${isMobile ? 'Oui' : 'Non'}
+                </div>
+                <div class="status ${isAndroid ? 'success' : 'info'}">
+                    ${isAndroid ? '✅' : 'ℹ️'} Android: ${isAndroid ? 'Oui' : 'Non'}
+                </div>
+                <div class="status ${isIOS ? 'warning' : 'info'}">
+                    ${isIOS ? '⚠️' : 'ℹ️'} iOS: ${isIOS ? 'Oui (pas de beforeinstallprompt)' : 'Non'}
+                </div>
+            `;
+            
+            log(`Appareil: ${isMobile ? 'Mobile' : 'Desktop'}, Android: ${isAndroid}, iOS: ${isIOS}`);
+        }
+
+        // Environment Info
+        function checkEnvironment() {
+            const info = document.getElementById('env-info');
+            const isHTTPS = location.protocol === 'https:';
+            const isLocalhost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            const isIOSStandalone = window.navigator.standalone === true;
+            
+            info.innerHTML = `
+                <div class="detail">URL: ${location.href}</div>
+                <div class="status ${isHTTPS || isLocalhost ? 'success' : 'error'}">
+                    ${isHTTPS || isLocalhost ? '✅' : '❌'} HTTPS: ${isHTTPS ? 'Oui' : 'Non'}
+                </div>
+                <div class="status ${isStandalone || isIOSStandalone ? 'warning' : 'success'}">
+                    ${isStandalone || isIOSStandalone ? '⚠️' : '✅'} Déjà installé: ${isStandalone || isIOSStandalone ? 'Oui' : 'Non'}
+                </div>
+            `;
+            
+            log(`HTTPS: ${isHTTPS}, Standalone: ${isStandalone}`);
+        }
+
+        // Manifest Check
+        async function checkManifest() {
+            const info = document.getElementById('manifest-info');
+            try {
+                const response = await fetch('/manifest.json');
+                const manifest = await response.json();
+                
+                const hasName = !!manifest.name;
+                const hasIcons = manifest.icons && manifest.icons.length >= 2;
+                const hasStartUrl = !!manifest.start_url;
+                const hasDisplay = manifest.display === 'standalone';
+                
+                info.innerHTML = `
+                    <div class="status ${response.ok ? 'success' : 'error'}">
+                        ${response.ok ? '✅' : '❌'} Manifest accessible
+                    </div>
+                    <div class="status ${hasName ? 'success' : 'error'}">
+                        ${hasName ? '✅' : '❌'} Name: ${manifest.name || 'Manquant'}
+                    </div>
+                    <div class="status ${hasIcons ? 'success' : 'error'}">
+                        ${hasIcons ? '✅' : '❌'} Icons: ${manifest.icons?.length || 0} icônes
+                    </div>
+                    <div class="status ${hasStartUrl ? 'success' : 'error'}">
+                        ${hasStartUrl ? '✅' : '❌'} Start URL: ${manifest.start_url || 'Manquant'}
+                    </div>
+                    <div class="status ${hasDisplay ? 'success' : 'error'}">
+                        ${hasDisplay ? '✅' : '❌'} Display: ${manifest.display || 'Manquant'}
+                    </div>
+                    <div class="detail">Theme Color: ${manifest.theme_color}</div>
+                `;
+                
+                log(`Manifest OK: ${manifest.icons?.length} icônes`);
+                
+                // Test icon loading
+                if (manifest.icons && manifest.icons.length > 0) {
+                    for (const icon of manifest.icons) {
+                        const iconUrl = icon.src.startsWith('/') ? icon.src : '/' + icon.src;
+                        try {
+                            const iconResponse = await fetch(iconUrl);
+                            log(`Icon ${icon.sizes}: ${iconResponse.ok ? '✅ OK' : '❌ ERREUR'}`);
+                        } catch (e) {
+                            log(`Icon ${icon.sizes}: ❌ ERREUR - ${e.message}`, 'error');
+                        }
+                    }
+                }
+            } catch (error) {
+                info.innerHTML = `<div class="status error">❌ Erreur: ${error.message}</div>`;
+                log(`Manifest ERROR: ${error.message}`, 'error');
+            }
+        }
+
+        // Service Worker Check
+        async function checkServiceWorker() {
+            const info = document.getElementById('sw-info');
+            
+            if (!('serviceWorker' in navigator)) {
+                info.innerHTML = '<div class="status error">❌ Service Worker non supporté</div>';
+                log('Service Worker non supporté', 'error');
+                return;
+            }
+            
+            try {
+                const registration = await navigator.serviceWorker.getRegistration();
+                
+                if (registration) {
+                    const isActive = registration.active !== null;
+                    const scope = registration.scope;
+                    
+                    info.innerHTML = `
+                        <div class="status ${isActive ? 'success' : 'warning'}">
+                            ${isActive ? '✅' : '⚠️'} Service Worker: ${isActive ? 'Actif' : 'En attente'}
+                        </div>
+                        <div class="detail">Scope: ${scope}</div>
+                        <div class="detail">State: ${registration.active?.state || 'N/A'}</div>
+                    `;
+                    
+                    log(`Service Worker: ${isActive ? 'Actif' : 'Inactif'}`);
+                } else {
+                    info.innerHTML = '<div class="status warning">⚠️ Service Worker non enregistré</div>';
+                    log('Service Worker non enregistré', 'warning');
+                }
+            } catch (error) {
+                info.innerHTML = `<div class="status error">❌ Erreur: ${error.message}</div>`;
+                log(`Service Worker ERROR: ${error.message}`, 'error');
+            }
+        }
+
+        // Install Check
+        function checkInstall() {
+            const info = document.getElementById('install-info');
+            const installBtn = document.getElementById('install-btn');
+            
+            // Listen for beforeinstallprompt
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                info.innerHTML = '<div class="status success">✅ PWA Installable détecté !</div>';
+                installBtn.style.display = 'inline-block';
+                log('✅ beforeinstallprompt déclenché - PWA installable !');
+            });
+            
+            installBtn.addEventListener('click', async () => {
+                if (!deferredPrompt) {
+                    log('Pas de prompt disponible', 'error');
+                    return;
+                }
+                
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                log(`Installation: ${outcome}`);
+                
+                if (outcome === 'accepted') {
+                    info.innerHTML = '<div class="status success">✅ Installation acceptée !</div>';
+                } else {
+                    info.innerHTML = '<div class="status warning">⚠️ Installation refusée</div>';
+                }
+                
+                deferredPrompt = null;
+                installBtn.style.display = 'none';
+            });
+            
+            // Check after 3 seconds
+            setTimeout(() => {
+                if (!deferredPrompt) {
+                    info.innerHTML = `
+                        <div class="status error">❌ beforeinstallprompt non déclenché</div>
+                        <div class="detail">Vérifiez les critères ci-dessus</div>
+                    `;
+                    log('❌ beforeinstallprompt NON déclenché après 3s', 'error');
+                }
+            }, 3000);
+        }
+
+        async function clearCache() {
+            if ('caches' in window) {
+                const cacheNames = await caches.keys();
+                await Promise.all(cacheNames.map(name => caches.delete(name)));
+                log('Cache vidé');
+                alert('Cache vidé ! Rechargez la page.');
+            }
+        }
+
+        // Run all checks
+        window.addEventListener('load', () => {
+            log('=== Début du diagnostic PWA ===');
+            checkDevice();
+            checkEnvironment();
+            checkManifest();
+            checkServiceWorker();
+            checkInstall();
+        });
+    </script>
+</body>
+</html>
