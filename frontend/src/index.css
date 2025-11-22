@@ -5531,6 +5531,40 @@ body.dashboard-body #root {
   font-weight: 600;
 }
 
+.status-pending {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.cod-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1));
+  border: 2px solid rgba(245, 158, 11, 0.3);
+  border-radius: 12px;
+}
+
+.notice-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.notice-content h4 {
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.notice-content p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
 .ordered-items {
   margin-bottom: 2rem;
 }

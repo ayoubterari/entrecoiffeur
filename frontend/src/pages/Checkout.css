@@ -249,10 +249,11 @@
 }
 
 .paypal-button,
-.card-button {
+.card-button,
+.cod-button {
   width: 100%;
   padding: 0.8rem 1.6rem;
-  background: linear-gradient(135deg, #4E4A43, #4E4A43);
+  background: linear-gradient(135deg, #C0B4A5, #A89985);
   color: white;
   border: none;
   border-radius: 12px;
@@ -268,16 +269,60 @@
 }
 
 .paypal-button:hover:not(:disabled),
-.card-button:hover:not(:disabled) {
+.card-button:hover:not(:disabled),
+.cod-button:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(192, 180, 165, 0.5);
 }
 
 .paypal-button:disabled,
-.card-button:disabled {
+.card-button:disabled,
+.cod-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
+}
+
+/* COD Info Box */
+.cod-info {
+  margin: 1.2rem 0;
+}
+
+.info-box {
+  background: linear-gradient(135deg, rgba(192, 180, 165, 0.1), rgba(168, 153, 133, 0.1));
+  border: 2px solid rgba(192, 180, 165, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.info-box h4 {
+  color: #2d3436;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.info-box li {
+  color: #636e72;
+  font-size: 0.85rem;
+  padding: 0.4rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.payment-method.active {
+  border-color: #C0B4A5;
+  background: rgba(192, 180, 165, 0.1);
 }
 
 .button-spinner {

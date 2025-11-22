@@ -166,14 +166,29 @@ const OrderSuccess = () => {
             <div className="payment-details">
               <div className="payment-method">
                 <span className="payment-icon">
-                  {paymentResult.id.startsWith('PAYPAL') ? '💙' : '💳'}
+                  {paymentResult.id.startsWith('COD') ? '💵' : (paymentResult.id.startsWith('PAYPAL') ? '💙' : '💳')}
                 </span>
                 <div className="payment-info">
-                  <p><strong>Méthode:</strong> {paymentResult.id.startsWith('PAYPAL') ? 'PayPal' : 'Carte bancaire'}</p>
-                  <p><strong>Statut:</strong> <span className="status-paid">✅ Payé</span></p>
+                  <p><strong>Méthode:</strong> {
+                    paymentResult.id.startsWith('COD') 
+                      ? 'Paiement à la livraison (COD)' 
+                      : (paymentResult.id.startsWith('PAYPAL') ? 'PayPal' : 'Carte bancaire')
+                  }</p>
+                  <p><strong>Statut:</strong> <span className={paymentResult.id.startsWith('COD') ? 'status-pending' : 'status-paid'}>
+                    {paymentResult.id.startsWith('COD') ? '⏳ En attente de livraison' : '✅ Payé'}
+                  </span></p>
                   <p><strong>Référence:</strong> {paymentResult.id}</p>
                 </div>
               </div>
+              {paymentResult.id.startsWith('COD') && (
+                <div className="cod-notice">
+                  <div className="notice-icon">ℹ️</div>
+                  <div className="notice-content">
+                    <h4>Paiement à la livraison</h4>
+                    <p>Vous paierez en espèces lors de la réception de votre commande.</p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Sécurité */}

@@ -451,7 +451,9 @@ const SellerStore = ({ onAddToCart, onToggleFavorite, isAuthenticated, userId })
                   <div className="detail-item">
                     <span className="detail-label">Type de compte :</span>
                     <span className="detail-value">
-                      {seller.userType === 'professionnel' ? '👑 Professionnel' : '💎 Particulier'}
+                      {seller.userType === 'professionnel' ? '👑 Professionnel' : 
+                       seller.userType === 'grossiste' ? '🏢 Grossiste' : 
+                       '💎 Particulier'}
                     </span>
                   </div>
                   {seller.companyName && (

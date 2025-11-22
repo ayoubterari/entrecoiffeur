@@ -75,7 +75,10 @@ const ProductsModule = ({ userId, userType }) => {
     nombreVitesse: '',
     moteur: '',
     zonesSpecifiques: '',
-    origineFabrication: ''
+    origineFabrication: '',
+    // Champs de livraison
+    freeShipping: true,
+    shippingCost: ''
   })
 
   // Get categories and user products
@@ -265,7 +268,10 @@ const ProductsModule = ({ userId, userType }) => {
         nombreVitesse: productForm.nombreVitesse || undefined,
         moteur: productForm.moteur || undefined,
         zonesSpecifiques: productForm.zonesSpecifiques || undefined,
-        origineFabrication: productForm.origineFabrication || undefined
+        origineFabrication: productForm.origineFabrication || undefined,
+        // Champs de livraison
+        freeShipping: productForm.freeShipping,
+        shippingCost: productForm.freeShipping ? undefined : (productForm.shippingCost ? parseFloat(productForm.shippingCost) : undefined)
       })
       
       resetForm()
@@ -337,7 +343,10 @@ const ProductsModule = ({ userId, userType }) => {
       nombreVitesse: product.nombreVitesse || '',
       moteur: product.moteur || '',
       zonesSpecifiques: product.zonesSpecifiques || '',
-      origineFabrication: product.origineFabrication || ''
+      origineFabrication: product.origineFabrication || '',
+      // Champs de livraison
+      freeShipping: product.freeShipping !== false,
+      shippingCost: product.shippingCost?.toString() || ''
     })
     
     const existingImages = product.images?.map((imageId, index) => ({
@@ -409,7 +418,10 @@ const ProductsModule = ({ userId, userType }) => {
         nombreVitesse: productForm.nombreVitesse || undefined,
         moteur: productForm.moteur || undefined,
         zonesSpecifiques: productForm.zonesSpecifiques || undefined,
-        origineFabrication: productForm.origineFabrication || undefined
+        origineFabrication: productForm.origineFabrication || undefined,
+        // Champs de livraison
+        freeShipping: productForm.freeShipping,
+        shippingCost: productForm.freeShipping ? undefined : (productForm.shippingCost ? parseFloat(productForm.shippingCost) : undefined)
       })
       
       resetForm()
@@ -563,6 +575,7 @@ const ProductsModule = ({ userId, userType }) => {
                       <TableHead>Description</TableHead>
                       <TableHead>Localisation</TableHead>
                       <TableHead>Prix</TableHead>
+                      <TableHead>Livraison</TableHead>
                       <TableHead>Stock</TableHead>
                       <TableHead>Catégorie</TableHead>
                       <TableHead>Statut</TableHead>
@@ -604,6 +617,17 @@ const ProductsModule = ({ userId, userType }) => {
                           {product.originalPrice && (
                             <div className="text-xs text-muted-foreground line-through">
                               {product.originalPrice}€
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {product.freeShipping ? (
+                            <Badge variant="default" className="bg-green-500">
+                              ✅ Gratuite
+                            </Badge>
+                          ) : (
+                            <div className="text-sm">
+                              {product.shippingCost ? `${product.shippingCost} DH` : 'Non défini'}
                             </div>
                           )}
                         </TableCell>
@@ -1094,6 +1118,46 @@ const ProductsModule = ({ userId, userType }) => {
               />
             </div>
 
+            {/* Options de livraison */}
+            <div className="space-y-3 p-4 border rounded-lg bg-blue-50">
+              <Label className="text-base font-semibold">🚚 Options de livraison</Label>
+              <p className="text-sm text-muted-foreground">Configurez les frais de livraison pour ce produit</p>
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="freeShipping"
+                  checked={productForm.freeShipping}
+                  onCheckedChange={(checked) => setProductForm({
+                    ...productForm, 
+                    freeShipping: checked,
+                    shippingCost: checked ? '' : productForm.shippingCost
+                  })}
+                />
+                <Label htmlFor="freeShipping" className="cursor-pointer font-medium">
+                  ✅ Livraison gratuite
+                </Label>
+              </div>
+
+              {!productForm.freeShipping && (
+                <div className="space-y-2 pl-6">
+                  <Label htmlFor="shippingCost">Prix de la livraison (DH) *</Label>
+                  <Input
+                    id="shippingCost"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={productForm.shippingCost}
+                    onChange={(e) => setProductForm({...productForm, shippingCost: e.target.value})}
+                    placeholder="Ex: 50.00"
+                    required={!productForm.freeShipping}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Le client paiera ce montant en plus du prix du produit
+                  </p>
+                </div>
+              )}
+            </div>
+
             {/* Visibilité du produit */}
             <div className="space-y-3 p-4 border rounded-lg bg-muted/50">
               <Label className="text-base font-semibold">👁️ Visibilité du produit</Label>
@@ -1557,6 +1621,46 @@ const ProductsModule = ({ userId, userType }) => {
                 onImagesChange={setProductImages}
                 maxImages={5}
               />
+            </div>
+
+            {/* Options de livraison */}
+            <div className="space-y-3 p-4 border rounded-lg bg-blue-50">
+              <Label className="text-base font-semibold">🚚 Options de livraison</Label>
+              <p className="text-sm text-muted-foreground">Configurez les frais de livraison pour ce produit</p>
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="edit-freeShipping"
+                  checked={productForm.freeShipping}
+                  onCheckedChange={(checked) => setProductForm({
+                    ...productForm, 
+                    freeShipping: checked,
+                    shippingCost: checked ? '' : productForm.shippingCost
+                  })}
+                />
+                <Label htmlFor="edit-freeShipping" className="cursor-pointer font-medium">
+                  ✅ Livraison gratuite
+                </Label>
+              </div>
+
+              {!productForm.freeShipping && (
+                <div className="space-y-2 pl-6">
+                  <Label htmlFor="edit-shippingCost">Prix de la livraison (DH) *</Label>
+                  <Input
+                    id="edit-shippingCost"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={productForm.shippingCost}
+                    onChange={(e) => setProductForm({...productForm, shippingCost: e.target.value})}
+                    placeholder="Ex: 50.00"
+                    required={!productForm.freeShipping}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Le client paiera ce montant en plus du prix du produit
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Visibilité du produit */}

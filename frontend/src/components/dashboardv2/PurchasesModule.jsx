@@ -161,11 +161,6 @@ const PurchasesModule = ({ userId }) => {
     doc.setFont('helvetica', 'bold')
     doc.text('FACTURE', 20, 65)
     
-    // Ligne décorative sous le titre
-    doc.setDrawColor(...accentColor)
-    doc.setLineWidth(2)
-    doc.line(20, 68, 70, 68)
-    
     // Informations de la facture dans un encadré moderne
     const invoiceDate = new Date(order.createdAt)
     doc.setFillColor(...lightGray)
@@ -189,10 +184,6 @@ const PurchasesModule = ({ userId }) => {
     doc.setLineWidth(1.5)
     doc.setFillColor(255, 255, 255)
     doc.roundedRect(115, 75, 75, 45, 3, 3, 'FD')
-    
-    // Barre de couleur sur le côté
-    doc.setFillColor(...accentColor)
-    doc.rect(115, 75, 3, 45, 'F')
     
     doc.setTextColor(...darkColor)
     doc.setFontSize(11)
@@ -275,7 +266,7 @@ const PurchasesModule = ({ userId }) => {
     
     // Frais de livraison
     doc.text('Frais de livraison TTC:', summaryX, summaryStartY + 14)
-    doc.text(`${order.shippingCost ? order.shippingCost.toFixed(2) : '0.00'} €`, summaryX + 55, summaryStartY + 14, { align: 'right' })
+    doc.text(`${order.shipping ? order.shipping.toFixed(2) : '0.00'} €`, summaryX + 55, summaryStartY + 14, { align: 'right' })
     
     // Ligne de séparation
     doc.setDrawColor(...primaryColor)

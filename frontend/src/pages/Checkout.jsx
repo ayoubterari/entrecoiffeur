@@ -15,7 +15,7 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
   const [originalOrderData, setOriginalOrderData] = useState(null)
   const [appliedCoupon, setAppliedCoupon] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [paymentMethod, setPaymentMethod] = useState('paypal')
+  const [paymentMethod, setPaymentMethod] = useState('cod')
   
   // Convex mutations
   const createOrder = useMutation(api.orders.createOrder)
@@ -84,32 +84,16 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
     }))
   }
 
-  const handlePayPalPayment = async () => {
+  const handleCODPayment = async () => {
     setLoading(true)
     
     try {
-      // Simuler l'intégration PayPal
-      const paypalOrder = {
-        intent: 'CAPTURE',
-        purchase_units: [{
-          amount: {
-            currency_code: 'EUR',
-            value: orderData.total.toFixed(2)
-          },
-          description: `Commande Entre Coiffeur - ${orderData.items.length} article(s)`
-        }]
-      }
-
-      // Simuler la création d'ordre PayPal
-      await new Promise(resolve => setTimeout(resolve, 2000))
-
-      // Simuler le succès du paiement
-      const paymentResult = {
-        id: 'PAYPAL_' + Date.now(),
-        status: 'COMPLETED',
-        amount: orderData.total,
-        currency: 'EUR',
-        payer: billingInfo
+      // Validation des champs requis
+      if (!billingInfo.firstName || !billingInfo.lastName || !billingInfo.email || 
+          !billingInfo.address || !billingInfo.city || !billingInfo.postalCode) {
+        alert('Veuillez remplir tous les champs obligatoires')
+        setLoading(false)
+        return
       }
 
       // Appliquer le coupon si présent
@@ -117,7 +101,7 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
         await applyCouponMutation({ couponId: orderData.couponId })
       }
 
-      // Créer la commande dans Convex
+      // Créer la commande dans Convex avec COD
       if (getProduct && getCurrentUser && getCurrentUser._id) {
         // Récupérer le code d'affiliation actif
         const affiliateCode = getActiveAffiliateCode()
@@ -135,12 +119,14 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
           discount: orderData.discount || 0,
           couponCode: orderData.couponCode || undefined,
           total: orderData.total,
-          paymentMethod: 'PayPal',
+          paymentMethod: 'COD',
           // Ajouter les données d'affiliation
           affiliateCode: affiliateCode || undefined,
-          paymentId: paymentResult.id,
+          paymentId: undefined, // Pas de paymentId pour COD
           billingInfo: billingInfo,
         })
+
+        console.log('Commande COD créée:', orderResult)
       } else {
         console.error('Impossible de créer la commande:', {
           getProduct: !!getProduct,
@@ -154,90 +140,25 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
       // Rediriger vers la page de succès
       navigate('/order-success', {
         state: {
-          paymentResult,
+          paymentResult: {
+            id: 'COD_' + Date.now(),
+            status: 'PENDING',
+            amount: orderData.total,
+            currency: 'DH',
+            method: 'Cash on Delivery'
+          },
           orderData,
           billingInfo
         }
       })
     } catch (error) {
-      console.error('Erreur PayPal:', error)
-      alert('Erreur lors du paiement. Veuillez réessayer.')
+      console.error('Erreur lors de la création de la commande:', error)
+      alert('Erreur lors de la création de la commande. Veuillez réessayer.')
     } finally {
       setLoading(false)
     }
   }
 
-  const handleCardPayment = async () => {
-    setLoading(true)
-    
-    try {
-      // Simuler le paiement par carte
-      await new Promise(resolve => setTimeout(resolve, 1500))
-
-      const paymentResult = {
-        id: 'CARD_' + Date.now(),
-        status: 'COMPLETED',
-        amount: orderData.total,
-        currency: 'EUR',
-        payer: billingInfo
-      }
-
-      // Appliquer le coupon si présent
-      if (orderData.couponId) {
-        await applyCouponMutation({ couponId: orderData.couponId })
-      }
-
-      // Créer la commande dans Convex
-      if (getProduct && getCurrentUser && getCurrentUser._id) {
-        // Récupérer le code d'affiliation actif
-        const affiliateCode = getActiveAffiliateCode()
-        
-        const orderResult = await createOrder({
-          buyerId: getCurrentUser._id,
-          sellerId: getProduct.sellerId,
-          productId: orderData.items[0].productId,
-          productName: orderData.items[0].name,
-          productPrice: orderData.items[0].price,
-          quantity: orderData.items[0].quantity,
-          subtotal: orderData.subtotal,
-          shipping: orderData.shipping,
-          tax: orderData.tax,
-          discount: orderData.discount || 0,
-          couponCode: orderData.couponCode || undefined,
-          total: orderData.total,
-          paymentMethod: 'Carte bancaire',
-          // Ajouter les données d'affiliation
-          affiliateCode: affiliateCode || undefined,
-          paymentId: paymentResult.id,
-          billingInfo: billingInfo,
-        })
-
-        console.log('Commande créée:', orderResult)
-      } else {
-        console.error('Impossible de créer la commande:', {
-          getProduct: !!getProduct,
-          getCurrentUser: !!getCurrentUser,
-          userId: getCurrentUser?._id,
-          userEmail: localStorage.getItem('userEmail')
-        })
-        throw new Error('Données utilisateur manquantes pour créer la commande')
-      }
-
-      navigate('/order-success', {
-        state: {
-          paymentResult,
-          orderData,
-          billingInfo
-        }
-      })
-
-    } catch (error) {
-      console.error('Erreur paiement carte:', error)
-      alert('Erreur lors du paiement. Veuillez réessayer.')
-    } finally {
-      setLoading(false)
-    }
-  }
 
   if (!orderData) {
     return (
@@ -387,93 +308,68 @@ const Checkout = ({ isAuthenticated, onLogin, userEmail, userFirstName, userLast
           </div>
         </div>
 
-        {/* Méthodes de paiement */}
+        {/* Méthode de paiement COD */}
         <div className="payment-section">
           <h2>Méthode de paiement</h2>
           
           <div className="payment-methods">
-            <label className="payment-method">
+            <label className="payment-method active">
               <input
                 type="radio"
                 name="paymentMethod"
-                value="paypal"
-                checked={paymentMethod === 'paypal'}
+                value="cod"
+                checked={paymentMethod === 'cod'}
                 onChange={(e) => setPaymentMethod(e.target.value)}
               />
               <div className="payment-option">
-                <div className="payment-icon">💳</div>
+                <div className="payment-icon">💵</div>
                 <div className="payment-info">
-                  <h4>PayPal</h4>
-                  <p>Paiement sécurisé avec PayPal</p>
-                </div>
-              </div>
-            </label>
-
-            <label className="payment-method">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="card"
-                checked={paymentMethod === 'card'}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
-              <div className="payment-option">
-                <div className="payment-icon">💳</div>
-                <div className="payment-info">
-                  <h4>Carte bancaire</h4>
-                  <p>Visa, Mastercard, American Express</p>
+                  <h4>Paiement à la livraison (COD)</h4>
+                  <p>Payez en espèces lors de la réception de votre commande</p>
                 </div>
               </div>
             </label>
           </div>
 
-          {/* Boutons de paiement */}
+          <div className="cod-info">
+            <div className="info-box">
+              <h4>ℹ️ Comment ça marche ?</h4>
+              <ul>
+                <li>✅ Commandez maintenant sans payer en ligne</li>
+                <li>📦 Recevez votre colis à l'adresse indiquée</li>
+                <li>💵 Payez en espèces au livreur</li>
+                <li>🎉 Profitez de votre achat !</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bouton de confirmation */}
           <div className="payment-actions">
-            {paymentMethod === 'paypal' ? (
-              <button
-                className="paypal-button"
-                onClick={handlePayPalPayment}
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <div className="button-spinner"></div>
-                    Traitement...
-                  </>
-                ) : (
-                  <>
-                    <span className="paypal-logo">PayPal</span>
-                    Payer {orderData.total.toFixed(2)}€
-                  </>
-                )}
-              </button>
-            ) : (
-              <button
-                className="card-button"
-                onClick={handleCardPayment}
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <div className="button-spinner"></div>
-                    Traitement...
-                  </>
-                ) : (
-                  <>
-                    💳 Payer par carte {orderData.total.toFixed(2)}€
-                  </>
-                )}
-              </button>
-            )}
+            <button
+              className="cod-button"
+              onClick={handleCODPayment}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <div className="button-spinner"></div>
+                  Traitement...
+                </>
+              ) : (
+                <>
+                  💵 Confirmer la commande ({orderData.total.toFixed(2)} DH)
+                </>
+              )}
+            </button>
           </div>
 
           <div className="payment-security">
             <div className="security-badges">
-              <span className="security-badge">🔒 SSL</span>
-              <span className="security-badge">✅ Sécurisé</span>
-              <span className="security-badge">🛡️ Crypté</span>
+              <span className="security-badge">🔒 Sécurisé</span>
+              <span className="security-badge">✅ Sans risque</span>
+              <span className="security-badge">💵 Paiement à la livraison</span>
             </div>
-            <p>Vos informations de paiement sont sécurisées et cryptées</p>
+            <p>Aucun paiement en ligne requis. Payez uniquement à la réception de votre commande.</p>
           </div>
         </div>
       </div>

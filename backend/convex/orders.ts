@@ -18,7 +18,7 @@ export const createOrder = mutation({
     couponCode: v.optional(v.string()),
     total: v.number(),
     paymentMethod: v.string(),
-    paymentId: v.string(),
+    paymentId: v.optional(v.string()), // Optionnel pour COD
     affiliateCode: v.optional(v.string()),
     billingInfo: v.object({
       firstName: v.string(),
@@ -49,6 +49,16 @@ export const createOrder = mutation({
       }
     }
 
+    // Déterminer le statut de paiement selon la méthode
+    const paymentStatus = args.paymentMethod === "COD" || args.paymentMethod === "Cash on Delivery" 
+      ? "pending" 
+      : "paid";
+    
+    // Déterminer le statut de la commande
+    const orderStatus = args.paymentMethod === "COD" || args.paymentMethod === "Cash on Delivery"
+      ? "pending"
+      : "confirmed";
+
     const orderId = await ctx.db.insert("orders", {
       orderNumber,
       buyerId: args.buyerId,
@@ -63,10 +73,10 @@ export const createOrder = mutation({
       discount: args.discount || 0,
       couponCode: args.couponCode || undefined,
       total: args.total,
-      status: "confirmed",
+      status: orderStatus,
       paymentMethod: args.paymentMethod,
-      paymentId: args.paymentId,
-      paymentStatus: "paid",
+      paymentId: args.paymentId || undefined,
+      paymentStatus: paymentStatus,
       billingInfo: args.billingInfo,
       // Ajouter les champs d'affiliation
       affiliateCode: args.affiliateCode || undefined,
@@ -353,7 +363,7 @@ export const getSellerOrderStats = query({
 
     const stats = {
       totalOrders: orders.length,
-      totalRevenue: orders.reduce((sum, order) => sum + order.total, 0),
+      totalRevenue: orders.reduce((sum, order) => sum + (order.total || 0), 0),
       pendingOrders: orders.filter(order => order.status === "pending").length,
       confirmedOrders: orders.filter(order => order.status === "confirmed").length,
       shippedOrders: orders.filter(order => order.status === "shipped").length,

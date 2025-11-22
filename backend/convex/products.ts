@@ -222,6 +222,9 @@ export const createProduct = mutation({
     moteur: v.optional(v.string()),
     zonesSpecifiques: v.optional(v.string()),
     origineFabrication: v.optional(v.string()),
+    // Champs de livraison
+    freeShipping: v.optional(v.boolean()),
+    shippingCost: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     // Get the seller information to check user type
@@ -401,6 +404,9 @@ export const updateProduct = mutation({
     moteur: v.optional(v.string()),
     zonesSpecifiques: v.optional(v.string()),
     origineFabrication: v.optional(v.string()),
+    // Champs de livraison
+    freeShipping: v.optional(v.boolean()),
+    shippingCost: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const { productId, categoryId, ...updates } = args;

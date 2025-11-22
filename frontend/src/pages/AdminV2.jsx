@@ -247,7 +247,7 @@ const AdminV2 = ({ isAuthenticated, userEmail, userFirstName, userLastName, user
           )}
 
           {activeTab === 'coupons' && hasAccess('coupons') && (
-            <CouponsModule />
+            <CouponsModule userId={userId} />
           )}
 
           {activeTab === 'reviews' && hasAccess('reviews') && (

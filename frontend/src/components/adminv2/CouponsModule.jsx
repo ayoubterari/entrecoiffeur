@@ -5,24 +5,54 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Badge } from '../ui/badge'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
 import CouponQRCode from '../dashboardv2/CouponQRCode'
+import { CouponForm } from '../dashboardv2/CouponsModuleForm'
 import { 
   Ticket, Search, QrCode, Eye, CheckCircle, XCircle, Clock,
   TrendingUp, Users, Store, Percent, DollarSign, Calendar,
-  Package, Tag, AlertTriangle
+  Package, Tag, AlertTriangle, Plus
 } from 'lucide-react'
 
-const CouponsModule = () => {
+const CouponsModule = ({ userId }) => {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
   const [filterSeller, setFilterSeller] = useState('all')
   const [selectedCoupon, setSelectedCoupon] = useState(null)
   const [isQRCodeDialogOpen, setIsQRCodeDialogOpen] = useState(false)
+  const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [editingCoupon, setEditingCoupon] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Form data
+  const [formData, setFormData] = useState({
+    code: '',
+    discountType: 'percentage',
+    discountValue: 0,
+    description: '',
+    isActive: true,
+    usageLimit: '',
+    usageLimitPerUser: '',
+    validFrom: new Date().toISOString().split('T')[0],
+    validUntil: '',
+    minimumAmount: '',
+    maximumDiscount: '',
+    applicableToAllProducts: true,
+    specificProductIds: [],
+    specificCategoryIds: [],
+    applicableToAllUsers: true,
+    specificUserTypes: []
+  })
 
   // Queries
   const coupons = useQuery(api.functions.queries.adminCoupons.getAllCoupons)
   const stats = useQuery(api.functions.queries.adminCoupons.getGlobalCouponStats)
   const topCoupons = useQuery(api.functions.queries.adminCoupons.getTopCoupons, { limit: 5 })
+  const categories = useQuery(api.categories.getAllCategories)
+  const products = useQuery(api.products.getProducts, {})
+
+  // Mutations
+  const createCoupon = useMutation(api.functions.mutations.sellerCoupons.createCoupon)
 
   // Filtrer les coupons
   const filteredCoupons = coupons?.filter(coupon => {
@@ -79,17 +109,77 @@ const CouponsModule = () => {
     })
   }
 
+  const handleCreateCoupon = async (e) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    try {
+      await createCoupon({
+        code: formData.code,
+        discountType: formData.discountType,
+        discountValue: parseFloat(formData.discountValue),
+        description: formData.description || undefined,
+        isActive: formData.isActive,
+        usageLimit: formData.usageLimit ? parseInt(formData.usageLimit) : undefined,
+        usageLimitPerUser: formData.usageLimitPerUser ? parseInt(formData.usageLimitPerUser) : undefined,
+        validFrom: new Date(formData.validFrom).getTime(),
+        validUntil: formData.validUntil ? new Date(formData.validUntil).getTime() : undefined,
+        minimumAmount: formData.minimumAmount ? parseFloat(formData.minimumAmount) : undefined,
+        maximumDiscount: formData.maximumDiscount ? parseFloat(formData.maximumDiscount) : undefined,
+        applicableToAllProducts: formData.applicableToAllProducts,
+        specificProductIds: formData.specificProductIds.length > 0 ? formData.specificProductIds : undefined,
+        specificCategoryIds: formData.specificCategoryIds.length > 0 ? formData.specificCategoryIds : undefined,
+        applicableToAllUsers: formData.applicableToAllUsers,
+        specificUserTypes: formData.specificUserTypes.length > 0 ? formData.specificUserTypes : undefined,
+        sellerId: userId,
+      })
+
+      // Réinitialiser le formulaire
+      setFormData({
+        code: '',
+        discountType: 'percentage',
+        discountValue: 0,
+        description: '',
+        isActive: true,
+        usageLimit: '',
+        usageLimitPerUser: '',
+        validFrom: new Date().toISOString().split('T')[0],
+        validUntil: '',
+        minimumAmount: '',
+        maximumDiscount: '',
+        applicableToAllProducts: true,
+        specificProductIds: [],
+        specificCategoryIds: [],
+        applicableToAllUsers: true,
+        specificUserTypes: []
+      })
+      setShowCreateDialog(false)
+      alert('Coupon créé avec succès !')
+    } catch (error) {
+      console.error('Erreur lors de la création du coupon:', error)
+      alert('Erreur lors de la création du coupon')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className="space-y-6">
       {/* En-tête */}
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-          <Ticket className="h-8 w-8 text-primary" />
-          Gestion des Coupons
-        </h2>
-        <p className="text-muted-foreground">
-          Vue d'ensemble de tous les coupons de la plateforme
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+            <Ticket className="h-8 w-8 text-primary" />
+            Gestion des Coupons
+          </h2>
+          <p className="text-muted-foreground">
+            Vue d'ensemble de tous les coupons de la plateforme
+          </p>
+        </div>
+        <Button onClick={() => setShowCreateDialog(true)} className="gap-2">
+          <Plus className="h-4 w-4" />
+          Nouveau Coupon
+        </Button>
       </div>
 
       {/* Statistiques globales */}
@@ -385,6 +475,24 @@ const CouponsModule = () => {
           }}
         />
       )}
+
+      {/* Dialog Création de Coupon */}
+      <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Créer un nouveau coupon</DialogTitle>
+          </DialogHeader>
+          <CouponForm
+            formData={formData}
+            setFormData={setFormData}
+            onSubmit={handleCreateCoupon}
+            isLoading={isLoading}
+            products={products}
+            categories={categories}
+            isEdit={false}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

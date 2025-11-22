@@ -29,8 +29,8 @@ export const createCoupon = mutation({
       throw new Error("Vendeur introuvable");
     }
     
-    if (seller.userType !== "professionnel" && seller.userType !== "grossiste") {
-      throw new Error("Seuls les professionnels et grossistes peuvent créer des coupons");
+    if (seller.userType !== "professionnel" && seller.userType !== "grossiste" && seller.userType !== "superadmin") {
+      throw new Error("Seuls les professionnels, grossistes et administrateurs peuvent créer des coupons");
     }
 
     // Vérifier si le code existe déjà pour ce vendeur

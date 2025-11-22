@@ -4,16 +4,19 @@ import { api } from '../../lib/convex'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { Badge } from '../ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
-import { Search, X, ShoppingBag, TrendingUp, Clock, CheckCircle, Download } from 'lucide-react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
+import { ShoppingBag, Search, X, Download, TrendingUp, Package, Truck, CheckCircle, Eye, Clock } from 'lucide-react'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 
 const OrdersModule = ({ userId }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
+  const [selectedOrder, setSelectedOrder] = useState(null)
+  const [showDetailsDialog, setShowDetailsDialog] = useState(false)
 
   // Get seller orders and stats
   const sellerOrders = useQuery(api.orders.getSellerOrders, 
@@ -59,21 +62,22 @@ const OrdersModule = ({ userId }) => {
     const pageWidth = doc.internal.pageSize.width
     const pageHeight = doc.internal.pageSize.height
     
-    // Couleurs modernes
-    const primaryColor = [192, 180, 165] // #C0B4A5
-    const accentColor = [34, 197, 94] // Vert moderne
-    const darkColor = [30, 30, 30]
-    const lightGray = [248, 250, 252]
-    const mediumGray = [148, 163, 184]
+    // Couleurs
+    const primaryColor = [192, 180, 165] // Beige
+    const accentColor = [34, 197, 94] // Vert
+    const darkColor = [45, 45, 45]
+    const mediumGray = [128, 128, 128]
+    const lightGray = [245, 245, 245]
     
-    // ========== EN-TÊTE MODERNE ==========
+    // ========== EN-TÊTE ==========
+    // Logo et nom de l'entreprise
     doc.setFillColor(...primaryColor)
-    doc.rect(0, 0, pageWidth, 50, 'F')
+    doc.roundedRect(10, 10, pageWidth - 20, 35, 3, 3, 'F')
     
     doc.setTextColor(255, 255, 255)
-    doc.setFontSize(28)
+    doc.setFontSize(24)
     doc.setFont('helvetica', 'bold')
-    doc.text('ENTRECOIFFEUR', 20, 22)
+    doc.text('ENTRECOIFFEUR', 20, 25)
     
     doc.setFontSize(11)
     doc.setFont('helvetica', 'normal')
@@ -108,11 +112,6 @@ const OrdersModule = ({ userId }) => {
     doc.setFont('helvetica', 'bold')
     doc.text('FACTURE', 20, 65)
     
-    // Ligne décorative sous le titre
-    doc.setDrawColor(...accentColor)
-    doc.setLineWidth(2)
-    doc.line(20, 68, 70, 68)
-    
     // Informations de la facture dans un encadré moderne
     const invoiceDate = new Date(order.createdAt)
     doc.setFillColor(...lightGray)
@@ -136,10 +135,6 @@ const OrdersModule = ({ userId }) => {
     doc.setFillColor(255, 255, 255)
     doc.roundedRect(115, 75, 75, 45, 3, 3, 'FD')
     
-    // Barre de couleur sur le côté
-    doc.setFillColor(...accentColor)
-    doc.rect(115, 75, 3, 45, 'F')
-    
     doc.setTextColor(...darkColor)
     doc.setFontSize(11)
     doc.setFont('helvetica', 'bold')
@@ -153,7 +148,7 @@ const OrdersModule = ({ userId }) => {
     doc.setTextColor(...mediumGray)
     doc.text(order.billingInfo.address, 122, 96)
     doc.text(`${order.billingInfo.postalCode} ${order.billingInfo.city}`, 122, 102)
-    doc.text(`Tél: ${order.billingInfo.phone}`, 122, 108)
+    doc.text(`Tél: ${order.billingInfo.phone || 'undefined'}`, 122, 108)
     if (order.billingInfo.email) {
       doc.text(order.billingInfo.email, 122, 114)
     }
@@ -217,7 +212,7 @@ const OrdersModule = ({ userId }) => {
     doc.text(`${(((order.productPrice * order.quantity) / 1.20) * 0.20).toFixed(2)} €`, summaryX + 55, summaryStartY + 7, { align: 'right' })
     
     doc.text('Frais de livraison TTC:', summaryX, summaryStartY + 14)
-    doc.text(`${order.shippingCost ? order.shippingCost.toFixed(2) : '0.00'} €`, summaryX + 55, summaryStartY + 14, { align: 'right' })
+    doc.text(`${order.shipping ? order.shipping.toFixed(2) : '0.00'} €`, summaryX + 55, summaryStartY + 14, { align: 'right' })
     
     doc.setDrawColor(...primaryColor)
     doc.setLineWidth(0.5)
@@ -468,13 +463,12 @@ const OrdersModule = ({ userId }) => {
                         {new Date(order.createdAt).toLocaleDateString('fr-FR')}
                       </span>
                     </TableCell>
-                    <TableCell>{getStatusBadge(order.status)}</TableCell>
                     <TableCell>
                       <Select
                         value={order.status}
                         onValueChange={(newStatus) => handleStatusUpdate(order._id, newStatus)}
                       >
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="w-[160px]">
                           <SelectValue placeholder="Changer statut" />
                         </SelectTrigger>
                         <SelectContent>
@@ -485,6 +479,20 @@ const OrdersModule = ({ userId }) => {
                           <SelectItem value="cancelled">❌ Annulée</SelectItem>
                         </SelectContent>
                       </Select>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedOrder(order)
+                          setShowDetailsDialog(true)
+                        }}
+                        className="gap-2"
+                      >
+                        <Eye className="h-4 w-4" />
+                        Voir détails
+                      </Button>
                     </TableCell>
                     <TableCell>
                       {order.status === 'delivered' ? (
@@ -519,6 +527,245 @@ const OrdersModule = ({ userId }) => {
           )}
         </CardContent>
       </Card>
+
+      {/* Dialog Détails de la commande - Design Sophistiqué */}
+      <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
+          {selectedOrder && (
+            <>
+              {/* Header avec gradient */}
+              <div className="relative bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-6 border-b">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <DialogTitle className="text-2xl font-bold mb-2">
+                      Commande #{selectedOrder.orderNumber}
+                    </DialogTitle>
+                    <DialogDescription className="text-base">
+                      Créée le {new Date(selectedOrder.createdAt).toLocaleDateString('fr-FR', { 
+                        day: 'numeric', 
+                        month: 'long', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </DialogDescription>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {getStatusBadge(selectedOrder.status)}
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 space-y-6">
+                {/* Produit et Montants - Cards côte à côte */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Card Produit */}
+                  <div className="relative overflow-hidden rounded-xl border bg-card hover:shadow-lg transition-shadow">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/10 to-transparent rounded-bl-full" />
+                    <div className="relative p-5">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 rounded-lg bg-blue-500/10">
+                          <Package className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <h3 className="font-semibold text-lg">Produit</h3>
+                      </div>
+                      <div className="space-y-2">
+                        <p className="font-medium text-base">{selectedOrder.productName}</p>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">Prix unitaire</span>
+                          <span className="font-medium">{selectedOrder.productPrice}€</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">Quantité</span>
+                          <Badge variant="secondary">{selectedOrder.quantity}</Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Montants */}
+                  <div className="relative overflow-hidden rounded-xl border bg-card hover:shadow-lg transition-shadow">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-500/10 to-transparent rounded-bl-full" />
+                    <div className="relative p-5">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 rounded-lg bg-green-500/10">
+                          <TrendingUp className="h-5 w-5 text-green-600" />
+                        </div>
+                        <h3 className="font-semibold text-lg">Montants</h3>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">Sous-total</span>
+                          <span className="font-medium">{selectedOrder.subtotal.toFixed(2)}€</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">Livraison</span>
+                          <span className="font-medium">{selectedOrder.shipping.toFixed(2)}€</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">TVA (20%)</span>
+                          <span className="font-medium">{selectedOrder.tax.toFixed(2)}€</span>
+                        </div>
+                        {selectedOrder.discount > 0 && (
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-green-600">Réduction</span>
+                            <span className="font-medium text-green-600">-{selectedOrder.discount.toFixed(2)}€</span>
+                          </div>
+                        )}
+                        <div className="pt-2 mt-2 border-t">
+                          <div className="flex items-center justify-between">
+                            <span className="font-semibold">Total</span>
+                            <span className="text-xl font-bold text-green-600">{selectedOrder.total.toFixed(2)}€</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Client - Card pleine largeur */}
+                <div className="relative overflow-hidden rounded-xl border bg-gradient-to-br from-purple-500/5 to-pink-500/5 hover:shadow-lg transition-shadow">
+                  <div className="p-5">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2 rounded-lg bg-purple-500/10">
+                        <ShoppingBag className="h-5 w-5 text-purple-600" />
+                      </div>
+                      <h3 className="font-semibold text-lg">Informations client</h3>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <div className="flex items-start gap-2">
+                          <span className="text-sm text-muted-foreground min-w-[80px]">Nom</span>
+                          <span className="text-sm font-medium">
+                            {selectedOrder.billingInfo.firstName} {selectedOrder.billingInfo.lastName}
+                          </span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-sm text-muted-foreground min-w-[80px]">Email</span>
+                          <span className="text-sm font-medium">{selectedOrder.billingInfo.email}</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-start gap-2">
+                          <span className="text-sm text-muted-foreground min-w-[80px]">Adresse</span>
+                          <span className="text-sm font-medium">{selectedOrder.billingInfo.address}</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-sm text-muted-foreground min-w-[80px]">Ville</span>
+                          <span className="text-sm font-medium">
+                            {selectedOrder.billingInfo.postalCode} {selectedOrder.billingInfo.city}, {selectedOrder.billingInfo.country}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Paiement et Dates - Cards côte à côte */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Card Paiement */}
+                  <div className="relative overflow-hidden rounded-xl border bg-card hover:shadow-lg transition-shadow">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-500/10 to-transparent rounded-bl-full" />
+                    <div className="relative p-5">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 rounded-lg bg-amber-500/10">
+                          <Download className="h-5 w-5 text-amber-600" />
+                        </div>
+                        <h3 className="font-semibold text-lg">Paiement</h3>
+                      </div>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-muted-foreground">Méthode</span>
+                          <Badge variant="outline" className="font-medium">
+                            {selectedOrder.paymentMethod}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-muted-foreground">Statut</span>
+                          {getStatusBadge(selectedOrder.paymentStatus)}
+                        </div>
+                        {selectedOrder.couponCode && (
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">Code promo</span>
+                            <Badge variant="secondary" className="font-mono">
+                              {selectedOrder.couponCode}
+                            </Badge>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Dates */}
+                  <div className="relative overflow-hidden rounded-xl border bg-card hover:shadow-lg transition-shadow">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-bl-full" />
+                    <div className="relative p-5">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 rounded-lg bg-indigo-500/10">
+                          <Clock className="h-5 w-5 text-indigo-600" />
+                        </div>
+                        <h3 className="font-semibold text-lg">Dates</h3>
+                      </div>
+                      <div className="space-y-3">
+                        <div>
+                          <p className="text-xs text-muted-foreground mb-1">Commande créée</p>
+                          <p className="text-sm font-medium">
+                            {new Date(selectedOrder.createdAt).toLocaleString('fr-FR', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground mb-1">Dernière mise à jour</p>
+                          <p className="text-sm font-medium">
+                            {new Date(selectedOrder.updatedAt).toLocaleString('fr-FR', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer avec actions */}
+              <div className="border-t bg-muted/30 p-6">
+                <div className="flex items-center justify-between">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowDetailsDialog(false)}
+                    className="gap-2"
+                  >
+                    <X className="h-4 w-4" />
+                    Fermer
+                  </Button>
+                  {selectedOrder.status === 'delivered' && (
+                    <Button 
+                      onClick={() => {
+                        handleDownloadInvoice(selectedOrder)
+                        setShowDetailsDialog(false)
+                      }}
+                      className="gap-2"
+                    >
+                      <Download className="h-4 w-4" />
+                      Télécharger la facture
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

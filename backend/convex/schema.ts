@@ -92,6 +92,9 @@ export default defineSchema({
     moteur: v.optional(v.string()),
     zonesSpecifiques: v.optional(v.string()),
     origineFabrication: v.optional(v.string()),
+    // Champs de livraison
+    freeShipping: v.optional(v.boolean()), // Livraison gratuite ou non
+    shippingCost: v.optional(v.number()), // Prix de la livraison si non gratuite
     createdAt: v.number(),
   }).index("by_seller", ["sellerId"])
     .index("by_category", ["category"])
@@ -123,7 +126,7 @@ export default defineSchema({
       v.literal("cancelled")
     ),
     paymentMethod: v.string(),
-    paymentId: v.string(),
+    paymentId: v.optional(v.string()), // Optionnel pour COD
     paymentStatus: v.union(v.literal("paid"), v.literal("pending"), v.literal("failed")),
     billingInfo: v.object({
       firstName: v.string(),

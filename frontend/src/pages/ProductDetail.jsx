@@ -101,16 +101,20 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
     }
 
     // Créer les données de commande
+    const shippingCost = product.freeShipping ? 0 : (product.shippingCost || 0)
+    
     const orderData = {
       items: [{
         productId: product._id,
         name: product.name,
         price: product.price,
         quantity: quantity,
-        image: product.images?.[0] || '🛍️'
+        image: product.images?.[0] || '🛍️',
+        freeShipping: product.freeShipping,
+        shippingCost: product.shippingCost
       }],
       subtotal: product.price * quantity,
-      shipping: product.price * quantity >= 50 ? 0 : 5.99,
+      shipping: shippingCost,
       tax: 0,
       total: 0
     }
@@ -164,6 +168,20 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
               )}
               {savings > 0 && (
                 <div className="savings">Économisez {savings}€</div>
+              )}
+              {product.freeShipping && (
+                <div className="free-shipping-badge" style={{
+                  display: 'inline-block',
+                  background: 'linear-gradient(135deg, #4ade80, #22c55e)',
+                  color: 'white',
+                  padding: '6px 12px',
+                  borderRadius: '20px',
+                  fontSize: '0.85rem',
+                  fontWeight: '600',
+                  marginTop: '8px'
+                }}>
+                  🚚 Livraison gratuite
+                </div>
               )}
             </div>
 
@@ -825,7 +843,11 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
               <div className="seller-content">
                 <div className="seller-main-line">
                   <span className="store-name">{seller?.companyName || 'Disway'}</span>
-                  <span className="seller-badge">{seller?.userType === 'professionnel' ? 'Pro' : 'Particulier'}</span>
+                  <span className="seller-badge">
+                    {seller?.userType === 'professionnel' ? 'Professionnel' : 
+                     seller?.userType === 'grossiste' ? 'Grossiste' : 
+                     'Particulier'}
+                  </span>
                 </div>
               </div>
             </div>
@@ -870,9 +892,17 @@ const ProductDetail = ({ productId, onBack, onAddToCart, isAuthenticated, onLogi
                   <span>Quantité:</span>
                   <span>{quantity}</span>
                 </div>
+                <div className="line-item">
+                  <span>Livraison:</span>
+                  <span className={product.freeShipping ? "free-shipping" : ""}>
+                    {product.freeShipping ? '✅ Gratuite' : `${product.shippingCost?.toFixed(2) || '0.00'} DH`}
+                  </span>
+                </div>
                 <div className="line-item total">
                   <span>Total:</span>
-                  <span className="total-amount">{totalPrice}€</span>
+                  <span className="total-amount">
+                    {(parseFloat(totalPrice) + (product.freeShipping ? 0 : (product.shippingCost || 0))).toFixed(2)}€
+                  </span>
                 </div>
               </div>
             </div>
