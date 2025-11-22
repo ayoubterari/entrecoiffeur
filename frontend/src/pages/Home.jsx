@@ -9,7 +9,6 @@ import SupportModal from '../components/SupportModal'
 import MobileMenu from '../components/MobileMenu'
 import FranceMapModalLeaflet from '../components/FranceMapModalLeaflet'
 import AdvancedSearchModal from '../components/AdvancedSearchModal'
-import PWADownloadBanner from '../components/PWADownloadBanner'
 import styles from '../components/Home.module.css'
 
 const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, userLastName, onAddToCart, cart, onOpenCart, onShowLogin, onToggleFavorite, favoritesCount, userId, onOpenFavorites, userType }) => {
@@ -864,9 +863,6 @@ const Home = ({ onLogout, onLogin, isAuthenticated, userEmail, userFirstName, us
           )}
         </div>
       </section>
-
-      {/* PWA Download Banner */}
-      <PWADownloadBanner />
 
       {/* Products by Category */}
       {productsByCategory.length > 0 && productsByCategory.map((categoryData) => {
